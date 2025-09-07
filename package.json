@@ -1,5 +1,5 @@
 {
-  "name": "my-angular-app",
+  "name": "smart-flashcard",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -32,6 +32,7 @@
     "@angular/router": "^20.2.0",
     "@angular/ssr": "^20.2.2",
     "express": "^5.1.0",
+    "ng-zorro-antd": "^20.2.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },
@@ -48,6 +49,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "less": "^4.4.1",
     "typescript": "~5.9.2"
   }
 }
