@@ -1,0 +1,173 @@
+<div class="register-container">
+  <mat-card class="register-card">
+    <mat-card-header class="register-header">
+      <mat-card-title class="register-title">Tạo tài khoản</mat-card-title>
+      <mat-card-subtitle class="register-subtitle">Tạo tài khoản để bắt đầu học tập</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Form đăng ký -->
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+        <!-- Display Name Field -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Họ và tên</mat-label>
+          <input 
+            matInput 
+            type="text"
+            formControlName="displayName"
+            placeholder="Nhập họ và tên của bạn"
+            [class.mat-form-field-invalid]="registerForm.get('displayName')?.invalid && registerForm.get('displayName')?.touched">
+          
+          <mat-icon matSuffix>person</mat-icon>
+          
+          <!-- Error messages cho displayName -->
+          <mat-error *ngIf="registerForm.get('displayName')?.errors?.['required']">
+            Họ và tên là bắt buộc
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Email Field -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <input 
+            matInput 
+            type="email"
+            formControlName="email"
+            placeholder="Nhập email của bạn"
+            [class.mat-form-field-invalid]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
+          
+          <mat-icon matSuffix>email</mat-icon>
+          
+          <!-- Error messages cho email -->
+          <mat-error *ngIf="registerForm.get('email')?.errors?.['required']">
+            Email là bắt buộc
+          </mat-error>
+          <mat-error *ngIf="registerForm.get('email')?.errors?.['email']">
+            Email không hợp lệ
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Password Field -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Mật khẩu</mat-label>
+          <input 
+            matInput 
+            [type]="showPassword ? 'text' : 'password'"
+            formControlName="password"
+            placeholder="Nhập mật khẩu (tối thiểu 6 ký tự)"
+            [class.mat-form-field-invalid]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
+          
+          <button 
+            mat-icon-button 
+            matSuffix 
+            type="button"
+            (click)="togglePasswordVisibility()"
+            [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="showPassword">
+            <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          
+          <!-- Error messages cho password -->
+          <mat-error *ngIf="registerForm.get('password')?.errors?.['required']">
+            Mật khẩu là bắt buộc
+          </mat-error>
+          <mat-error *ngIf="registerForm.get('password')?.errors?.['minlength']">
+            Mật khẩu phải có ít nhất 6 ký tự
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Confirm Password Field -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Xác nhận mật khẩu</mat-label>
+          <input 
+            matInput 
+            [type]="showConfirmPassword ? 'text' : 'password'"
+            formControlName="confirmPassword"
+            placeholder="Nhập lại mật khẩu"
+            [class.mat-form-field-invalid]="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched || hasPasswordMismatchError">
+          
+          <button 
+            mat-icon-button 
+            matSuffix 
+            type="button"
+            (click)="toggleConfirmPasswordVisibility()"
+            [attr.aria-label]="'Hide confirm password'"
+            [attr.aria-pressed]="showConfirmPassword">
+            <mat-icon>{{ showConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          
+          <!-- Error messages cho confirmPassword -->
+          <mat-error *ngIf="registerForm.get('confirmPassword')?.errors?.['required']">
+            Xác nhận mật khẩu là bắt buộc
+          </mat-error>
+          <mat-error *ngIf="hasPasswordMismatchError">
+            Mật khẩu xác nhận không khớp
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Submit Button -->
+        <button 
+          mat-raised-button 
+          color="primary" 
+          type="submit"
+          class="full-width register-btn"
+          [disabled]="registerForm.invalid || isLoading">
+          <span *ngIf="!isLoading">ĐĂNG KÝ</span>
+          <span *ngIf="isLoading" class="loading-content">
+            <mat-icon class="loading-icon">sync</mat-icon>
+            Đang xử lý...
+          </span>
+        </button>
+      </form>
+
+      <!-- Divider -->
+      <div class="divider-section">
+        <mat-divider></mat-divider>
+        <span class="divider-text">Hoặc</span>
+        <mat-divider></mat-divider>
+      </div>
+
+      <!-- Social Register Buttons -->
+      <div class="social-register-section">
+        <button 
+          mat-stroked-button 
+          type="button"
+          class="full-width social-btn"
+          (click)="registerWithGoogle()"
+          [disabled]="isLoading">
+          <svg class="social-icon" viewBox="0 0 24 24" width="20" height="20">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+          </svg>
+          Đăng ký với Google
+        </button>
+        
+        <button 
+          mat-stroked-button 
+          type="button"
+          class="full-width social-btn"
+          (click)="registerWithFacebook()"
+          [disabled]="isLoading">
+          <svg class="social-icon" viewBox="0 0 24 24" width="20" height="20">
+            <path fill="#1877F2" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+          </svg>
+          Đăng ký với Facebook
+        </button>
+      </div>
+    </mat-card-content>
+
+    <!-- Login Link -->
+    <mat-card-actions class="login-section">
+      <span class="login-text">Đã có tài khoản?</span>
+      <button 
+        mat-button 
+        color="primary"
+        (click)="navigateToLogin()"
+        class="login-link">
+        Đăng nhập ngay
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

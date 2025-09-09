@@ -1,0 +1,290 @@
+// Container chính
+.onboarding-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f6fa 0%, #e3f2fd 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  font-family: 'Roboto', sans-serif;
+}
+
+.onboarding-wrapper {
+  width: 100%;
+  max-width: 600px;
+  position: relative;
+}
+
+// Skip button section
+.skip-section {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+  
+  .skip-btn {
+    font-size: 14px;
+    text-transform: none;
+    opacity: 0.8;
+    
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+// Material Stepper customization
+.onboarding-stepper {
+  background: transparent !important;
+  
+  // Hide stepper header
+  .mat-stepper-header-container {
+    display: none;
+  }
+  
+  // Customize stepper content
+  .mat-horizontal-stepper-content {
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
+  }
+  
+  // Remove stepper lines
+  .mat-stepper-horizontal-line {
+    display: none;
+  }
+}
+
+// Step content styling
+.step-content {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+// Onboarding card
+.onboarding-card {
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
+  border-radius: 20px !important;
+  overflow: hidden;
+  text-align: center;
+  
+  .mat-mdc-card-content {
+    padding: 40px 32px !important;
+  }
+}
+
+// Step image
+.step-image {
+  margin-bottom: 32px;
+  
+  .onboarding-image {
+    width: 280px;
+    height: 280px;
+    object-fit: contain;
+    border-radius: 16px;
+  }
+}
+
+// Step text
+.step-text {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.step-title {
+  font-size: 32px !important;
+  font-weight: 700 !important;
+  color: var(--mat-sys-on-surface);
+  margin-bottom: 16px !important;
+  line-height: 1.2;
+}
+
+.step-description {
+  font-size: 18px !important;
+  color: var(--mat-sys-on-surface-variant) !important;
+  line-height: 1.6;
+  margin: 0 !important;
+}
+
+// Navigation section
+.navigation-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.nav-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+  gap: 16px;
+}
+
+.nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  text-transform: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  
+  &.prev-btn {
+    &:disabled {
+      opacity: 0.3;
+    }
+  }
+  
+  &.next-btn {
+    mat-icon {
+      margin-left: 4px;
+    }
+  }
+}
+
+.start-btn {
+  height: 56px;
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  text-transform: none !important;
+  border-radius: 12px !important;
+  padding: 0 32px !important;
+  box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3) !important;
+  
+  mat-icon {
+    margin-left: 8px;
+    font-size: 20px;
+  }
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(25, 118, 210, 0.4) !important;
+  }
+}
+
+// Login section
+.login-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  
+  .login-text {
+    color: var(--mat-sys-on-surface-variant);
+    font-size: 14px;
+    margin-right: 8px;
+  }
+  
+  .login-link {
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: none;
+  }
+}
+
+// Responsive design
+@media (max-width: 600px) {
+  .onboarding-container {
+    padding: 16px;
+  }
+  
+  .onboarding-card {
+    .mat-mdc-card-content {
+      padding: 32px 24px !important;
+    }
+  }
+  
+  .step-image .onboarding-image {
+    width: 240px;
+    height: 240px;
+  }
+  
+  .step-title {
+    font-size: 26px !important;
+  }
+  
+  .step-description {
+    font-size: 16px !important;
+  }
+  
+  .nav-buttons {
+    flex-direction: column;
+    gap: 12px;
+    
+    .nav-btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+  
+  .start-btn {
+    width: 100%;
+    height: 52px;
+    font-size: 16px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .step-image .onboarding-image {
+    width: 200px;
+    height: 200px;
+  }
+  
+  .step-title {
+    font-size: 24px !important;
+  }
+  
+  .step-description {
+    font-size: 15px !important;
+  }
+}
+
+// Animation cho card
+.onboarding-card {
+  animation: slideInUp 0.6s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Material icon customization
+mat-icon {
+  &.mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+// Custom stepper animation
+.mat-horizontal-stepper-content[aria-expanded="true"] {
+  overflow: visible !important;
+}
+
+// Ensure proper step visibility
+::ng-deep {
+  .mat-horizontal-stepper-content {
+    overflow: visible !important;
+  }
+  
+  .mat-horizontal-content-container {
+    overflow: visible !important;
+  }
+}

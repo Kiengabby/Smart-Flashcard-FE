@@ -1,0 +1,222 @@
+// Container chính
+.login-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f6fa 0%, #e3f2fd 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  font-family: 'Roboto', sans-serif;
+}
+
+// Material Card styling
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
+  border-radius: 16px !important;
+  overflow: hidden;
+}
+
+// Header styling
+.login-header {
+  text-align: center;
+  margin-bottom: 24px;
+  
+  .login-title {
+    font-size: 28px !important;
+    font-weight: 600 !important;
+    margin-bottom: 8px !important;
+    color: var(--mat-sys-on-surface);
+  }
+  
+  .login-subtitle {
+    font-size: 16px !important;
+    color: var(--mat-sys-on-surface-variant) !important;
+    margin: 0 !important;
+  }
+}
+
+// Form styling
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+// Full width utility
+.full-width {
+  width: 100%;
+}
+
+// Form field customization
+.mat-mdc-form-field {
+  &.full-width {
+    width: 100%;
+  }
+}
+
+// Forgot password section
+.forgot-password-section {
+  text-align: right;
+  margin-top: -8px;
+  margin-bottom: 8px;
+  
+  .forgot-password-link {
+    font-size: 14px;
+    text-transform: none;
+  }
+}
+
+// Primary login button
+.login-btn {
+  height: 48px;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  text-transform: none !important;
+  border-radius: 8px !important;
+  margin-top: 8px;
+  
+  .loading-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    
+    .loading-icon {
+      animation: spin 1s linear infinite;
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// Divider section
+.divider-section {
+  display: flex;
+  align-items: center;
+  margin: 24px 0;
+  gap: 16px;
+  
+  .divider-text {
+    color: var(--mat-sys-on-surface-variant);
+    font-size: 14px;
+    white-space: nowrap;
+  }
+  
+  mat-divider {
+    flex: 1;
+  }
+}
+
+// Social login buttons
+.social-login-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.social-btn {
+  height: 48px;
+  text-transform: none !important;
+  border-radius: 8px !important;
+  font-weight: 500 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  
+  .social-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+  
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+}
+
+// Register section
+.register-section {
+  justify-content: center;
+  align-items: center;
+  padding: 16px 24px !important;
+  border-top: 1px solid var(--mat-sys-outline-variant);
+  
+  .register-text {
+    color: var(--mat-sys-on-surface-variant);
+    font-size: 14px;
+    margin-right: 8px;
+  }
+  
+  .register-link {
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: none;
+  }
+}
+
+// Material form field error customization
+.mat-mdc-form-field {
+  .mat-mdc-form-field-error {
+    font-size: 12px;
+  }
+}
+
+// Responsive design
+@media (max-width: 480px) {
+  .login-container {
+    padding: 16px;
+  }
+  
+  .login-card {
+    .mat-mdc-card-content {
+      padding: 16px !important;
+    }
+  }
+  
+  .login-header {
+    .login-title {
+      font-size: 24px !important;
+    }
+  }
+  
+  .login-btn,
+  .social-btn {
+    height: 44px;
+    font-size: 15px !important;
+  }
+}
+
+// Animation cho card
+.login-card {
+  animation: slideInUp 0.6s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Material icon customization
+mat-icon {
+  &.mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+}

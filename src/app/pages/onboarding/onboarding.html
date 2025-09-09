@@ -1,0 +1,138 @@
+<div class="onboarding-container">
+  <div class="onboarding-wrapper">
+    <!-- Skip Button -->
+    <div class="skip-section">
+      <button 
+        mat-button 
+        color="primary"
+        class="skip-btn"
+        (click)="skipOnboarding()">
+        Bỏ qua
+      </button>
+    </div>
+
+    <!-- Material Stepper -->
+    <mat-horizontal-stepper 
+      #stepper 
+      class="onboarding-stepper"
+      [linear]="false"
+      [selectedIndex]="currentIndex">
+      
+      <!-- Step 1: Học Flashcard Thông Minh -->
+      <mat-step>
+        <ng-template matStepLabel>Bước 1</ng-template>
+        <div class="step-content">
+          <mat-card class="onboarding-card">
+            <mat-card-content>
+              <div class="step-image">
+                <img 
+                  [src]="onboardingSlides[0].image" 
+                  [alt]="onboardingSlides[0].title"
+                  class="onboarding-image">
+              </div>
+              
+              <div class="step-text">
+                <h2 class="step-title">{{ onboardingSlides[0].title }}</h2>
+                <p class="step-description">{{ onboardingSlides[0].description }}</p>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </mat-step>
+
+      <!-- Step 2: Theo Dõi Tiến Độ -->
+      <mat-step>
+        <ng-template matStepLabel>Bước 2</ng-template>
+        <div class="step-content">
+          <mat-card class="onboarding-card">
+            <mat-card-content>
+              <div class="step-image">
+                <img 
+                  [src]="onboardingSlides[1].image" 
+                  [alt]="onboardingSlides[1].title"
+                  class="onboarding-image">
+              </div>
+              
+              <div class="step-text">
+                <h2 class="step-title">{{ onboardingSlides[1].title }}</h2>
+                <p class="step-description">{{ onboardingSlides[1].description }}</p>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </mat-step>
+
+      <!-- Step 3: Học Mọi Lúc Mọi Nơi -->
+      <mat-step>
+        <ng-template matStepLabel>Bước 3</ng-template>
+        <div class="step-content">
+          <mat-card class="onboarding-card">
+            <mat-card-content>
+              <div class="step-image">
+                <img 
+                  [src]="onboardingSlides[2].image" 
+                  [alt]="onboardingSlides[2].title"
+                  class="onboarding-image">
+              </div>
+              
+              <div class="step-text">
+                <h2 class="step-title">{{ onboardingSlides[2].title }}</h2>
+                <p class="step-description">{{ onboardingSlides[2].description }}</p>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </mat-step>
+    </mat-horizontal-stepper>
+
+    <!-- Navigation Buttons -->
+    <div class="navigation-section">
+      <div class="nav-buttons">
+        <!-- Previous Button -->
+        <button 
+          mat-button 
+          color="primary"
+          class="nav-btn prev-btn"
+          [disabled]="currentIndex === 0"
+          (click)="goToPreviousStep(stepper)">
+          <mat-icon>arrow_back</mat-icon>
+          Quay lại
+        </button>
+
+        <!-- Next/Start Button -->
+        <button 
+          *ngIf="currentIndex < onboardingSlides.length - 1"
+          mat-button 
+          color="primary"
+          class="nav-btn next-btn"
+          (click)="goToNextStep(stepper)">
+          Tiếp theo
+          <mat-icon>arrow_forward</mat-icon>
+        </button>
+
+        <!-- Final Step Button -->
+        <button 
+          *ngIf="currentIndex === onboardingSlides.length - 1"
+          mat-raised-button 
+          color="primary"
+          class="start-btn"
+          (click)="navigateToRegister()">
+          BẮT ĐẦU NGAY
+          <mat-icon>rocket_launch</mat-icon>
+        </button>
+      </div>
+
+      <!-- Login Link -->
+      <div class="login-section">
+        <span class="login-text">Đã có tài khoản? </span>
+        <button 
+          mat-button 
+          color="primary"
+          routerLink="/auth/login" 
+          class="login-link">
+          Đăng nhập
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
