@@ -8,6 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
+import { AuthService } from '../../services/auth.service';
 
 // Custom Validator cho password matching
 export function passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
@@ -44,7 +45,8 @@ export class RegisterComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -68,28 +70,21 @@ export class RegisterComponent implements OnInit {
   /**
    * Xử lý submit form đăng ký
    */
-  onSubmit(): void {
+  async onSubmit(): Promise<void> {
     if (this.registerForm.invalid) {
       this.markAllFieldsAsTouched();
       return;
     }
 
     this.isLoading = true;
-
-    // Log dữ liệu form để kiểm tra (sẽ thay thế bằng call AuthService sau)
-    console.log('Register form data:', this.registerForm.value);
-
-    // Simulate API call với timeout
-    setTimeout(() => {
+    try {
+      await this.authService.register({
+        email: this.registerForm.value.email,
+        password: this.registerForm.value.password
+      });
+    } finally {
       this.isLoading = false;
-      
-      // TODO: Thay thế bằng logic authentication thực tế
-      console.log('Đăng ký thành công!');
-      
-      // Điều hướng đến trang đăng nhập hoặc onboarding sau khi đăng ký thành công
-      // this.router.navigate(['/auth/login']);
-      // hoặc this.router.navigate(['/onboarding']);
-    }, 2000);
+    }
   }
 
   /**
@@ -101,68 +96,28 @@ export class RegisterComponent implements OnInit {
     });
   }
 
-  /**
-   * Toggle hiển thị/ẩn mật khẩu
-   */
-  togglePasswordVisibility(): void {
-    this.showPassword = !this.showPassword;
-  }
+  togglePasswordVisibility(): void { this.showPassword = !this.showPassword; }
+  toggleConfirmPasswordVisibility(): void { this.showConfirmPassword = !this.showConfirmPassword; }
 
-  /**
-   * Toggle hiển thị/ẩn xác nhận mật khẩu
-   */
-  toggleConfirmPasswordVisibility(): void {
-    this.showConfirmPassword = !this.showConfirmPassword;
-  }
-
-  /**
-   * Đăng ký bằng Google
-   * TODO: Tích hợp Firebase Google Auth
-   */
   registerWithGoogle(): void {
     if (this.isLoading) return;
-    
-    console.log('Đăng ký bằng Google');
-    // TODO: Implement Google authentication
-    // this.authService.registerWithGoogle()
+    // Có thể bổ sung sau nếu muốn đăng ký bằng Google
   }
 
-  /**
-   * Đăng ký bằng Facebook
-   * TODO: Tích hợp Firebase Facebook Auth
-   */
   registerWithFacebook(): void {
     if (this.isLoading) return;
-    
-    console.log('Đăng ký bằng Facebook');
-    // TODO: Implement Facebook authentication
-    // this.authService.registerWithFacebook()
+    // Có thể bổ sung sau nếu muốn đăng ký bằng Facebook
   }
 
-  /**
-   * Điều hướng đến trang đăng nhập
-   */
-  navigateToLogin(): void {
-    this.router.navigate(['/auth/login']);
-  }
+  navigateToLogin(): void { this.router.navigate(['/auth/login']); }
 
-  /**
-   * Kiểm tra field có lỗi và đã được touched không
-   */
   hasFieldError(fieldName: string, errorType?: string): boolean {
     const field = this.registerForm.get(fieldName);
     if (!field) return false;
-
-    if (errorType) {
-      return field.hasError(errorType) && field.touched;
-    }
-    
+    if (errorType) return field.hasError(errorType) && field.touched;
     return field.invalid && field.touched;
   }
 
-  /**
-   * Lấy thông báo lỗi cho field
-   */
   getFieldErrorMessage(fieldName: string): string {
     const field = this.registerForm.get(fieldName);
     if (!field || !field.errors || !field.touched) return '';
@@ -173,26 +128,15 @@ export class RegisterComponent implements OnInit {
         case 'email': return 'Email là bắt buộc';
         case 'password': return 'Mật khẩu là bắt buộc';
         case 'confirmPassword': return 'Xác nhận mật khẩu là bắt buộc';
-        default: return 'Trường này là bắt buộc';
       }
     }
 
-    if (field.errors['email']) {
-      return 'Email không hợp lệ';
-    }
-
-    if (field.errors['minlength']) {
-      return 'Mật khẩu phải có ít nhất 6 ký tự';
-    }
-
+    if (field.errors['email']) return 'Email không hợp lệ';
+    if (field.errors['minlength']) return 'Mật khẩu phải có ít nhất 6 ký tự';
     return '';
   }
 
-  /**
-   * Kiểm tra xem có lỗi password mismatch không
-   */
   get hasPasswordMismatchError(): boolean {
-    return this.registerForm.errors?.['passwordMismatch'] && 
-           this.registerForm.get('confirmPassword')?.touched || false;
+    return !!(this.registerForm.errors?.['passwordMismatch'] && this.registerForm.get('confirmPassword')?.touched);
   }
 }
