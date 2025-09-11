@@ -13,6 +13,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { provideAuth, getAuth } from '@angular/fire/auth';
+import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 
 registerLocaleData(en);
 
@@ -41,5 +42,6 @@ export const appConfig: ApplicationConfig = {
     // Firebase
     provideFirebaseApp(() => initializeApp(firebaseConfig)),
     provideAuth(() => getAuth()),
+    provideFirestore(() => getFirestore()),
   ]
 };

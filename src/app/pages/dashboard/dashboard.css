@@ -1,0 +1,73 @@
+h1 {
+  color: #1976d2;
+  font-weight: 500;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.deck-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 20px;
+  padding: 0 16px;
+  margin-bottom: 80px; /* Space for FAB */
+}
+
+.deck-item {
+  display: flex;
+}
+
+.deck-card {
+  width: 100%;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.deck-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.deck-card mat-card-header {
+  padding-bottom: 8px;
+}
+
+.deck-card mat-card-content {
+  color: #666;
+  font-size: 14px;
+}
+
+.deck-card mat-card-actions {
+  padding-top: 8px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.fab-button {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.fab-button:hover {
+  transform: scale(1.1);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .deck-list {
+    grid-template-columns: 1fr;
+    padding: 0 12px;
+  }
+  
+  .fab-button {
+    bottom: 16px;
+    right: 16px;
+  }
+  
+  h1 {
+    font-size: 24px;
+    margin-bottom: 16px;
+  }
+}

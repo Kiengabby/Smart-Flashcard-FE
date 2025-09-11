@@ -1,4 +1,22 @@
-<div class="dashboard-container">
-  <h2>Dashboard</h2>
-  <p>Chào mừng bạn! Bạn đã đăng nhập thành công.</p>
+<h1>Các bộ thẻ của bạn</h1>
+<div class="deck-list">
+  <div *ngFor="let deck of decks$ | async" class="deck-item">
+  <mat-card class="deck-card">
+    <mat-card-header>
+      <mat-card-title>{{ deck.name }}</mat-card-title>
+      <mat-card-subtitle>{{ deck.description }}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <p>Số thẻ: {{ deck.cardCount }}</p>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-button color="primary">Học ngay</button>
+      <button mat-button color="warn">Xóa</button>
+    </mat-card-actions>
+  </mat-card>
+  </div>
 </div>
+
+<button mat-fab color="primary" class="fab-button" (click)="openCreateDeckDialog()">
+  <mat-icon>add</mat-icon>
+</button>
