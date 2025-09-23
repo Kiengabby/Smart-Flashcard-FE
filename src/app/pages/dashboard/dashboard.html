@@ -1,13 +1,96 @@
 <div class="dashboard-container">
-  <div class="dashboard-header">
-    <h2>Bộ thẻ của tôi</h2>
-    <button nz-button nzType="primary" (click)="openCreateDeckModal()">
-      <i nz-icon nzType="plus"></i>
-      Tạo bộ thẻ mới
+  <!-- Header Section với lời chào cá nhân hóa -->
+  <div class="welcome-section">
+    <div class="greeting">
+      <h1 class="greeting-title">Chào buổi {{ getGreetingTime() }}, {{ userName }}! 👋</h1>
+      <p class="greeting-subtitle">Sẵn sàng cho bài học hôm nay chưa?</p>
+    </div>
+    <div class="streak-badge">
+      <div class="streak-icon">🔥</div>
+      <div class="streak-info">
+        <span class="streak-number">{{ currentStreak }}</span>
+        <span class="streak-label">ngày</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Progress Section - 4 Kỹ năng -->
+  <div class="progress-section">
+    <h2 class="section-title">Tiến độ của tôi</h2>
+    <div class="skills-grid">
+      <div class="skill-card" *ngFor="let skill of skills">
+        <div class="skill-icon">
+          <i nz-icon [nzType]="skill.icon" [style.color]="skill.color"></i>
+        </div>
+        <div class="skill-info">
+          <h3 class="skill-name">{{ skill.name }}</h3>
+          <div class="progress-circle">
+            <nz-progress 
+              [nzPercent]="skill.progress" 
+              nzType="circle" 
+              [nzWidth]="60"
+              [nzStrokeColor]="skill.color"
+              [nzFormat]="progressFormat">
+            </nz-progress>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Study Goal Section -->
+  <div class="goal-section">
+    <h2 class="section-title">Mục tiêu học tập hôm nay</h2>
+    <div class="goal-card">
+      <div class="goal-content">
+        <div class="goal-icon">⏰</div>
+        <div class="goal-info">
+          <p class="goal-description">Thời gian học mục tiêu</p>
+          <div class="time-selector">
+            <button 
+              class="time-option" 
+              [class.active]="selectedTime === time"
+              *ngFor="let time of timeOptions"
+              (click)="selectTime(time)">
+              {{ time }}p
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="goal-progress">
+        <div class="progress-info">
+          <span class="progress-text">{{ studiedTime }}/{{ selectedTime }} phút</span>
+          <span class="progress-percentage">{{ getProgressPercentage() }}%</span>
+        </div>
+        <nz-progress 
+          [nzPercent]="getProgressPercentage()" 
+          [nzStrokeColor]="'#52c41a'"
+          [nzShowInfo]="false">
+        </nz-progress>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA Section -->
+  <div class="cta-section">
+    <button class="start-learning-btn" nz-button nzType="primary" nzSize="large" (click)="startLearning()">
+      <div class="btn-content">
+        <i nz-icon nzType="play-circle" class="play-icon"></i>
+        <span class="btn-text">Bắt đầu học</span>
+      </div>
     </button>
   </div>
 
-  <div class="dashboard-content">
+  <!-- Deck Management Section -->
+  <div class="deck-section">
+    <div class="section-header">
+      <h2 class="section-title">Bộ thẻ của tôi</h2>
+      <button nz-button nzType="default" (click)="openCreateDeckModal()" class="create-deck-btn">
+        <i nz-icon nzType="plus"></i>
+        Tạo bộ thẻ mới
+      </button>
+    </div>
+
     <!-- Loading state -->
     <div *ngIf="isLoading" class="loading-container">
       <nz-spin nzSize="large" nzTip="Đang tải dữ liệu..."></nz-spin>
@@ -15,40 +98,48 @@
 
     <!-- Empty state -->
     <div *ngIf="!isLoading && decks.length === 0" class="empty-container">
-      <nz-empty 
-        nzNotFoundImage="simple" 
-        nzNotFoundContent="Bạn chưa có bộ thẻ nào"
-        nzNotFoundFooter="Hãy tạo bộ thẻ đầu tiên để bắt đầu học!">
-        <button nz-button nzType="primary" (click)="openCreateDeckModal()">
+      <div class="empty-content">
+        <div class="empty-icon">📚</div>
+        <h3 class="empty-title">Chưa có bộ thẻ nào</h3>
+        <p class="empty-description">Hãy tạo bộ thẻ đầu tiên để bắt đầu hành trình học tập!</p>
+        <button nz-button nzType="primary" (click)="openCreateDeckModal()" class="empty-cta">
           <i nz-icon nzType="plus"></i>
           Tạo bộ thẻ đầu tiên
         </button>
-      </nz-empty>
+      </div>
     </div>
 
     <!-- Deck list -->
     <div *ngIf="!isLoading && decks.length > 0" class="deck-grid">
       <nz-row [nzGutter]="[16, 16]">
         <nz-col *ngFor="let deck of decks" nzXs="24" nzSm="12" nzMd="8" nzLg="6">
-          <nz-card 
-            class="deck-card"
-            [nzTitle]="deck.name"
-            [nzExtra]="extraTemplate"
-            nzHoverable>
-            <p class="deck-description">{{ deck.description || 'Không có mô tả' }}</p>
-            <div class="deck-stats">
-              <span class="card-count">
-                <i nz-icon nzType="credit-card"></i>
-                {{ deck.cardCount || 0 }} thẻ
-              </span>
-            </div>
-            
-            <ng-template #extraTemplate>
-              <button nz-button nzType="text" nzSize="small">
+          <div class="deck-card" (click)="openDeck(deck)">
+            <div class="deck-header">
+              <h3 class="deck-title">{{ deck.name }}</h3>
+              <button nz-button nzType="text" nzSize="small" class="deck-menu" (click)="$event.stopPropagation()">
                 <i nz-icon nzType="more"></i>
               </button>
-            </ng-template>
-          </nz-card>
+            </div>
+            <p class="deck-description">{{ deck.description || 'Không có mô tả' }}</p>
+            <div class="deck-stats">
+              <div class="stat-item">
+                <i nz-icon nzType="credit-card"></i>
+                <span>{{ deck.cardCount || 0 }} thẻ</span>
+              </div>
+              <div class="stat-item">
+                <i nz-icon nzType="clock-circle"></i>
+                <span>{{ getLastStudied(deck) }}</span>
+              </div>
+            </div>
+            <div class="deck-progress">
+              <nz-progress 
+                [nzPercent]="deck.progress || 0" 
+                [nzStrokeColor]="'#1890ff'"
+                [nzShowInfo]="false"
+                nzSize="small">
+              </nz-progress>
+            </div>
+          </div>
         </nz-col>
       </nz-row>
     </div>

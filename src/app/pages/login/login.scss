@@ -1,52 +1,126 @@
-// Container chính
+// Login Container - Full Screen Centered
 .login-container {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #f5f6fa 0%, #e3f2fd 100%);
   display: flex;
   align-items: center;
   justify-content: center;
+  height: 100vh;
+  background-color: #f0f2f5;
   padding: 20px;
-  font-family: 'Roboto', sans-serif;
-}
-
-// Material Card styling
-.login-card {
-  width: 100%;
-  max-width: 420px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
-  border-radius: 16px !important;
-  overflow: hidden;
-}
-
-// Header styling
-.login-header {
-  text-align: center;
-  margin-bottom: 24px;
   
-  .login-title {
-    font-size: 28px !important;
-    font-weight: 600 !important;
-    margin-bottom: 8px !important;
-    color: var(--mat-sys-on-surface);
+  // Card Styling
+  nz-card {
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    
+    // Card Title Styling
+    .ant-card-head-title {
+      text-align: center;
+      font-size: 24px;
+      font-weight: 600;
+      color: #262626;
+    }
+    
+    // Card Body
+    .ant-card-body {
+      padding: 24px;
+    }
   }
   
-  .login-subtitle {
-    font-size: 16px !important;
-    color: var(--mat-sys-on-surface-variant) !important;
-    margin: 0 !important;
+  // Form Styling
+  form {
+    .ant-form-item {
+      margin-bottom: 16px;
+      
+      &:last-of-type {
+        margin-bottom: 24px;
+      }
+    }
+    
+    // Input Groups
+    .ant-input-group {
+      .ant-input {
+        padding: 12px 11px;
+        font-size: 14px;
+        
+        &::placeholder {
+          color: #bfbfbf;
+        }
+      }
+      
+      .ant-input-group-addon {
+        background-color: #fafafa;
+        border-color: #d9d9d9;
+      }
+    }
+    
+    // Primary Button
+    .ant-btn-primary {
+      height: 44px;
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 16px;
+      
+      &:hover {
+        box-shadow: 0 2px 8px rgba(24, 144, 255, 0.3);
+      }
+    }
+  }
+  
+  // Register Link Section
+  .register-link {
+    text-align: center;
+    margin-top: 16px;
+    color: #8c8c8c;
+    
+    a {
+      color: #1890ff;
+      font-weight: 500;
+      text-decoration: none;
+      
+      &:hover {
+        color: #40a9ff;
+        text-decoration: underline;
+      }
+    }
+  }
+  
+  // Header Link (Extra Template)
+  .header-link {
+    color: #1890ff;
+    text-decoration: none;
+    font-weight: 500;
+    
+    &:hover {
+      color: #40a9ff;
+    }
+  }
+  
+  // Password Toggle Icon
+  .password-toggle {
+    cursor: pointer;
+    color: #8c8c8c;
+    
+    &:hover {
+      color: #1890ff;
+    }
   }
 }
 
-// Form styling
-.login-form {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-// Full width utility
-.full-width {
-  width: 100%;
+// Responsive Design
+@media (max-width: 480px) {
+  .login-container {
+    padding: 16px;
+    
+    nz-card {
+      max-width: 100%;
+      
+      .ant-card-body {
+        padding: 20px;
+      }
+    }
+  }
 }
 
 // Form field customization

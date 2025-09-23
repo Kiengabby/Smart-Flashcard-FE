@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 
@@ -8,6 +8,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
   standalone: true,
   imports: [
     CommonModule, 
+    RouterLink, 
     NzButtonModule
   ],
   templateUrl: './onboarding.html',

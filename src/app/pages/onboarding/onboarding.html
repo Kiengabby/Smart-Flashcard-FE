@@ -1,128 +1,42 @@
 <div class="onboarding-container">
-  <div class="onboarding-wrapper">
-    <!-- Skip Button -->
-    <div class="skip-section">
+  <div class="onboarding-card">
+    <!-- Illustration Image -->
+    <img 
+      src="https://storyset.com/illustration/online-learning/bro" 
+      alt="Online Learning Illustration"
+      class="illustration-image"
+      onerror="this.src='https://via.placeholder.com/400x300/4A90E2/FFFFFF?text=Smart+Flashcard'"
+    />
+    
+    <!-- Main Content -->
+    <h1 class="main-title">Học tập thông minh hơn, không khó hơn</h1>
+    
+    <p class="description">
+      Khám phá phương pháp học tập hiệu quả với Smart Flashcard. 
+      Tạo bộ thẻ học cá nhân, theo dõi tiến độ và nâng cao kiến thức mọi lúc, mọi nơi.
+    </p>
+    
+    <!-- Action Buttons -->
+    <div class="actions">
       <button 
         nz-button 
-        nzType="link"
-        class="skip-btn"
-        (click)="skipOnboarding()">
-        Bỏ qua
+        nzType="primary" 
+        nzBlock 
+        nzSize="large"
+        (click)="navigateToRegister()"
+        class="primary-action">
+        Tạo tài khoản
       </button>
-    </div>
-
-    <!-- NG-ZORRO Steps -->
-    <nz-steps 
-      [nzCurrent]="currentIndex" 
-      nzDirection="horizontal"
-      nzSize="small"
-      class="onboarding-steps">
-      <nz-step nzTitle="Bước 1" nzDescription="Học Flashcard Thông Minh"></nz-step>
-      <nz-step nzTitle="Bước 2" nzDescription="Tạo Bộ Thẻ Cá Nhân"></nz-step>
-      <nz-step nzTitle="Bước 3" nzDescription="Bắt Đầu Hành Trình"></nz-step>
-    </nz-steps>
-    <!-- Content Area -->
-    <div class="content-area">
-      <!-- Step 1: Học Flashcard Thông Minh -->
-      <div class="step-content" *ngIf="currentIndex === 0">
-        <nz-card class="onboarding-card" [nzBordered]="false">
-          <div class="step-image">
-            <img 
-              [src]="onboardingSlides[0].image" 
-              [alt]="onboardingSlides[0].title"
-              class="onboarding-image">
-          </div>
-          
-          <div class="step-text">
-            <h2 class="step-title">{{ onboardingSlides[0].title }}</h2>
-            <p class="step-description">{{ onboardingSlides[0].description }}</p>
-          </div>
-        </nz-card>
-      </div>
-
-      <!-- Step 2: Theo Dõi Tiến Độ -->
-      <div class="step-content" *ngIf="currentIndex === 1">
-        <nz-card class="onboarding-card" [nzBordered]="false">
-          <div class="step-image">
-            <img 
-              [src]="onboardingSlides[1].image" 
-              [alt]="onboardingSlides[1].title"
-              class="onboarding-image">
-          </div>
-          
-          <div class="step-text">
-            <h2 class="step-title">{{ onboardingSlides[1].title }}</h2>
-            <p class="step-description">{{ onboardingSlides[1].description }}</p>
-          </div>
-        </nz-card>
-      </div>
-
-      <!-- Step 3: Học Mọi Lúc Mọi Nơi -->
-      <div class="step-content" *ngIf="currentIndex === 2">
-        <nz-card class="onboarding-card" [nzBordered]="false">
-          <div class="step-image">
-            <img 
-              [src]="onboardingSlides[2].image" 
-              [alt]="onboardingSlides[2].title"
-              class="onboarding-image">
-          </div>
-          
-          <div class="step-text">
-            <h2 class="step-title">{{ onboardingSlides[2].title }}</h2>
-            <p class="step-description">{{ onboardingSlides[2].description }}</p>
-          </div>
-        </nz-card>
-      </div>
-    </div>
-
-    <!-- Navigation Buttons -->
-    <div class="navigation-section">
-      <div class="nav-buttons">
-        <!-- Previous Button -->
-        <button 
-          nz-button 
-          nzType="default"
-          class="nav-btn prev-btn"
-          [disabled]="currentIndex === 0"
-          (click)="goToPreviousStep()">
-          <i nz-icon nzType="left" nzTheme="outline"></i>
-          Quay lại
-        </button>
-
-        <!-- Next/Start Button -->
-        <button 
-          *ngIf="currentIndex < onboardingSlides.length - 1"
-          nz-button 
-          nzType="default"
-          class="nav-btn next-btn"
-          (click)="goToNextStep()">
-          Tiếp theo
-          <i nz-icon nzType="right" nzTheme="outline"></i>
-        </button>
-
-        <!-- Final Step Button -->
-        <button 
-          *ngIf="currentIndex === onboardingSlides.length - 1"
-          nz-button 
-          nzType="primary"
-          class="start-btn"
-          (click)="navigateToRegister()">
-          BẮT ĐẦU NGAY
-          <i nz-icon nzType="rocket" nzTheme="outline"></i>
-        </button>
-      </div>
-
-      <!-- Login Link -->
-      <div class="login-section">
-        <span class="login-text">Đã có tài khoản? </span>
-        <button 
-          nz-button 
-          nzType="link"
-          routerLink="/auth/login" 
-          class="login-link">
-          Đăng nhập
-        </button>
-      </div>
+      
+      <button 
+        nz-button 
+        nzType="text" 
+        nzBlock 
+        nzSize="large"
+        (click)="navigateToLogin()"
+        class="secondary-action">
+        Đã có tài khoản? Đăng nhập
+      </button>
     </div>
   </div>
 </div>

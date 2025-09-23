@@ -7,12 +7,12 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { AuthService } from '../../services/auth.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-login',
+  standalone: true,
   imports: [
     CommonModule, 
     ReactiveFormsModule,
@@ -21,8 +21,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
     NzFormModule,
     NzInputModule,
     NzButtonModule,
-    NzIconModule,
-    NzDividerModule
+    NzIconModule
   ],
   templateUrl: './login.html',
   styleUrl: './login.scss'
@@ -30,7 +29,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   isLoading = false;
-  showPassword = false;
+  passwordVisible = false;
 
   constructor(
     private fb: FormBuilder,
@@ -94,7 +93,7 @@ export class LoginComponent implements OnInit {
    * Toggle hiển thị/ẩn mật khẩu
    */
   togglePasswordVisibility(): void {
-    this.showPassword = !this.showPassword;
+    this.passwordVisible = !this.passwordVisible;
   }
 
   /**
