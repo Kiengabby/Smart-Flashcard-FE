@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { MatStepperModule } from '@angular/material/stepper';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatCardModule } from '@angular/material/card';
+import { NzStepsModule } from 'ng-zorro-antd/steps';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzCardModule } from 'ng-zorro-antd/card';
 
 interface OnboardingSlide {
   image: string;
@@ -17,10 +17,10 @@ interface OnboardingSlide {
   imports: [
     CommonModule, 
     RouterLink, 
-    MatStepperModule, 
-    MatButtonModule, 
-    MatIconModule, 
-    MatCardModule
+    NzStepsModule, 
+    NzButtonModule, 
+    NzIconModule, 
+    NzCardModule
   ],
   templateUrl: './onboarding.html',
   styleUrl: './onboarding.scss'
@@ -53,30 +53,28 @@ export class OnboardingComponent implements OnInit {
   }
 
   /**
-   * Chuyển sang step tiếp theo
+   * Bỏ qua onboarding và điều hướng trực tiếp đến trang đăng ký
    */
-  goToNextStep(stepper: any): void {
+  skipOnboarding(): void {
+    this.navigateToRegister();
+  }
+
+  /**
+   * Điều hướng đến step tiếp theo
+   */
+  goToNextStep(): void {
     if (this.currentIndex < this.onboardingSlides.length - 1) {
       this.currentIndex++;
-      stepper.next();
     }
   }
 
   /**
    * Quay lại step trước đó
    */
-  goToPreviousStep(stepper: any): void {
+  goToPreviousStep(): void {
     if (this.currentIndex > 0) {
       this.currentIndex--;
-      stepper.previous();
     }
-  }
-
-  /**
-   * Bỏ qua onboarding và điều hướng trực tiếp đến trang đăng ký
-   */
-  skipOnboarding(): void {
-    this.navigateToRegister();
   }
 
   /**

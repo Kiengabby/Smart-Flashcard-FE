@@ -1,0 +1,41 @@
+<div class="create-deck-modal">
+  <form nz-form [formGroup]="createDeckForm" (ngSubmit)="onSubmit()" class="create-deck-form">
+    <nz-form-item>
+      <nz-form-label nzFor="name" nzRequired>Tên bộ thẻ</nz-form-label>
+      <nz-form-control nzErrorTip="Tên bộ thẻ là bắt buộc và không được vượt quá 100 ký tự">
+        <input 
+          nz-input 
+          id="name"
+          formControlName="name" 
+          placeholder="Nhập tên bộ thẻ"
+          maxlength="100" />
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label nzFor="description">Mô tả</nz-form-label>
+      <nz-form-control nzErrorTip="Mô tả không được vượt quá 500 ký tự">
+        <textarea 
+          nz-input 
+          id="description"
+          formControlName="description" 
+          placeholder="Nhập mô tả cho bộ thẻ (tùy chọn)"
+          rows="3"
+          maxlength="500">
+        </textarea>
+      </nz-form-control>
+    </nz-form-item>
+
+    <div class="modal-footer">
+      <button nz-button type="button" (click)="onCancel()">Hủy</button>
+      <button 
+        nz-button 
+        nzType="primary" 
+        type="submit"
+        [nzLoading]="isLoading"
+        [disabled]="createDeckForm.invalid">
+        Tạo bộ thẻ
+      </button>
+    </div>
+  </form>
+</div>

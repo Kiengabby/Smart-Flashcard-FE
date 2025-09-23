@@ -1,4 +1,58 @@
-<h2>Chào mừng đến với Dashboard</h2>
-<p>Đây là trang tổng quan cho người dùng đã đăng nhập.</p>
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h2>Bộ thẻ của tôi</h2>
+    <button nz-button nzType="primary" (click)="openCreateDeckModal()">
+      <i nz-icon nzType="plus"></i>
+      Tạo bộ thẻ mới
+    </button>
+  </div>
+
+  <div class="dashboard-content">
+    <!-- Loading state -->
+    <div *ngIf="isLoading" class="loading-container">
+      <nz-spin nzSize="large" nzTip="Đang tải dữ liệu..."></nz-spin>
+    </div>
+
+    <!-- Empty state -->
+    <div *ngIf="!isLoading && decks.length === 0" class="empty-container">
+      <nz-empty 
+        nzNotFoundImage="simple" 
+        nzNotFoundContent="Bạn chưa có bộ thẻ nào"
+        nzNotFoundFooter="Hãy tạo bộ thẻ đầu tiên để bắt đầu học!">
+        <button nz-button nzType="primary" (click)="openCreateDeckModal()">
+          <i nz-icon nzType="plus"></i>
+          Tạo bộ thẻ đầu tiên
+        </button>
+      </nz-empty>
+    </div>
+
+    <!-- Deck list -->
+    <div *ngIf="!isLoading && decks.length > 0" class="deck-grid">
+      <nz-row [nzGutter]="[16, 16]">
+        <nz-col *ngFor="let deck of decks" nzXs="24" nzSm="12" nzMd="8" nzLg="6">
+          <nz-card 
+            class="deck-card"
+            [nzTitle]="deck.name"
+            [nzExtra]="extraTemplate"
+            nzHoverable>
+            <p class="deck-description">{{ deck.description || 'Không có mô tả' }}</p>
+            <div class="deck-stats">
+              <span class="card-count">
+                <i nz-icon nzType="credit-card"></i>
+                {{ deck.cardCount || 0 }} thẻ
+              </span>
+            </div>
+            
+            <ng-template #extraTemplate>
+              <button nz-button nzType="text" nzSize="small">
+                <i nz-icon nzType="more"></i>
+              </button>
+            </ng-template>
+          </nz-card>
+        </nz-col>
+      </nz-row>
+    </div>
+  </div>
+</div>
 
 

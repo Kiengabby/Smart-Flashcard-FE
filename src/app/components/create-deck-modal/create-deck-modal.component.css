@@ -1,0 +1,25 @@
+.create-deck-modal {
+  padding: 16px 0;
+}
+
+.create-deck-form {
+  margin-bottom: 0;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #f0f0f0;
+}
+
+nz-form-item {
+  margin-bottom: 16px;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 80px;
+}

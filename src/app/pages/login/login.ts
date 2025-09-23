@@ -8,9 +8,8 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
-import { NzMessageModule } from 'ng-zorro-antd/message';
-import { NzMessageService } from 'ng-zorro-antd/message';
 import { AuthService } from '../../services/auth.service';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-login',
@@ -23,8 +22,7 @@ import { AuthService } from '../../services/auth.service';
     NzInputModule,
     NzButtonModule,
     NzIconModule,
-    NzDividerModule,
-    NzMessageModule
+    NzDividerModule
   ],
   templateUrl: './login.html',
   styleUrl: './login.scss'
