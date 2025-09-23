@@ -1,25 +1,30 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatDividerModule } from '@angular/material/divider';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzDividerModule } from 'ng-zorro-antd/divider';
+import { NzMessageModule } from 'ng-zorro-antd/message';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
   imports: [
     CommonModule, 
     ReactiveFormsModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatIconModule,
-    MatDividerModule
+    RouterModule,
+    NzCardModule,
+    NzFormModule,
+    NzInputModule,
+    NzButtonModule,
+    NzIconModule,
+    NzDividerModule,
+    NzMessageModule
   ],
   templateUrl: './login.html',
   styleUrl: './login.scss'
@@ -31,7 +36,9 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private authService: AuthService,
+    private message: NzMessageService
   ) {}
 
   ngOnInit(): void {
@@ -59,19 +66,21 @@ export class LoginComponent implements OnInit {
 
     this.isLoading = true;
 
-    // Log dữ liệu form để kiểm tra (sẽ thay thế bằng call service sau)
-    console.log('Login form data:', this.loginForm.value);
-
-    // Simulate API call với timeout
-    setTimeout(() => {
-      this.isLoading = false;
-      
-      // TODO: Thay thế bằng logic authentication thực tế
-      console.log('Đăng nhập thành công!');
-      
-      // Điều hướng đến dashboard hoặc trang chính sau khi đăng nhập thành công
-      // this.router.navigate(['/dashboard']);
-    }, 2000);
+    // Gọi API đăng nhập
+    this.authService.login(this.loginForm.value).subscribe({
+      next: (response) => {
+        this.isLoading = false;
+        this.message.success('Đăng nhập thành công!');
+        
+        // Điều hướng đến dashboard sau khi đăng nhập thành công
+        this.router.navigate(['/dashboard']);
+      },
+      error: (error) => {
+        this.isLoading = false;
+        this.message.error(error.error?.message || 'Đăng nhập thất bại. Vui lòng thử lại!');
+        console.error('Login error:', error);
+      }
+    });
   }
 
   /**
