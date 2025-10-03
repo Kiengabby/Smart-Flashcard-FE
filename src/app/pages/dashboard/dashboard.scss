@@ -1,0 +1,197 @@
+﻿// Clean SCSS file
+
+// Page header styling
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  padding: 24px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  color: white;
+
+  .header-content {
+    h2 {
+      margin: 0;
+      color: white;
+      font-size: 28px;
+      font-weight: 600;
+    }
+
+    p {
+      margin: 8px 0 0 0;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 16px;
+    }
+  }
+
+  button {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.3);
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+  }
+}
+
+// Loading and empty states
+.loading-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+.empty-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50vh;
+  padding: 48px 0;
+}
+
+// Decks container styling
+.decks-container {
+  padding: 16px 0;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+// Deck card styling
+.deck-card {
+  height: 100%;
+  transition: all 0.3s ease;
+  border-radius: 12px;
+  border: 1px solid #f0f0f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    border-color: #1890ff;
+  }
+
+  :deep(.ant-card-body) {
+    padding: 20px;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card-header {
+    margin-bottom: 12px;
+  }
+
+  .deck-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #262626;
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  .deck-description {
+    color: #8c8c8c;
+    font-size: 14px;
+    line-height: 1.6;
+    flex: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 16px;
+  }
+
+  :deep(.ant-card-actions) {
+    border-top: 1px solid #f0f0f0;
+    background: #fafafa;
+
+    li {
+      margin: 12px 0;
+
+      .anticon {
+        color: #8c8c8c;
+        font-size: 18px;
+        transition: all 0.3s ease;
+
+        &:hover {
+          color: #1890ff;
+          transform: scale(1.1);
+        }
+      }
+    }
+  }
+}
+
+// Deck stats styling
+.deck-stats {
+  padding: 12px 16px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin-top: auto;
+
+  .stat-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    .anticon {
+      color: #1890ff;
+      font-size: 16px;
+    }
+
+    .stat-number {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1890ff;
+    }
+
+    .stat-label {
+      font-size: 14px;
+      color: #8c8c8c;
+      font-weight: 500;
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+    text-align: center;
+
+    .header-content h2 {
+      font-size: 24px;
+    }
+  }
+
+  .decks-container {
+    padding: 8px;
+  }
+
+  .deck-card {
+    margin-bottom: 16px;
+  }
+}
+
+@media (max-width: 576px) {
+  .page-header {
+    padding: 16px;
+
+    .header-content h2 {
+      font-size: 20px;
+    }
+  }
+
+  .empty-state {
+    min-height: 40vh;
+  }
+}

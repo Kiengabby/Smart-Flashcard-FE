@@ -5,6 +5,8 @@ import { NzModalRef } from 'ng-zorro-antd/modal';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { DeckService } from '../../services/deck.service';
 import { CreateDeckRequest } from '../../interfaces/deck.dto';
 
 @Component({
@@ -21,12 +23,14 @@ import { CreateDeckRequest } from '../../interfaces/deck.dto';
   styleUrls: ['./create-deck-modal.component.css']
 })
 export class CreateDeckModalComponent implements OnInit {
-  createDeckForm!: FormGroup;
-  isLoading = false;
+  deckForm!: FormGroup;
+  isConfirmLoading = false;
 
   constructor(
     private fb: FormBuilder,
-    private modalRef: NzModalRef
+    private deckService: DeckService,
+    private modalRef: NzModalRef,
+    private message: NzMessageService
   ) {}
 
   ngOnInit(): void {
@@ -34,29 +38,47 @@ export class CreateDeckModalComponent implements OnInit {
   }
 
   private initializeForm(): void {
-    this.createDeckForm = this.fb.group({
+    this.deckForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(100)]],
       description: ['', [Validators.maxLength(500)]]
     });
   }
 
-  onSubmit(): void {
-    if (this.createDeckForm.invalid) {
+  /**
+   * Xử lý khi người dùng nhấn OK
+   */
+  handleOk(): void {
+    if (!this.deckForm.valid) {
       this.markAllFieldsAsTouched();
       return;
     }
 
-    const formData: CreateDeckRequest = this.createDeckForm.value;
-    this.modalRef.close(formData);
+    this.isConfirmLoading = true;
+    const formData: CreateDeckRequest = this.deckForm.value;
+    
+    this.deckService.createDeck(formData).subscribe({
+      next: (response) => {
+        this.message.success('Tạo bộ thẻ thành công!');
+        this.modalRef.close(true); // Trả về true để báo hiệu thành công
+      },
+      error: (error) => {
+        console.error('Lỗi khi tạo bộ thẻ:', error);
+        this.message.error('Có lỗi xảy ra khi tạo bộ thẻ. Vui lòng thử lại!');
+        this.isConfirmLoading = false;
+      }
+    });
   }
 
-  onCancel(): void {
-    this.modalRef.close(null);
+  /**
+   * Xử lý khi người dùng nhấn Cancel
+   */
+  handleCancel(): void {
+    this.modalRef.close();
   }
 
   private markAllFieldsAsTouched(): void {
-    Object.keys(this.createDeckForm.controls).forEach(key => {
-      this.createDeckForm.get(key)?.markAsTouched();
+    Object.keys(this.deckForm.controls).forEach(key => {
+      this.deckForm.get(key)?.markAsTouched();
     });
   }
 }
