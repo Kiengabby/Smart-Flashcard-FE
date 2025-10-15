@@ -1,50 +1,64 @@
 <nz-layout class="app-layout">
-  <nz-sider class="menu-sidebar"
+  <nz-sider 
+    class="menu-sidebar"
     nzCollapsible
-    nzWidth="256px"
+    nzWidth="280px"
     nzBreakpoint="md"
     [(nzCollapsed)]="isCollapsed"
     [nzTrigger]="null"
+    nzTheme="dark"
   >
-    <div class="sidebar-logo">
-      <a href="https://ng.ant.design/" target="_blank">
-        <img src="https://ng.ant.design/assets/img/logo.svg" alt="logo">
-        <h1>Ant Design of Angular</h1>
-      </a>
+    <!-- Logo Area -->
+    <div class="sidebar-logo" [class.collapsed]="isCollapsed">
+      <div class="logo-container">
+        <nz-icon nzType="book" class="logo-icon"></nz-icon>
+        <h1 *ngIf="!isCollapsed" class="logo-text">Word Quest</h1>
+      </div>
     </div>
-    <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
-      <li nz-submenu nzOpen nzTitle="Dashboard" nzIcon="dashboard">
-        <ul>
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="/welcome">Welcome</a>
-          </li>
-          <li nz-menu-item nzMatchRouter>
-            <a>Monitor</a>
-          </li>
-          <li nz-menu-item nzMatchRouter>
-            <a>Workplace</a>
-          </li>
-        </ul>
-      </li>
-      <li nz-submenu nzOpen nzTitle="Form" nzIcon="form">
-        <ul>
-          <li nz-menu-item nzMatchRouter>
-            <a>Basic Form</a>
-          </li>
-        </ul>
+
+    <!-- Navigation Menu -->
+    <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed" class="sidebar-menu">
+      <li 
+        *ngFor="let item of menuItems" 
+        nz-menu-item 
+        [nzSelected]="item.isActive"
+        [routerLink]="item.routerLink"
+        class="menu-item"
+      >
+        <nz-icon [nzType]="item.icon" class="menu-icon"></nz-icon>
+        <span class="menu-title">{{ item.title }}</span>
       </li>
     </ul>
+
+    <!-- User Profile Section -->
+    <div class="user-profile" [class.collapsed]="isCollapsed">
+      <div class="profile-content">
+        <nz-avatar 
+          [nzSrc]="currentUser.avatar" 
+          [nzSize]="isCollapsed ? 'default' : 'large'"
+          class="user-avatar"
+        ></nz-avatar>
+        <div *ngIf="!isCollapsed" class="user-info">
+          <div class="user-name">{{ currentUser.name }}</div>
+          <div class="user-status">Đang hoạt động</div>
+        </div>
+      </div>
+    </div>
   </nz-sider>
-  <nz-layout>
-    <nz-header>
-      <div class="app-header">
+
+  <nz-layout class="main-layout">
+    <!-- Header với toggle button -->
+    <nz-header class="app-header">
+      <div class="header-content">
         <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
-          <nz-icon class="trigger" [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'" />
+          <nz-icon class="trigger-icon" [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"></nz-icon>
         </span>
       </div>
     </nz-header>
-    <nz-content>
-      <div class="inner-content">
+
+    <!-- Main Content Area -->
+    <nz-content class="main-content">
+      <div class="content-wrapper">
         <router-outlet></router-outlet>
       </div>
     </nz-content>

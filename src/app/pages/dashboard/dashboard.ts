@@ -12,11 +12,14 @@ import { NzEmptyModule } from 'ng-zorro-antd/empty';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzTypographyModule } from 'ng-zorro-antd/typography';
+import { NzStatisticModule } from 'ng-zorro-antd/statistic';
 
 // Services và interfaces
 import { DeckService } from '../../services/deck.service';
 import { DeckDTO } from '../../interfaces/deck.dto';
 import { CreateDeckModalComponent } from '../../components/create-deck-modal/create-deck-modal.component';
+import { DeckCardComponent } from '../../components/deck-card/deck-card.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -32,6 +35,10 @@ import { CreateDeckModalComponent } from '../../components/create-deck-modal/cre
     NzSpinModule,
     NzEmptyModule,
     NzModalModule,
+    NzTypographyModule,
+    NzStatisticModule,
+    // Custom Components
+    DeckCardComponent,
   ],
   providers: [
     NzModalService,
@@ -45,6 +52,14 @@ export class DashboardComponent implements OnInit {
   // Properties cho quản lý bộ thẻ
   decks: DeckDTO[] = [];
   isLoading = true;
+
+  // User info - thông thường sẽ lấy từ AuthService
+  currentUser = {
+    name: 'Kiên Gabby',
+    totalDecks: 0,
+    studiedToday: 0,
+    streakDays: 3
+  };
 
   constructor(
     private deckService: DeckService,
@@ -115,6 +130,7 @@ export class DashboardComponent implements OnInit {
         }
       ];
       this.isLoading = false;
+      this.updateUserStats(); // Cập nhật thống kê sau khi load
     }, 1000); // Giả lập thời gian loading 1 giây
 
     // Code gốc để gọi API (sẽ dùng khi có backend)
@@ -150,6 +166,41 @@ export class DashboardComponent implements OnInit {
         this.loadDecks();
       }
     });
+  }
+
+  /**
+   * Bắt đầu học một bộ thẻ
+   */
+  startStudying(deck: DeckDTO): void {
+    this.messageService.info(`Bắt đầu học bộ thẻ: ${deck.name}`);
+    // TODO: Navigate to study page
+    // this.router.navigate(['/study', deck.id]);
+  }
+
+  /**
+   * Mở cài đặt cho bộ thẻ
+   */
+  openDeckSettings(deck: DeckDTO): void {
+    this.messageService.info(`Mở cài đặt cho bộ thẻ: ${deck.name}`);
+    // TODO: Navigate to deck settings
+    // this.router.navigate(['/deck', deck.id, 'settings']);
+  }
+
+  /**
+   * Tính toán progress học tập giả lập
+   */
+  calculateProgress(deck: DeckDTO): number {
+    // Giả lập tiến độ học dựa trên cardCount
+    const baseProgress = Math.floor(Math.random() * 80) + 10; // 10-90%
+    return Math.min(baseProgress, 100);
+  }
+
+  /**
+   * Cập nhật thống kê user sau khi load decks
+   */
+  updateUserStats(): void {
+    this.currentUser.totalDecks = this.decks.length;
+    this.currentUser.studiedToday = Math.floor(Math.random() * 50) + 10; // Giả lập
   }
 }
 

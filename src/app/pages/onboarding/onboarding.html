@@ -1,42 +1,153 @@
-<div class="onboarding-container">
-  <div class="onboarding-card">
-    <!-- Illustration Image -->
-    <img 
-      src="https://storyset.com/illustration/online-learning/bro" 
-      alt="Online Learning Illustration"
-      class="illustration-image"
-      onerror="this.src='https://via.placeholder.com/400x300/4A90E2/FFFFFF?text=Smart+Flashcard'"
-    />
+<div class="onboarding-wrapper">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <!-- Left Side: Content -->
+      <div class="hero-text">
+        <div class="badge-wrapper">
+          <span class="badge">
+            <nz-icon nzType="star" nzTheme="fill"></nz-icon>
+            Phương pháp học tập hiện đại
+          </span>
+        </div>
+        
+        <h1 class="hero-title">
+          Học tập thông minh hơn,<br/>
+          <span class="gradient-text">không khó hơn</span>
+        </h1>
+        
+        <p class="hero-description">
+          Khám phá phương pháp học tập hiệu quả với Smart Flashcard. 
+          Tạo bộ thẻ học cá nhân, theo dõi tiến độ và nâng cao kiến thức 
+          mọi lúc, mọi nơi với AI hỗ trợ.
+        </p>
+        
+        <div class="hero-actions">
+          <button 
+            nz-button 
+            nzType="primary" 
+            nzSize="large"
+            (click)="navigateToRegister()"
+            class="btn-primary">
+            <nz-icon nzType="rocket" nzTheme="outline"></nz-icon>
+            Bắt đầu miễn phí
+          </button>
+          
+          <button 
+            nz-button 
+            nzType="default" 
+            nzSize="large"
+            (click)="navigateToLogin()"
+            class="btn-secondary">
+            Đăng nhập
+          </button>
+        </div>
+        
+        <!-- Stats -->
+        <div class="hero-stats">
+          <div class="stat-item">
+            <div class="stat-number">10K+</div>
+            <div class="stat-label">Người học</div>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <div class="stat-number">50K+</div>
+            <div class="stat-label">Bộ thẻ</div>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <div class="stat-number">4.9⭐</div>
+            <div class="stat-label">Đánh giá</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Right Side: Visual -->
+      <div class="hero-visual">
+        <div class="visual-card card-1">
+          <div class="card-icon">📚</div>
+          <div class="card-title">Học từ vựng</div>
+          <div class="card-progress">
+            <nz-progress [nzPercent]="75" nzStatus="active" [nzShowInfo]="false"></nz-progress>
+          </div>
+        </div>
+        
+        <div class="visual-card card-2">
+          <div class="card-icon">🎯</div>
+          <div class="card-title">Hoàn thành thử thách</div>
+          <div class="card-badge">+50 XP</div>
+        </div>
+        
+        <div class="visual-card card-3">
+          <div class="card-icon">🔥</div>
+          <div class="card-title">Chuỗi học: 7 ngày</div>
+        </div>
+        
+        <!-- Decorative Elements -->
+        <div class="floating-shape shape-1"></div>
+        <div class="floating-shape shape-2"></div>
+        <div class="floating-shape shape-3"></div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Features Section -->
+  <section class="features-section">
+    <div class="section-header">
+      <h2 class="section-title">Tại sao chọn Smart Flashcard?</h2>
+      <p class="section-subtitle">Những tính năng vượt trội giúp bạn học tập hiệu quả hơn</p>
+    </div>
     
-    <!-- Main Content -->
-    <h1 class="main-title">Học tập thông minh hơn, không khó hơn</h1>
+    <div class="features-grid">
+      @for (feature of features; track feature.title) {
+        <div class="feature-card">
+          <div class="feature-icon" [style.background]="feature.color">
+            <nz-icon [nzType]="feature.icon" nzTheme="outline"></nz-icon>
+          </div>
+          <h3 class="feature-title">{{ feature.title }}</h3>
+          <p class="feature-description">{{ feature.description }}</p>
+        </div>
+      }
+    </div>
+  </section>
+  
+  <!-- How It Works Section -->
+  <section class="how-it-works-section">
+    <div class="section-header">
+      <h2 class="section-title">Cách thức hoạt động</h2>
+      <p class="section-subtitle">4 bước đơn giản để chinh phục kiến thức mới</p>
+    </div>
     
-    <p class="description">
-      Khám phá phương pháp học tập hiệu quả với Smart Flashcard. 
-      Tạo bộ thẻ học cá nhân, theo dõi tiến độ và nâng cao kiến thức mọi lúc, mọi nơi.
-    </p>
-    
-    <!-- Action Buttons -->
-    <div class="actions">
+    <div class="steps-container">
+      @for (step of steps; track step.title; let i = $index) {
+        <div class="step-card">
+          <div class="step-number">{{ i + 1 }}</div>
+          <div class="step-content">
+            <h3 class="step-title">{{ step.title }}</h3>
+            <p class="step-description">{{ step.description }}</p>
+          </div>
+          <div class="step-icon">{{ step.emoji }}</div>
+        </div>
+      }
+    </div>
+  </section>
+  
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="cta-content">
+      <h2 class="cta-title">Sẵn sàng bắt đầu hành trình học tập?</h2>
+      <p class="cta-description">
+        Tham gia cùng hàng nghìn người học thông minh đang sử dụng Smart Flashcard
+      </p>
       <button 
         nz-button 
         nzType="primary" 
-        nzBlock 
         nzSize="large"
         (click)="navigateToRegister()"
-        class="primary-action">
-        Tạo tài khoản
-      </button>
-      
-      <button 
-        nz-button 
-        nzType="text" 
-        nzBlock 
-        nzSize="large"
-        (click)="navigateToLogin()"
-        class="secondary-action">
-        Đã có tài khoản? Đăng nhập
+        class="cta-button">
+        <nz-icon nzType="arrow-right"></nz-icon>
+        Tạo tài khoản miễn phí
       </button>
     </div>
-  </div>
+  </section>
 </div>

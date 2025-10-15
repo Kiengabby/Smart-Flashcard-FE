@@ -1,19 +1,9 @@
 <nz-layout>
-  <nz-header>
-    <div class="logo">Smart Flashcard</div>
-    <ul nz-menu nzTheme="dark" nzMode="horizontal">
-      <li nz-menu-item [routerLink]="['/welcome']">Trang chủ</li>
-      <li nz-menu-item [routerLink]="['/onboarding']">Giới thiệu</li>
-      <li nz-menu-item [routerLink]="['/auth/login']">Đăng nhập</li>
-      <li nz-menu-item [routerLink]="['/auth/register']">Đăng ký</li>
-    </ul>
-  </nz-header>
   <nz-content>
     <div class="content-wrapper">
       <router-outlet></router-outlet>
     </div>
   </nz-content>
-  <nz-footer>© {{ currentYear }} Smart Flashcard</nz-footer>
 </nz-layout>
 
 

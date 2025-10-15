@@ -1,69 +1,202 @@
-<div class="register-container">
-  <nz-card class="register-card">
-    <div class="register-header">
-      <h2 class="register-title">Tạo tài khoản</h2>
-      <p class="register-subtitle">Tạo tài khoản để bắt đầu học tập</p>
+<div class="register-wrapper">
+  <div class="register-container">
+    <!-- Left Side: Form -->
+    <div class="register-form-section">
+      <div class="form-content">
+        <div class="brand-section">
+          <div class="brand-icon">📚</div>
+          <h1 class="brand-name">Smart Flashcard</h1>
+          <p class="brand-tagline">Học ngôn ngữ với AI - Dịch, Luyện, Viết, Nói</p>
+        </div>
+
+        <div class="form-header">
+          <h2 class="form-title">Tạo tài khoản</h2>
+          <p class="form-subtitle">Bắt đầu hành trình học tập của bạn ngay hôm nay</p>
+        </div>
+
+        <form nz-form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+          <nz-form-item>
+            <nz-form-control nzErrorTip="Họ và tên là bắt buộc!">
+              <nz-input-group nzPrefixIcon="user" nzSize="large">
+                <input 
+                  type="text" 
+                  nz-input 
+                  formControlName="displayName" 
+                  placeholder="Họ và tên" 
+                />
+              </nz-input-group>
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-control nzErrorTip="Email không hợp lệ!">
+              <nz-input-group nzPrefixIcon="mail" nzSize="large">
+                <input 
+                  type="email" 
+                  nz-input 
+                  formControlName="email" 
+                  placeholder="Email" 
+                />
+              </nz-input-group>
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-control nzErrorTip="Mật khẩu phải có ít nhất 6 ký tự!">
+              <nz-input-group nzPrefixIcon="lock" nzSize="large" [nzSuffix]="passwordSuffixTemplate">
+                <input 
+                  [type]="showPassword ? 'text' : 'password'" 
+                  nz-input 
+                  formControlName="password" 
+                  placeholder="Mật khẩu (tối thiểu 6 ký tự)" 
+                />
+              </nz-input-group>
+              <ng-template #passwordSuffixTemplate>
+                <i nz-icon [nzType]="showPassword ? 'eye-invisible' : 'eye'" (click)="togglePasswordVisibility()" class="password-toggle"></i>
+              </ng-template>
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-control nzErrorTip="Mật khẩu xác nhận không khớp!">
+              <nz-input-group nzPrefixIcon="lock" nzSize="large" [nzSuffix]="confirmPasswordSuffixTemplate">
+                <input 
+                  [type]="showConfirmPassword ? 'text' : 'password'" 
+                  nz-input 
+                  formControlName="confirmPassword" 
+                  placeholder="Xác nhận mật khẩu" 
+                />
+              </nz-input-group>
+              <ng-template #confirmPasswordSuffixTemplate>
+                <i nz-icon [nzType]="showConfirmPassword ? 'eye-invisible' : 'eye'" (click)="toggleConfirmPasswordVisibility()" class="password-toggle"></i>
+              </ng-template>
+            </nz-form-control>
+          </nz-form-item>
+
+          <div class="form-remember">
+            <label nz-checkbox formControlName="agreeToTerms">
+              Tôi đồng ý với <a href="#" class="link-primary">Điều khoản dịch vụ</a>
+            </label>
+          </div>
+
+          <button 
+            nz-button 
+            nzType="primary" 
+            nzSize="large"
+            nzBlock
+            [nzLoading]="isLoading" 
+            [disabled]="registerForm.invalid" 
+            class="submit-btn">
+            Tạo tài khoản
+          </button>
+        </form>
+
+        <nz-divider nzText="Hoặc đăng ký với"></nz-divider>
+
+        <div class="social-buttons">
+          <button 
+            nz-button 
+            nzType="default" 
+            nzSize="large"
+            class="social-btn google-btn" 
+            (click)="registerWithGoogle()" 
+            [disabled]="isLoading">
+            <i nz-icon nzType="google"></i>
+            Google
+          </button>
+        </div>
+
+        <div class="form-footer">
+          <p>Đã có tài khoản? <a routerLink="/auth/login" class="link-primary">Đăng nhập ngay</a></p>
+        </div>
+      </div>
     </div>
 
-    <form nz-form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
-      <nz-form-item>
-        <nz-form-label nzFor="displayName" class="form-label">Họ và tên</nz-form-label>
-        <nz-form-control nzErrorTip="Họ và tên là bắt buộc!">
-          <nz-input-group nzPrefixIcon="user">
-            <input type="text" nz-input formControlName="displayName" placeholder="Nhập họ và tên của bạn" />
-          </nz-input-group>
-        </nz-form-control>
-      </nz-form-item>
+    <!-- Right Side: Features -->
+    <div class="register-features-section">
+      <div class="features-content">
+        <div class="features-header">
+          <nz-icon nzType="star" nzTheme="fill" class="star-icon"></nz-icon>
+          <h2 class="features-title">Tính năng nổi bật</h2>
+        </div>
 
-      <nz-form-item>
-        <nz-form-label nzFor="email" class="form-label">Email</nz-form-label>
-        <nz-form-control nzErrorTip="Email không hợp lệ!">
-          <nz-input-group nzPrefixIcon="mail">
-            <input type="email" nz-input formControlName="email" placeholder="Nhập email của bạn" />
-          </nz-input-group>
-        </nz-form-control>
-      </nz-form-item>
+        <div class="features-list">
+          <div class="feature-item">
+            <div class="feature-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+              <nz-icon nzType="global" nzTheme="outline"></nz-icon>
+            </div>
+            <div class="feature-content">
+              <h3 class="feature-title">Cung cấp Extension dịch thuật đa ngôn ngữ</h3>
+              <p class="feature-description">Dịch nhanh chóng và chính xác với hơn 100 ngôn ngữ</p>
+            </div>
+          </div>
 
-      <nz-form-item>
-        <nz-form-label nzFor="password" class="form-label">Mật khẩu</nz-form-label>
-        <nz-form-control nzErrorTip="Mật khẩu phải có ít nhất 6 ký tự!">
-          <nz-input-group nzPrefixIcon="lock" [nzSuffix]="passwordSuffixTemplate">
-            <input [type]="showPassword ? 'text' : 'password'" nz-input formControlName="password" placeholder="Nhập mật khẩu (tối thiểu 6 ký tự)" />
-          </nz-input-group>
-          <ng-template #passwordSuffixTemplate>
-            <i nz-icon [nzType]="showPassword ? 'eye-invisible' : 'eye'" (click)="togglePasswordVisibility()"></i>
-          </ng-template>
-        </nz-form-control>
-      </nz-form-item>
+          <div class="feature-item">
+            <div class="feature-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+              <nz-icon nzType="star" nzTheme="outline"></nz-icon>
+            </div>
+            <div class="feature-content">
+              <h3 class="feature-title">50 point sử dụng tính năng nâng cao</h3>
+              <p class="feature-description">Khám phá các tính năng AI cao cấp miễn phí</p>
+            </div>
+          </div>
 
-      <nz-form-item>
-        <nz-form-label nzFor="confirmPassword" class="form-label">Xác nhận mật khẩu</nz-form-label>
-        <nz-form-control nzErrorTip="Mật khẩu xác nhận không khớp!">
-          <nz-input-group nzPrefixIcon="lock" [nzSuffix]="confirmPasswordSuffixTemplate">
-            <input [type]="showConfirmPassword ? 'text' : 'password'" nz-input formControlName="confirmPassword" placeholder="Nhập lại mật khẩu" />
-          </nz-input-group>
-          <ng-template #confirmPasswordSuffixTemplate>
-            <i nz-icon [nzType]="showConfirmPassword ? 'eye-invisible' : 'eye'" (click)="toggleConfirmPasswordVisibility()"></i>
-          </ng-template>
-        </nz-form-control>
-      </nz-form-item>
+          <div class="feature-item">
+            <div class="feature-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+              <nz-icon nzType="check-circle" nzTheme="outline"></nz-icon>
+            </div>
+            <div class="feature-content">
+              <h3 class="feature-title">Đã đăng chế độ học tập và ghi nhớ từ vựng</h3>
+              <p class="feature-description">Phương pháp học tập khoa học với flashcard thông minh</p>
+            </div>
+          </div>
 
-      <button nz-button nzType="primary" [nzLoading]="isLoading" [disabled]="registerForm.invalid" class="full-width register-btn">
-        TẠO TÀI KHOẢN
-      </button>
-    </form>
+          <div class="feature-item">
+            <div class="feature-icon" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+              <nz-icon nzType="book" nzTheme="outline"></nz-icon>
+            </div>
+            <div class="feature-content">
+              <h3 class="feature-title">Tính năng luyện viết câu, đoạn văn (IELTS...)</h3>
+              <p class="feature-description">Luyện tập writing với AI chấm điểm và góp ý chi tiết</p>
+            </div>
+          </div>
 
-    <nz-divider nzText="Hoặc"></nz-divider>
+          <div class="feature-item">
+            <div class="feature-icon" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+              <nz-icon nzType="sound" nzTheme="outline"></nz-icon>
+            </div>
+            <div class="feature-content">
+              <h3 class="feature-title">Tính năng luyện nói Shadowing</h3>
+              <p class="feature-description">Cải thiện phát âm và kỹ năng nói tự nhiên</p>
+            </div>
+          </div>
 
-    <div class="social-login-section">
-      <button nz-button nzType="default" class="full-width social-btn" (click)="registerWithGoogle()" [disabled]="isLoading">
-        <i nz-icon nzType="google"></i>
-        Đăng ký với Google
-      </button>
+          <div class="feature-item">
+            <div class="feature-icon" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);">
+              <nz-icon nzType="audio" nzTheme="outline"></nz-icon>
+            </div>
+            <div class="feature-content">
+              <h3 class="feature-title">Tính năng luyện nghe và typing</h3>
+              <p class="feature-description">Rèn luyện nghe hiểu và đánh máy chuẩn xác</p>
+            </div>
+          </div>
+
+          <div class="feature-item">
+            <div class="feature-icon" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);">
+              <nz-icon nzType="bar-chart" nzTheme="outline"></nz-icon>
+            </div>
+            <div class="feature-content">
+              <h3 class="feature-title">Thống kê sử dụng chi tiết</h3>
+              <p class="feature-description">Theo dõi tiến độ và phân tích kết quả học tập</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Decorative Elements -->
+      <div class="decorative-shape shape-1"></div>
+      <div class="decorative-shape shape-2"></div>
+      <div class="decorative-shape shape-3"></div>
     </div>
-
-    <div class="login-link-section">
-      <span>Đã có tài khoản? <a routerLink="/login">Đăng nhập ngay</a></span>
-    </div>
-  </nz-card>
+  </div>
 </div>

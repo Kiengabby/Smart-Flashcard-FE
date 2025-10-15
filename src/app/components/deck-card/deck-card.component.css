@@ -1,0 +1,164 @@
+/* Deck Card Styles */
+.deck-card {
+  height: 100%;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid #f0f0f0;
+}
+
+.deck-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  border-color: #1890ff;
+}
+
+/* Card Header */
+.card-header {
+  margin-bottom: 16px;
+}
+
+.deck-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #262626;
+  margin: 0 0 8px 0;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.study-status {
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Description */
+.deck-description {
+  color: #595959;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 63px; /* Ensure consistent height */
+}
+
+/* Progress Section */
+.progress-section {
+  margin-bottom: 20px;
+  padding: 12px;
+  background: #fafafa;
+  border-radius: 8px;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.progress-label {
+  font-size: 12px;
+  color: #8c8c8c;
+  font-weight: 500;
+}
+
+.progress-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: #262626;
+}
+
+/* Stats Section */
+.deck-stats {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 16px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  justify-content: center;
+}
+
+.stat-icon {
+  color: #8c8c8c;
+  font-size: 14px;
+}
+
+.stat-number {
+  font-weight: 600;
+  color: #262626;
+  font-size: 16px;
+}
+
+.stat-label {
+  color: #8c8c8c;
+  font-size: 12px;
+}
+
+/* Action Buttons */
+.action-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  color: #8c8c8c;
+}
+
+.action-button:hover {
+  background: #e6f7ff;
+  color: #1890ff;
+  transform: scale(1.1);
+}
+
+.action-button nz-icon {
+  font-size: 18px;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .deck-title {
+    font-size: 16px;
+  }
+  
+  .deck-description {
+    font-size: 13px;
+    -webkit-line-clamp: 2;
+    min-height: 42px;
+  }
+  
+  .stat-number {
+    font-size: 14px;
+  }
+}
+
+/* Animation for progress bar */
+.ant-progress-line {
+  animation: progressGrow 0.6s ease-out;
+}
+
+@keyframes progressGrow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
