@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { driver, DriveStep, Config } from 'driver.js';
-import 'driver.js/dist/driver.css';
+// Sử dụng kiểu any cho driver.js vì không có @types chính thức
+import { driver } from 'driver.js';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +17,7 @@ export class OnboardingService {
    * Khởi tạo driver với config
    */
   private initializeDriver(): void {
-    const config: Config = {
+    const config: any = {
       showProgress: true,
       showButtons: ['next', 'previous', 'close'],
       nextBtnText: 'Tiếp theo →',
@@ -60,7 +60,7 @@ export class OnboardingService {
    * Bắt đầu dashboard onboarding tour
    */
   startDashboardTour(): void {
-    const steps: DriveStep[] = [
+    const steps: any[] = [
       // Step 1: Welcome
       {
         popover: {
