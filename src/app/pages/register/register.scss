@@ -7,7 +7,8 @@ $text-light: #6b7280;
 $white: #ffffff;
 
 .register-wrapper {
-  min-height: 100vh;
+  height: 100vh;
+  max-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   display: flex;
   align-items: center;
@@ -43,28 +44,39 @@ $white: #ffffff;
 }
 
 .register-container {
-  max-width: 1630px;
+  max-width: 1400px;
+  max-height: 90vh;
   width: 95%;
   display: grid;
-  grid-template-columns: 520px 1fr;
+  grid-template-columns: 480px 1fr;
   background: $white;
   border-radius: 24px;
   box-shadow: 0 30px 90px rgba(0, 0, 0, 0.2);
-  overflow: visible;
-  min-height: 720px;
+  overflow: hidden;
   position: relative;
   z-index: 1;
   animation: slideUp 0.6s ease-out;
 }
 
 .register-form-section {
-  padding: 56px 48px;
+  padding: 40px 36px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   background: $white;
   position: relative;
   border-radius: 24px 0 0 24px;
+  overflow-y: auto;
+  max-height: 90vh;
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
 
 .form-content {
@@ -74,25 +86,25 @@ $white: #ffffff;
 
 .brand-section {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 28px;
   animation: fadeIn 0.8s ease-out 0.2s both;
 }
 
 .brand-icon {
-  font-size: 56px;
-  margin-bottom: 16px;
+  font-size: 48px;
+  margin-bottom: 12px;
   display: inline-block;
   animation: bounce 2s ease-in-out infinite;
 }
 
 .brand-name {
-  font-size: 26px;
+  font-size: 24px;
   font-weight: 800;
   background: $primary-gradient;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   letter-spacing: -0.5px;
 }
 
@@ -104,20 +116,20 @@ $white: #ffffff;
 }
 
 .form-header {
-  margin-bottom: 32px;
+  margin-bottom: 24px;
   animation: fadeIn 0.8s ease-out 0.3s both;
 }
 
 .form-title {
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 800;
   color: $text-dark;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   letter-spacing: -0.5px;
 }
 
 .form-subtitle {
-  font-size: 15px;
+  font-size: 14px;
   color: $text-light;
   margin: 0;
   font-weight: 500;
@@ -127,19 +139,20 @@ $white: #ffffff;
   animation: fadeIn 0.8s ease-out 0.4s both;
 
   nz-form-item {
-    margin-bottom: 20px;
+    margin-bottom: 16px;
   }
 
   input {
-    font-size: 15px;
-    height: 50px;
+    font-size: 14px;
+    height: 48px;
     border-radius: 12px;
-    border: 2px solid #e5e7eb;
+    border: none !important;
     transition: all 0.3s ease;
+    box-shadow: none !important;
 
     &:focus {
-      border-color: #667eea;
-      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+      border: none !important;
+      box-shadow: none !important;
     }
 
     &::placeholder {
@@ -151,17 +164,25 @@ $white: #ffffff;
     border-radius: 12px;
     border: 2px solid #e5e7eb;
     transition: all 0.3s ease;
+    padding: 12px 16px;
 
     &:focus,
     &:focus-within {
       border-color: #667eea;
       box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
     }
+
+    input {
+      border: none !important;
+      box-shadow: none !important;
+      outline: none !important;
+    }
   }
 
   .ant-input-prefix {
     color: #9ca3af;
     font-size: 16px;
+    margin-right: 12px;
   }
 }
 
@@ -177,7 +198,7 @@ $white: #ffffff;
 }
 
 .form-remember {
-  margin-bottom: 24px;
+  margin-bottom: 20px;
   animation: fadeIn 0.8s ease-out 0.5s both;
 
   label {
@@ -200,12 +221,13 @@ $white: #ffffff;
 }
 
 .submit-btn {
-  height: 52px;
-  font-size: 16px;
+  height: 50px;
+  font-size: 15px;
   font-weight: 700;
   border-radius: 12px;
   background: $primary-gradient;
   border: none;
+  color: #ffffff !important;
   box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
   transition: all 0.3s ease;
   letter-spacing: 0.5px;
@@ -215,10 +237,20 @@ $white: #ffffff;
   &:hover:not(:disabled) {
     transform: translateY(-3px);
     box-shadow: 0 12px 32px rgba(102, 126, 234, 0.5);
+    color: #ffffff !important;
   }
 
   &:active:not(:disabled) {
     transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  span {
+    color: #ffffff !important;
   }
 }
 
@@ -265,7 +297,8 @@ nz-divider {
   font-size: 14px;
   color: $text-light;
   font-weight: 500;
-  animation: fadeIn 0.8s ease-out 0.9s both;
+  margin-top: 20px;
+  animation: fadeIn 0.8s ease-out 0.7s both;
 
   .link-primary {
     color: #667eea;
@@ -283,14 +316,23 @@ nz-divider {
 
 .register-features-section {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 56px 48px;
+  padding: 40px 36px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   position: relative;
-  overflow: hidden;
-  min-width: 600px;
+  overflow-y: auto;
+  max-height: 90vh;
   border-radius: 0 24px 24px 0;
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 
   &::before {
     content: "";
@@ -324,22 +366,22 @@ nz-divider {
 
 .features-header {
   text-align: center;
-  margin-bottom: 48px;
+  margin-bottom: 32px;
   color: $white;
   animation: slideInRight 0.8s ease-out;
 }
 
 .star-icon {
-  font-size: 40px;
+  font-size: 36px;
   color: #fbbf24;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   display: inline-block;
   animation: rotate-star 3s linear infinite;
   filter: drop-shadow(0 4px 8px rgba(251, 191, 36, 0.4));
 }
 
 .features-title {
-  font-size: 36px;
+  font-size: 30px;
   font-weight: 800;
   margin: 0;
   color: $white;
@@ -349,37 +391,19 @@ nz-divider {
 
 .features-list {
   display: grid;
-  gap: 16px;
-  max-height: 580px;
-  overflow-y: auto;
-  padding-right: 8px;
-
-  &::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 10px;
-
-    &:hover {
-      background: rgba(255, 255, 255, 0.5);
-    }
-  }
+  gap: 14px;
+  max-height: none;
+  overflow-y: visible;
+  padding-right: 0;
 }
 
 .feature-item {
   display: flex;
-  gap: 16px;
+  gap: 14px;
   background: rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(20px);
-  padding: 20px;
-  border-radius: 16px;
+  padding: 16px;
+  border-radius: 14px;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   border: 1px solid rgba(255, 255, 255, 0.2);
   animation: slideInRight 0.6s ease-out both;
@@ -398,9 +422,9 @@ nz-divider {
 }
 
 .feature-icon {
-  width: 52px;
-  height: 52px;
-  border-radius: 14px;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -414,7 +438,7 @@ nz-divider {
   }
 
   i {
-    font-size: 26px;
+    font-size: 24px;
   }
 }
 
@@ -423,19 +447,19 @@ nz-divider {
 }
 
 .feature-title {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 700;
   color: $white;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
   line-height: 1.4;
   letter-spacing: -0.2px;
 }
 
 .feature-description {
-  font-size: 13px;
+  font-size: 12.5px;
   color: rgba(255, 255, 255, 0.85);
   margin: 0;
-  line-height: 1.6;
+  line-height: 1.5;
   font-weight: 500;
 }
 

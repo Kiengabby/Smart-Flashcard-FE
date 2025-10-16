@@ -7,6 +7,7 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { AuthService } from '../../services/auth.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 
@@ -21,7 +22,8 @@ import { NzMessageService } from 'ng-zorro-antd/message';
     NzFormModule,
     NzInputModule,
     NzButtonModule,
-    NzIconModule
+    NzIconModule,
+    NzCheckboxModule
   ],
   templateUrl: './login.html',
   styleUrl: './login.scss'
@@ -48,7 +50,8 @@ export class LoginComponent implements OnInit {
   private initializeForm(): void {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]]
+      password: ['', [Validators.required]],
+      rememberMe: [false]
     });
   }
 

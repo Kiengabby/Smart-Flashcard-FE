@@ -6,7 +6,7 @@
         <div class="brand-section">
           <div class="brand-icon">📚</div>
           <h1 class="brand-name">Smart Flashcard</h1>
-          <p class="brand-tagline">Học ngôn ngữ với AI - Dịch, Luyện, Viết, Nói</p>
+          <p class="brand-tagline">Học tập thông minh hơn với Flashcard và AI</p>
         </div>
 
         <div class="form-header">
@@ -91,21 +91,6 @@
           </button>
         </form>
 
-        <nz-divider nzText="Hoặc đăng ký với"></nz-divider>
-
-        <div class="social-buttons">
-          <button 
-            nz-button 
-            nzType="default" 
-            nzSize="large"
-            class="social-btn google-btn" 
-            (click)="registerWithGoogle()" 
-            [disabled]="isLoading">
-            <i nz-icon nzType="google"></i>
-            Google
-          </button>
-        </div>
-
         <div class="form-footer">
           <p>Đã có tài khoản? <a routerLink="/auth/login" class="link-primary">Đăng nhập ngay</a></p>
         </div>
@@ -123,71 +108,61 @@
         <div class="features-list">
           <div class="feature-item">
             <div class="feature-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-              <nz-icon nzType="global" nzTheme="outline"></nz-icon>
+              <nz-icon nzType="bulb" nzTheme="outline"></nz-icon>
             </div>
             <div class="feature-content">
-              <h3 class="feature-title">Cung cấp Extension dịch thuật đa ngôn ngữ</h3>
-              <p class="feature-description">Dịch nhanh chóng và chính xác với hơn 100 ngôn ngữ</p>
+              <h3 class="feature-title">Học thông minh với AI</h3>
+              <p class="feature-description">AI tự động tạo flashcard, gợi ý hình ảnh và câu ví dụ giúp bạn học nhanh hơn</p>
             </div>
           </div>
 
           <div class="feature-item">
             <div class="feature-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
-              <nz-icon nzType="star" nzTheme="outline"></nz-icon>
+              <nz-icon nzType="rocket" nzTheme="outline"></nz-icon>
             </div>
             <div class="feature-content">
-              <h3 class="feature-title">50 point sử dụng tính năng nâng cao</h3>
-              <p class="feature-description">Khám phá các tính năng AI cao cấp miễn phí</p>
+              <h3 class="feature-title">Phương pháp 4 bước</h3>
+              <p class="feature-description">Chinh phục từ vựng qua 4 bước: Xem, Quiz, Nghe và Thử thách thực tế</p>
             </div>
           </div>
 
           <div class="feature-item">
             <div class="feature-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
-              <nz-icon nzType="check-circle" nzTheme="outline"></nz-icon>
+              <nz-icon nzType="thunderbolt" nzTheme="outline"></nz-icon>
             </div>
             <div class="feature-content">
-              <h3 class="feature-title">Đã đăng chế độ học tập và ghi nhớ từ vựng</h3>
-              <p class="feature-description">Phương pháp học tập khoa học với flashcard thông minh</p>
+              <h3 class="feature-title">Ôn tập thông minh</h3>
+              <p class="feature-description">Hệ thống SRS giúp bạn ôn đúng lúc, nhớ lâu hơn với ít thời gian hơn</p>
             </div>
           </div>
 
           <div class="feature-item">
             <div class="feature-icon" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
-              <nz-icon nzType="book" nzTheme="outline"></nz-icon>
+              <nz-icon nzType="trophy" nzTheme="outline"></nz-icon>
             </div>
             <div class="feature-content">
-              <h3 class="feature-title">Tính năng luyện viết câu, đoạn văn (IELTS...)</h3>
-              <p class="feature-description">Luyện tập writing với AI chấm điểm và góp ý chi tiết</p>
-            </div>
-          </div>
-
-          <div class="feature-item">
-            <div class="feature-icon" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
-              <nz-icon nzType="sound" nzTheme="outline"></nz-icon>
-            </div>
-            <div class="feature-content">
-              <h3 class="feature-title">Tính năng luyện nói Shadowing</h3>
-              <p class="feature-description">Cải thiện phát âm và kỹ năng nói tự nhiên</p>
+              <h3 class="feature-title">Thách đấu bạn bè</h3>
+              <p class="feature-description">Tạo động lực học tập qua các cuộc thi nhỏ với bạn bè</p>
             </div>
           </div>
 
           <div class="feature-item">
             <div class="feature-icon" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);">
-              <nz-icon nzType="audio" nzTheme="outline"></nz-icon>
+              <nz-icon nzType="team" nzTheme="outline"></nz-icon>
             </div>
             <div class="feature-content">
-              <h3 class="feature-title">Tính năng luyện nghe và typing</h3>
-              <p class="feature-description">Rèn luyện nghe hiểu và đánh máy chuẩn xác</p>
+              <h3 class="feature-title">Cộng đồng học tập</h3>
+              <p class="feature-description">Chia sẻ và học hỏi mẹo ghi nhớ từ hàng nghìn người học khác</p>
             </div>
           </div>
 
           <div class="feature-item">
-            <div class="feature-icon" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);">
-              <nz-icon nzType="bar-chart" nzTheme="outline"></nz-icon>
+            <div class="feature-icon" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+              <nz-icon nzType="line-chart" nzTheme="outline"></nz-icon>
             </div>
             <div class="feature-content">
-              <h3 class="feature-title">Thống kê sử dụng chi tiết</h3>
-              <p class="feature-description">Theo dõi tiến độ và phân tích kết quả học tập</p>
+              <h3 class="feature-title">Theo dõi tiến độ</h3>
+              <p class="feature-description">Xem biểu đồ chi tiết về quá trình học tập và đạt được các huy hiệu</p>
             </div>
           </div>
         </div>

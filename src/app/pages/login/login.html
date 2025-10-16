@@ -1,65 +1,165 @@
-<div class="login-container">
-  <nz-card [nzTitle]="'Đăng nhập'" [nzExtra]="extraTemplate">
-    <form nz-form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <!-- Email Field -->
-      <nz-form-item>
-        <nz-form-control nzErrorTip="Email không hợp lệ!">
-          <nz-input-group nzPrefixIcon="user">
-            <input 
-              type="email" 
-              nz-input 
-              formControlName="email" 
-              placeholder="Email" />
-          </nz-input-group>
-        </nz-form-control>
-      </nz-form-item>
+<div class="login-wrapper">
+  <div class="login-container">
+    <!-- Left Side: Form -->
+    <div class="login-form-section">
+      <div class="form-content">
+        <div class="brand-section">
+          <div class="brand-icon">🚀</div>
+          <h1 class="brand-name">Chào mừng trở lại!</h1>
+          <p class="brand-tagline">Tiếp tục hành trình học tập của bạn</p>
+        </div>
 
-      <!-- Password Field -->
-      <nz-form-item>
-        <nz-form-control nzErrorTip="Mật khẩu là bắt buộc!">
-          <nz-input-group nzPrefixIcon="lock" [nzSuffix]="suffixTemplate">
-            <input 
-              [type]="passwordVisible ? 'text' : 'password'" 
-              nz-input 
-              formControlName="password" 
-              placeholder="Mật khẩu" />
-          </nz-input-group>
-        </nz-form-control>
-      </nz-form-item>
+        <form nz-form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+          <nz-form-item>
+            <nz-form-control nzErrorTip="Email không hợp lệ!">
+              <nz-input-group nzPrefixIcon="mail" nzSize="large">
+                <input 
+                  type="email" 
+                  nz-input 
+                  formControlName="email" 
+                  placeholder="Email" 
+                />
+              </nz-input-group>
+            </nz-form-control>
+          </nz-form-item>
 
-      <!-- Login Button -->
-      <nz-form-item>
-        <button 
-          nz-button 
-          nzType="primary" 
-          nzBlock 
-          [nzLoading]="isLoading"
-          [disabled]="loginForm.invalid">
-          Đăng nhập
-        </button>
-      </nz-form-item>
+          <nz-form-item>
+            <nz-form-control nzErrorTip="Mật khẩu là bắt buộc!">
+              <nz-input-group nzPrefixIcon="lock" nzSize="large" [nzSuffix]="passwordSuffixTemplate">
+                <input 
+                  [type]="passwordVisible ? 'text' : 'password'" 
+                  nz-input 
+                  formControlName="password" 
+                  placeholder="Mật khẩu" 
+                />
+              </nz-input-group>
+              <ng-template #passwordSuffixTemplate>
+                <i nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'" (click)="togglePasswordVisibility()" class="password-toggle"></i>
+              </ng-template>
+            </nz-form-control>
+          </nz-form-item>
 
-      <!-- Register Link -->
-      <div class="register-link">
-        <span>Chưa có tài khoản? 
-          <a routerLink="/auth/register">Đăng ký ngay</a>
-        </span>
+          <div class="form-actions">
+            <label nz-checkbox formControlName="rememberMe">
+              <span class="remember-text">Ghi nhớ đăng nhập</span>
+            </label>
+            <a href="#" class="forgot-password">Quên mật khẩu?</a>
+          </div>
+
+          <button 
+            nz-button 
+            nzType="primary" 
+            nzSize="large"
+            nzBlock
+            [nzLoading]="isLoading" 
+            [disabled]="loginForm.invalid" 
+            class="submit-btn">
+            Đăng nhập
+          </button>
+        </form>
+
+        <div class="form-footer">
+          <p>Chưa có tài khoản? <a routerLink="/auth/register" class="link-primary">Đăng ký ngay</a></p>
+        </div>
       </div>
-    </form>
-  </nz-card>
+    </div>
+
+    <!-- Right Side: Hero Section -->
+    <div class="login-hero-section">
+      <div class="hero-content">
+        <!-- Welcome Back Message -->
+        <div class="hero-header">
+          <h2 class="hero-title">Học tập mỗi ngày,<br/><span class="gradient-text">Tiến bộ mỗi giờ</span></h2>
+          <p class="hero-description">
+            Hơn 10,000+ người học đang tin tưởng và sử dụng Smart Flashcard để nâng cao kiến thức mỗi ngày
+          </p>
+        </div>
+
+        <!-- Live Stats -->
+        <div class="stats-container">
+          <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+              <nz-icon nzType="user" nzTheme="outline"></nz-icon>
+            </div>
+            <div class="stat-content">
+              <div class="stat-number">10,000+</div>
+              <div class="stat-label">Người học</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+              <nz-icon nzType="fire" nzTheme="fill"></nz-icon>
+            </div>
+            <div class="stat-content">
+              <div class="stat-number">50,000+</div>
+              <div class="stat-label">Bộ thẻ học</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+              <nz-icon nzType="trophy" nzTheme="outline"></nz-icon>
+            </div>
+            <div class="stat-content">
+              <div class="stat-number">1M+</div>
+              <div class="stat-label">Từ vựng đã học</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Success Stories -->
+        <div class="testimonials">
+          <div class="testimonial-card active">
+            <div class="testimonial-header">
+              <div class="avatar">👨‍🎓</div>
+              <div class="user-info">
+                <div class="user-name">Minh Khoa</div>
+                <div class="user-role">Sinh viên IELTS 7.5</div>
+              </div>
+            </div>
+            <p class="testimonial-text">
+              "Smart Flashcard giúp tôi học từ vựng hiệu quả gấp 3 lần so với phương pháp truyền thống!"
+            </p>
+          </div>
+
+          <div class="testimonial-card">
+            <div class="testimonial-header">
+              <div class="avatar">👩‍💼</div>
+              <div class="user-info">
+                <div class="user-name">Thu Hà</div>
+                <div class="user-role">Giáo viên tiếng Anh</div>
+              </div>
+            </div>
+            <p class="testimonial-text">
+              "Công cụ tuyệt vời cho cả giáo viên và học sinh. Giao diện đẹp, dễ sử dụng!"
+            </p>
+          </div>
+        </div>
+
+        <!-- Quick Features -->
+        <div class="quick-features">
+          <div class="feature-badge">
+            <nz-icon nzType="check-circle" nzTheme="fill"></nz-icon>
+            <span>AI thông minh</span>
+          </div>
+          <div class="feature-badge">
+            <nz-icon nzType="check-circle" nzTheme="fill"></nz-icon>
+            <span>Học mọi lúc</span>
+          </div>
+          <div class="feature-badge">
+            <nz-icon nzType="check-circle" nzTheme="fill"></nz-icon>
+            <span>Miễn phí 100%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Decorative Elements -->
+      <div class="decorative-circles">
+        <div class="circle circle-1"></div>
+        <div class="circle circle-2"></div>
+        <div class="circle circle-3"></div>
+      </div>
+    </div>
+  </div>
 </div>
-
-<!-- Password Visibility Toggle Template -->
-<ng-template #suffixTemplate>
-  <i 
-    nz-icon 
-    [nzType]="passwordVisible ? 'eye-invisible' : 'eye'" 
-    (click)="togglePasswordVisibility()"
-    class="password-toggle">
-  </i>
-</ng-template>
-
-<!-- Extra Template for Card Header -->
-<ng-template #extraTemplate>
-  <a routerLink="/auth/register" class="header-link">Đăng ký</a>
-</ng-template>
