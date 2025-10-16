@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -51,7 +51,8 @@ export class RegisterComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private authService: AuthService,
-    private message: NzMessageService
+    private message: NzMessageService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -87,16 +88,22 @@ export class RegisterComponent implements OnInit {
     // Gọi API đăng ký
     this.authService.register(this.registerForm.value).subscribe({
       next: (response) => {
-        this.isLoading = false;
-        this.message.success('Đăng ký thành công!');
-        
-        // Điều hướng đến dashboard sau khi đăng ký thành công
-        this.router.navigate(['/dashboard']);
+        setTimeout(() => {
+          this.isLoading = false;
+          this.cdr.detectChanges();
+          this.message.success('Đăng ký thành công!');
+          
+          // Điều hướng đến dashboard sau khi đăng ký thành công
+          this.router.navigate(['/app/dashboard']);
+        });
       },
       error: (error) => {
-        this.isLoading = false;
-        this.message.error(error.error?.message || 'Đăng ký thất bại. Vui lòng thử lại!');
-        console.error('Register error:', error);
+        setTimeout(() => {
+          this.isLoading = false;
+          this.cdr.detectChanges();
+          this.message.error(error.error?.message || 'Đăng ký thất bại. Vui lòng thử lại!');
+          console.error('Register error:', error);
+        });
       }
     });
   }

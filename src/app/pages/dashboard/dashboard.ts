@@ -14,9 +14,12 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
 import { NzStatisticModule } from 'ng-zorro-antd/statistic';
+import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 
 // Services và interfaces
 import { DeckService } from '../../services/deck.service';
+import { TokenService } from '../../services/token.service';
+import { OnboardingService } from '../../services/onboarding.service';
 import { DeckDTO } from '../../interfaces/deck.dto';
 import { CreateDeckModalComponent } from '../../components/create-deck-modal/create-deck-modal.component';
 import { DeckCardComponent } from '../../components/deck-card/deck-card.component';
@@ -37,38 +40,189 @@ import { DeckCardComponent } from '../../components/deck-card/deck-card.componen
     NzModalModule,
     NzTypographyModule,
     NzStatisticModule,
-    // Custom Components
-    DeckCardComponent,
+    NzAvatarModule,
   ],
   providers: [
     NzModalService,
     NzMessageService
   ],
-  templateUrl: './dashboard.html',
-  styleUrls: ['./dashboard.scss'],
+  templateUrl: './dashboard-clean.html',
+  styleUrls: ['./dashboard-new.scss'],
 })
 export class DashboardComponent implements OnInit {
   
+  // Properties cho thống kê - đúng với tính năng dự án
+  stats = {
+    conqueredDecks: 3,        // Số bộ thẻ đã chinh phục
+    studyStreak: 7,           // Chuỗi ngày học liên tiếp
+    totalWordsLearned: 156,   // Tổng số từ đã học
+    reviewToday: 15,          // Số thẻ cần ôn tập hôm nay
+    totalDecks: 5,            // Tổng số bộ thẻ
+    activeChallenges: 1       // Số lời thách đấu đang chờ
+  };
+
+  // Tính phần trăm sử dụng
+  get usagePercentage(): number {
+    return this.stats.conqueredDecks > 0 
+      ? Math.round((this.stats.conqueredDecks / this.stats.totalDecks) * 100) 
+      : 0;
+  }
+
+  // Calendar properties
+  currentMonth: number = new Date().getMonth() + 1;
+  currentYear: number = new Date().getFullYear();
+  calendarDays: Array<{
+    date: number;
+    currentMonth: boolean;
+    isToday: boolean;
+    hasActivity: boolean;
+    activityLevel: number;
+  }> = [];
+
   // Properties cho quản lý bộ thẻ
   decks: DeckDTO[] = [];
   isLoading = true;
 
-  // User info - thông thường sẽ lấy từ AuthService
+  // User info - lấy từ TokenService
   currentUser = {
-    name: 'Kiên Gabby',
+    name: '',
     totalDecks: 0,
-    studiedToday: 0,
-    streakDays: 3
+    studiedToday: 0
   };
 
   constructor(
     private deckService: DeckService,
+    private tokenService: TokenService,
+    private onboardingService: OnboardingService,
     private modalService: NzModalService,
     private messageService: NzMessageService
   ) {}
 
   ngOnInit(): void {
+    this.loadUserInfo();
+    this.generateCalendar();
     this.loadDecks();
+    
+    // 🎯 Check và trigger onboarding tour cho người dùng mới
+    this.checkAndStartOnboarding();
+  }
+
+  /**
+   * Kiểm tra và bắt đầu onboarding tour cho người dùng lần đầu
+   */
+  checkAndStartOnboarding(): void {
+    // Delay một chút để đảm bảo DOM đã render đầy đủ
+    setTimeout(() => {
+      if (!this.onboardingService.hasCompletedOnboarding()) {
+        this.onboardingService.startDashboardTour();
+      }
+    }, 500);
+  }
+
+  /**
+   * Load thông tin user từ token
+   */
+  loadUserInfo(): void {
+    const userInfo = this.tokenService.getUserInfo();
+    if (userInfo) {
+      this.currentUser.name = userInfo.displayName || userInfo.email;
+    }
+  }
+
+  /**
+   * Tạo calendar cho tháng hiện tại
+   */
+  generateCalendar(): void {
+    this.calendarDays = [];
+    const year = this.currentYear;
+    const month = this.currentMonth - 1; // JS months are 0-indexed
+    
+    // Ngày đầu tiên của tháng
+    const firstDay = new Date(year, month, 1);
+    const startingDayOfWeek = firstDay.getDay();
+    
+    // Số ngày trong tháng
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    
+    // Số ngày của tháng trước
+    const daysInPrevMonth = new Date(year, month, 0).getDate();
+    
+    // Ngày hôm nay
+    const today = new Date();
+    const isCurrentMonth = today.getMonth() === month && today.getFullYear() === year;
+    const todayDate = today.getDate();
+    
+    // Sample activity data (sẽ thay bằng data thực từ API)
+    const activityDates = [13, 14, 15, 16, 17, 18];
+    
+    // Thêm các ngày của tháng trước
+    for (let i = startingDayOfWeek - 1; i >= 0; i--) {
+      this.calendarDays.push({
+        date: daysInPrevMonth - i,
+        currentMonth: false,
+        isToday: false,
+        hasActivity: false,
+        activityLevel: 0
+      });
+    }
+    
+    // Thêm các ngày của tháng hiện tại
+    for (let day = 1; day <= daysInMonth; day++) {
+      const hasActivity = activityDates.includes(day);
+      this.calendarDays.push({
+        date: day,
+        currentMonth: true,
+        isToday: isCurrentMonth && day === todayDate,
+        hasActivity: hasActivity,
+        activityLevel: hasActivity ? Math.floor(Math.random() * 3) + 1 : 0
+      });
+    }
+    
+    // Thêm các ngày của tháng sau để fill calendar grid
+    const remainingDays = 42 - this.calendarDays.length; // 6 rows * 7 days
+    for (let day = 1; day <= remainingDays; day++) {
+      this.calendarDays.push({
+        date: day,
+        currentMonth: false,
+        isToday: false,
+        hasActivity: false,
+        activityLevel: 0
+      });
+    }
+  }
+
+  /**
+   * Chuyển sang tháng trước
+   */
+  previousMonth(): void {
+    if (this.currentMonth === 1) {
+      this.currentMonth = 12;
+      this.currentYear--;
+    } else {
+      this.currentMonth--;
+    }
+    this.generateCalendar();
+  }
+
+  /**
+   * Chuyển sang tháng sau
+   */
+  nextMonth(): void {
+    if (this.currentMonth === 12) {
+      this.currentMonth = 1;
+      this.currentYear++;
+    } else {
+      this.currentMonth++;
+    }
+    this.generateCalendar();
+  }
+
+  /**
+   * Điều hướng đến các action
+   */
+  navigateToAction(action: string): void {
+    console.log('Navigate to:', action);
+    this.messageService.info(`Chức năng ${action} đang được phát triển!`);
   }
 
   /**

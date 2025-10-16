@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -37,7 +37,8 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private authService: AuthService,
-    private message: NzMessageService
+    private message: NzMessageService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -69,16 +70,22 @@ export class LoginComponent implements OnInit {
     // Gọi API đăng nhập
     this.authService.login(this.loginForm.value).subscribe({
       next: (response) => {
-        this.isLoading = false;
-        this.message.success('Đăng nhập thành công!');
-        
-        // Điều hướng đến dashboard sau khi đăng nhập thành công
-        this.router.navigate(['/dashboard']);
+        setTimeout(() => {
+          this.isLoading = false;
+          this.cdr.detectChanges();
+          this.message.success('Đăng nhập thành công!');
+          
+          // Điều hướng đến dashboard sau khi đăng nhập thành công
+          this.router.navigate(['/app/dashboard']);
+        }, 0);
       },
       error: (error) => {
-        this.isLoading = false;
-        this.message.error(error.error?.message || 'Đăng nhập thất bại. Vui lòng thử lại!');
-        console.error('Login error:', error);
+        setTimeout(() => {
+          this.isLoading = false;
+          this.cdr.detectChanges();
+          this.message.error(error.error?.message || 'Đăng nhập thất bại. Vui lòng thử lại!');
+          console.error('Login error:', error);
+        }, 0);
       }
     });
   }

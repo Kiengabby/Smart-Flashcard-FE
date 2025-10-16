@@ -1,3 +1,6 @@
+/* Import onboarding styles FIRST - before ANY other CSS */
+@import './app/services/onboarding.service.css';
+
 /* You can add global styles to this file, and also import other style files */
 
 html, body { height: 100%; }
