@@ -380,7 +380,19 @@
       font-size: 18px;
       font-weight: 600;
       color: #262626;
+      margin-bottom: 8px;
+    }
+
+    .deck-description {
+      font-size: 14px;
+      color: #8c8c8c;
       margin-bottom: 12px;
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .deck-stats {

@@ -1,0 +1,112 @@
+<div class="study-mode-container">
+  <!-- Header -->
+  <div class="study-mode-header">
+    <button nz-button nzType="text" (click)="goBack()" class="back-btn">
+      <span nz-icon nzType="arrow-left" nzTheme="outline"></span>
+      Quay lại
+    </button>
+    <h1 class="page-title">Chọn Chế độ Học</h1>
+    <p class="page-subtitle">
+      Chọn phương pháp học phù hợp nhất với bạn. Theo dõi tiến độ và thành thạo từ vựng theo tốc độ của riêng bạn.
+    </p>
+  </div>
+
+  <!-- Stats Section -->
+  <nz-card class="stats-card" [nzBordered]="false">
+    <div class="stats-title">Tiến độ của bạn</div>
+    <nz-row [nzGutter]="24">
+      <nz-col [nzXs]="24" [nzSm]="8">
+        <nz-statistic 
+          [nzValue]="stats.totalWords" 
+          nzTitle="Tổng từ vựng"
+          [nzValueStyle]="{ color: '#3f8600', fontSize: '32px', fontWeight: '600' }">
+        </nz-statistic>
+      </nz-col>
+      <nz-col [nzXs]="24" [nzSm]="8">
+        <nz-statistic 
+          [nzValue]="stats.mastered" 
+          nzTitle="Đã thành thạo"
+          [nzValueStyle]="{ color: '#1890ff', fontSize: '32px', fontWeight: '600' }">
+        </nz-statistic>
+      </nz-col>
+      <nz-col [nzXs]="24" [nzSm]="8">
+        <nz-statistic 
+          [nzValue]="stats.needReview" 
+          nzTitle="Đến hạn ôn tập"
+          [nzValueStyle]="{ color: '#fa8c16', fontSize: '32px', fontWeight: '600' }">
+        </nz-statistic>
+      </nz-col>
+    </nz-row>
+  </nz-card>
+
+  <!-- Progress Info -->
+  <div class="progress-section">
+    <h3 class="section-title">
+      <span nz-icon nzType="line-chart" nzTheme="outline"></span>
+      Tiến độ Thành thạo Từ vựng
+    </h3>
+    <div class="progress-detail">
+      <div class="progress-item">
+        <div class="progress-label">Đã biết</div>
+        <div class="progress-value">{{ stats.mastered }}</div>
+      </div>
+      <div class="progress-item">
+        <div class="progress-label">Dễ</div>
+        <div class="progress-value">0</div>
+      </div>
+      <div class="progress-item">
+        <div class="progress-label">Trung bình</div>
+        <div class="progress-value">{{ cards.length - stats.mastered > 0 ? cards.length - stats.mastered : 0 }}</div>
+      </div>
+      <div class="progress-item">
+        <div class="progress-label">Khó</div>
+        <div class="progress-value">0</div>
+      </div>
+      <div class="progress-item highlight">
+        <div class="progress-label">Chưa bắt đầu</div>
+        <div class="progress-value">{{ stats.totalWords > stats.mastered ? stats.totalWords - stats.mastered : 0 }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Study Modes -->
+  <div class="study-modes-section">
+    <h3 class="section-title">
+      <span nz-icon nzType="book" nzTheme="outline"></span>
+      Chế độ Học
+    </h3>
+    
+    <nz-row [nzGutter]="[16, 16]">
+      <nz-col 
+        *ngFor="let mode of studyModes" 
+        [nzXs]="24" 
+        [nzSm]="12" 
+        [nzLg]="12">
+        <div 
+          class="mode-card" 
+          [style.borderLeftColor]="mode.color"
+          (click)="selectMode(mode)">
+          <div class="mode-icon" [style.backgroundColor]="mode.color">
+            <span nz-icon [nzType]="mode.icon" nzTheme="outline"></span>
+          </div>
+          <div class="mode-content">
+            <h4 class="mode-name">{{ mode.name }}</h4>
+            <p class="mode-description">{{ mode.description }}</p>
+          </div>
+          <div class="mode-arrow">
+            <span nz-icon nzType="arrow-right" nzTheme="outline"></span>
+          </div>
+        </div>
+      </nz-col>
+    </nz-row>
+  </div>
+
+  <!-- Show Word List Link -->
+  <div class="bottom-action">
+    <button nz-button nzType="link" nzSize="large" (click)="goBack()">
+      <span nz-icon nzType="unordered-list" nzTheme="outline"></span>
+      Hiện danh sách Từ vựng
+    </button>
+  </div>
+</div>
+

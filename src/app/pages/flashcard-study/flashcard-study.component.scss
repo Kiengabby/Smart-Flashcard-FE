@@ -1,0 +1,329 @@
+.flashcard-study-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+// Header
+.study-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+
+  .back-btn,
+  .restart-btn {
+    font-size: 20px;
+    color: #8c8c8c;
+    
+    &:hover {
+      color: #262626;
+    }
+  }
+
+  .progress-info {
+    .card-count {
+      font-size: 18px;
+      font-weight: 600;
+      color: #262626;
+    }
+  }
+}
+
+// Progress Bar
+.progress-bar-container {
+  margin-bottom: 32px;
+
+  ::ng-deep .ant-progress-bg {
+    border-radius: 4px;
+  }
+}
+
+// Loading
+.loading-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+
+  .loading-spinner {
+    font-size: 48px;
+    color: #1890ff;
+    
+    span {
+      animation: spin 1s linear infinite;
+    }
+  }
+
+  p {
+    font-size: 16px;
+    color: #8c8c8c;
+  }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+// Flashcard
+.flashcard-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.flashcard {
+  width: 100%;
+  max-width: 600px;
+  height: 400px;
+  perspective: 1000px;
+  cursor: pointer;
+
+  &.flipped .flashcard-inner {
+    transform: rotateY(180deg);
+  }
+}
+
+.flashcard-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.flashcard-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  padding: 32px;
+  background: #fff;
+
+  .face-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #8c8c8c;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 24px;
+  }
+
+  .face-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .card-text {
+      font-size: 28px;
+      font-weight: 500;
+      color: #262626;
+      text-align: center;
+      line-height: 1.6;
+      margin: 0;
+    }
+  }
+
+  .face-hint {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #8c8c8c;
+    margin-top: 16px;
+
+    span[nz-icon] {
+      font-size: 16px;
+    }
+  }
+}
+
+.flashcard-front {
+  border: 3px solid #1890ff;
+
+  .face-label {
+    color: #1890ff;
+  }
+}
+
+.flashcard-back {
+  border: 3px solid #52c41a;
+  transform: rotateY(180deg);
+
+  .face-label {
+    color: #52c41a;
+  }
+}
+
+.flip-hint {
+  margin-top: 24px;
+  text-align: center;
+  color: #8c8c8c;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  span[nz-icon] {
+    font-size: 16px;
+    color: #1890ff;
+  }
+}
+
+// Controls
+.study-controls {
+  margin-top: auto;
+}
+
+.knowledge-rating {
+  margin-bottom: 24px;
+
+  .rating-label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #262626;
+    text-align: center;
+    margin-bottom: 16px;
+  }
+
+  .rating-buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+
+    button {
+      flex: 1;
+      max-width: 200px;
+      height: 56px;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+
+      span[nz-icon] {
+        font-size: 20px;
+      }
+
+      &.btn-unknown {
+        border-color: #ff4d4f;
+        color: #ff4d4f;
+
+        &:hover {
+          background: #fff1f0;
+          border-color: #ff4d4f;
+          color: #ff4d4f;
+        }
+      }
+
+      &.btn-known {
+        background: #52c41a;
+        border-color: #52c41a;
+
+        &:hover {
+          background: #73d13d;
+          border-color: #73d13d;
+        }
+      }
+    }
+  }
+}
+
+.navigation-controls {
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+
+  button {
+    flex: 1;
+    height: 48px;
+    font-size: 15px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+  }
+}
+
+// Empty State
+.empty-state {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  text-align: center;
+
+  span[nz-icon] {
+    font-size: 64px;
+    color: #d9d9d9;
+  }
+
+  h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #262626;
+    margin: 0;
+  }
+
+  p {
+    font-size: 14px;
+    color: #8c8c8c;
+    margin: 0 0 24px 0;
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .flashcard-study-container {
+    padding: 16px;
+  }
+
+  .flashcard {
+    height: 350px;
+  }
+
+  .flashcard-face {
+    padding: 24px;
+
+    .face-content .card-text {
+      font-size: 22px;
+    }
+  }
+
+  .knowledge-rating {
+    .rating-buttons {
+      flex-direction: column;
+
+      button {
+        max-width: 100%;
+      }
+    }
+  }
+}
+

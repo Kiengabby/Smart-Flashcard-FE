@@ -1,0 +1,161 @@
+<div class="deck-detail-container">
+  <!-- Header -->
+  <div class="deck-header">
+    <button nz-button nzType="text" (click)="goBack()" class="back-btn">
+      <span nz-icon nzType="arrow-left" nzTheme="outline"></span>
+      Quay lại
+    </button>
+  </div>
+
+  <!-- Deck Info Card -->
+  <nz-card 
+    *ngIf="!isLoadingDeck && deck" 
+    class="deck-info-card"
+    [nzBordered]="false">
+    <div class="deck-info">
+      <div class="deck-main-info">
+        <h1 class="deck-name">{{ deck.name }}</h1>
+        <p class="deck-description">{{ deck.description }}</p>
+        <div class="deck-stats">
+          <div class="stat-item">
+            <span nz-icon nzType="credit-card" nzTheme="outline"></span>
+            <span class="stat-value">{{ deck.cardCount || 0 }}</span>
+            <span class="stat-label">thẻ</span>
+          </div>
+        </div>
+      </div>
+      <div class="deck-actions">
+        <button 
+          nz-button 
+          nzType="primary" 
+          nzSize="large"
+          (click)="startLearning()"
+          [disabled]="!cards.length">
+          <span nz-icon nzType="rocket" nzTheme="outline"></span>
+          Bắt đầu Chinh phục
+        </button>
+      </div>
+    </div>
+  </nz-card>
+
+  <!-- Loading state cho deck info -->
+  <nz-card *ngIf="isLoadingDeck" [nzBordered]="false">
+    <div style="text-align: center; padding: 40px;">
+      <nz-spin nzSimple [nzSize]="'large'"></nz-spin>
+    </div>
+  </nz-card>
+
+  <nz-divider></nz-divider>
+
+  <!-- Cards Section -->
+  <div class="cards-section">
+    <div class="section-header">
+      <div class="section-title">
+        <h2>Danh sách Flashcard</h2>
+        <span class="card-count">({{ cards.length }} thẻ)</span>
+      </div>
+      <button 
+        nz-button 
+        nzType="primary" 
+        (click)="openAddCardModal()">
+        <span nz-icon nzType="plus" nzTheme="outline"></span>
+        Thêm thẻ mới
+      </button>
+    </div>
+
+    <!-- Loading state -->
+    <div *ngIf="isLoadingCards" class="loading-container">
+      <nz-spin nzSimple [nzSize]="'large'"></nz-spin>
+      <p>Đang tải danh sách thẻ...</p>
+    </div>
+
+    <!-- Empty state -->
+    <nz-empty 
+      *ngIf="!isLoadingCards && !cards.length"
+      nzNotFoundImage="simple"
+      class="empty-state">
+      <div nz-empty-footer class="empty-message">
+        <h3>✨ Bộ thẻ còn trống</h3>
+        <p>Hãy thêm ít nhất 5 thẻ để bắt đầu chinh phục!</p>
+        <p class="tip">💡 Mẹo: Chỉ cần nhập nội dung, hệ thống sẽ giúp bạn tối ưu hóa việc học!</p>
+        <button 
+          nz-button 
+          nzType="primary" 
+          nzSize="large"
+          (click)="openAddCardModal()"
+          style="margin-top: 16px;">
+          <span nz-icon nzType="plus" nzTheme="outline"></span>
+          Thêm thẻ đầu tiên
+        </button>
+      </div>
+    </nz-empty>
+
+    <!-- Cards List -->
+    <div *ngIf="!isLoadingCards && cards.length" class="cards-list">
+      <nz-card 
+        *ngFor="let card of cards; let i = index"
+        class="card-item"
+        [nzBordered]="true">
+        <div class="card-content">
+          <div class="card-number">#{{ i + 1 }}</div>
+          <div class="card-texts">
+            <div class="card-side front">
+              <label>Mặt trước:</label>
+              <p>{{ card.frontText }}</p>
+            </div>
+            <div class="card-side back">
+              <label>Mặt sau:</label>
+              <p>{{ card.backText }}</p>
+            </div>
+          </div>
+          <div class="card-actions">
+            <button 
+              nz-button 
+              nzType="default" 
+              nzSize="small"
+              (click)="openEditCardModal(card)"
+              nz-tooltip="Chỉnh sửa">
+              <span nz-icon nzType="edit" nzTheme="outline"></span>
+            </button>
+            <button 
+              nz-button 
+              nzType="default" 
+              nzDanger
+              nzSize="small"
+              nz-popconfirm
+              nzPopconfirmTitle="Bạn có chắc muốn xóa thẻ này?"
+              nzPopconfirmPlacement="left"
+              (nzOnConfirm)="deleteCard(card)"
+              nz-tooltip="Xóa">
+              <span nz-icon nzType="delete" nzTheme="outline"></span>
+            </button>
+          </div>
+        </div>
+      </nz-card>
+    </div>
+
+    <!-- Progress hint khi có 1-4 thẻ -->
+    <div *ngIf="!isLoadingCards && cards.length > 0 && cards.length < 5" class="progress-hint">
+      <div class="hint-card">
+        <span nz-icon nzType="info-circle" nzTheme="outline" class="hint-icon"></span>
+        <div class="hint-content">
+          <h4>🎯 Tiến độ: {{ cards.length }}/5 thẻ</h4>
+          <p>Thêm {{ 5 - cards.length }} thẻ nữa là bạn có thể bắt đầu chinh phục rồi! 🚀</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ready to conquer khi có đủ 5+ thẻ -->
+    <div *ngIf="!isLoadingCards && cards.length >= 5" class="ready-hint">
+      <div class="hint-card success">
+        <span nz-icon nzType="check-circle" nzTheme="outline" class="hint-icon"></span>
+        <div class="hint-content">
+          <h4>✅ Bộ thẻ đã sẵn sàng!</h4>
+          <p>Bạn đã có {{ cards.length }} thẻ. Đã đến lúc chinh phục chúng!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

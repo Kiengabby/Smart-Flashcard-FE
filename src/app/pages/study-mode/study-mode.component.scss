@@ -1,0 +1,270 @@
+.study-mode-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+// Header
+.study-mode-header {
+  margin-bottom: 32px;
+
+  .back-btn {
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    
+    &:hover {
+      color: #1890ff;
+    }
+  }
+
+  .page-title {
+    font-size: 32px;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+    color: #262626;
+  }
+
+  .page-subtitle {
+    font-size: 16px;
+    color: #8c8c8c;
+    margin: 0;
+    max-width: 600px;
+  }
+}
+
+// Stats Card
+.stats-card {
+  margin-bottom: 32px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+
+  ::ng-deep .ant-card-body {
+    padding: 24px;
+  }
+
+  .stats-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #262626;
+  }
+
+  ::ng-deep .ant-statistic-title {
+    font-size: 14px;
+    color: #8c8c8c;
+    margin-bottom: 8px;
+  }
+}
+
+// Progress Section
+.progress-section {
+  background: #fff;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  margin-bottom: 32px;
+
+  .section-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 20px 0;
+    color: #262626;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    span[nz-icon] {
+      font-size: 20px;
+    }
+  }
+
+  .progress-detail {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+
+    .progress-item {
+      flex: 1;
+      min-width: 100px;
+      padding: 16px;
+      background: #f5f5f5;
+      border-radius: 8px;
+      text-align: center;
+
+      &.highlight {
+        background: #e6f7ff;
+        border: 1px solid #91d5ff;
+      }
+
+      .progress-label {
+        font-size: 13px;
+        color: #8c8c8c;
+        margin-bottom: 8px;
+      }
+
+      .progress-value {
+        font-size: 24px;
+        font-weight: 600;
+        color: #262626;
+      }
+    }
+  }
+}
+
+// Study Modes Section
+.study-modes-section {
+  margin-bottom: 32px;
+
+  .section-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 24px 0;
+    color: #262626;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    span[nz-icon] {
+      font-size: 22px;
+      color: #1890ff;
+    }
+  }
+
+  .mode-card {
+    background: #fff;
+    padding: 24px;
+    border-radius: 12px;
+    border: 2px solid #f0f0f0;
+    border-left-width: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    height: 100%;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      border-color: currentColor;
+    }
+
+    .mode-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+
+      span[nz-icon] {
+        font-size: 28px;
+        color: #fff;
+      }
+    }
+
+    .mode-content {
+      flex: 1;
+
+      .mode-name {
+        font-size: 18px;
+        font-weight: 600;
+        margin: 0 0 8px 0;
+        color: #262626;
+      }
+
+      .mode-description {
+        font-size: 14px;
+        color: #8c8c8c;
+        margin: 0;
+        line-height: 1.6;
+      }
+    }
+
+    .mode-arrow {
+      flex-shrink: 0;
+      font-size: 20px;
+      color: #d9d9d9;
+      transition: all 0.3s ease;
+    }
+
+    &:hover .mode-arrow {
+      color: #1890ff;
+      transform: translateX(4px);
+    }
+  }
+}
+
+// Bottom Action
+.bottom-action {
+  text-align: center;
+  padding: 24px 0;
+
+  button {
+    font-size: 16px;
+    color: #1890ff;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    &:hover {
+      color: #40a9ff;
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .study-mode-container {
+    padding: 16px;
+  }
+
+  .study-mode-header {
+    .page-title {
+      font-size: 24px;
+    }
+
+    .page-subtitle {
+      font-size: 14px;
+    }
+  }
+
+  .progress-detail {
+    .progress-item {
+      min-width: 80px;
+      padding: 12px;
+
+      .progress-value {
+        font-size: 20px;
+      }
+    }
+  }
+
+  .mode-card {
+    padding: 16px;
+
+    .mode-icon {
+      width: 48px;
+      height: 48px;
+
+      span[nz-icon] {
+        font-size: 24px;
+      }
+    }
+
+    .mode-content {
+      .mode-name {
+        font-size: 16px;
+      }
+
+      .mode-description {
+        font-size: 13px;
+      }
+    }
+  }
+}
+

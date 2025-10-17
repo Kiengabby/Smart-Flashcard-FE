@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 // NG-ZORRO Modules
 import { NzGridModule } from 'ng-zorro-antd/grid';
@@ -95,7 +96,8 @@ export class DashboardComponent implements OnInit {
     private tokenService: TokenService,
     private onboardingService: OnboardingService,
     private modalService: NzModalService,
-    private messageService: NzMessageService
+    private messageService: NzMessageService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -231,76 +233,19 @@ export class DashboardComponent implements OnInit {
   loadDecks(): void {
     this.isLoading = true;
     
-    // Tạm thời sử dụng mock data để test giao diện
-    setTimeout(() => {
-      this.decks = [
-        {
-          id: '1',
-          name: 'Từ vựng Tiếng Anh cơ bản',
-          description: 'Bộ từ vựng tiếng Anh dành cho người mới bắt đầu học. Bao gồm các từ thông dụng trong giao tiếp hàng ngày, giúp bạn tự tin giao tiếp.',
-          cardCount: 150,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        },
-        {
-          id: '2', 
-          name: 'Lịch sử Việt Nam',
-          description: 'Những sự kiện quan trọng trong lịch sử Việt Nam từ thời cổ đại đến hiện đại. Tìm hiểu về các triều đại và những bước ngoặt lịch sử.',
-          cardCount: 89,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        },
-        {
-          id: '3',
-          name: 'Toán học lớp 12',
-          description: 'Công thức và định lý toán học quan trọng cho kỳ thi THPT Quốc gia. Bao gồm đại số, hình học và giải tích.',
-          cardCount: 234,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        },
-        {
-          id: '4',
-          name: 'Từ vựng TOEIC',
-          description: 'Bộ từ vựng TOEIC phần Business và Academic để đạt điểm cao. Được biên soạn theo chuẩn quốc tế.',
-          cardCount: 456,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        },
-        {
-          id: '5',
-          name: 'Khoa học tự nhiên',
-          description: 'Kiến thức cơ bản về vật lý, hóa học, sinh học dành cho học sinh THCS. Dễ hiểu và thực tế.',
-          cardCount: 178,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        },
-        {
-          id: '6',
-          name: 'Ngữ pháp tiếng Anh',
-          description: 'Các cấu trúc ngữ pháp tiếng Anh từ cơ bản đến nâng cao với ví dụ minh họa cụ thể.',
-          cardCount: 312,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        }
-      ];
-      this.isLoading = false;
-      this.updateUserStats(); // Cập nhật thống kê sau khi load
-    }, 1000); // Giả lập thời gian loading 1 giây
-
-    // Code gốc để gọi API (sẽ dùng khi có backend)
-    /*
     this.deckService.getDecks().subscribe({
       next: (data: DeckDTO[]) => {
         this.decks = data;
         this.isLoading = false;
+        this.updateUserStats(); // Cập nhật thống kê sau khi load
       },
       error: (error) => {
         console.error('Lỗi khi tải danh sách bộ thẻ:', error);
         this.messageService.error('Không thể tải danh sách bộ thẻ. Vui lòng thử lại!');
         this.isLoading = false;
+        // Có thể giữ một số mock data cho demo nếu API fail
       }
     });
-    */
   }
 
   /**
@@ -326,18 +271,23 @@ export class DashboardComponent implements OnInit {
    * Bắt đầu học một bộ thẻ
    */
   startStudying(deck: DeckDTO): void {
-    this.messageService.info(`Bắt đầu học bộ thẻ: ${deck.name}`);
-    // TODO: Navigate to study page
-    // this.router.navigate(['/study', deck.id]);
+    // Navigate đến deck detail để xem và quản lý thẻ
+    this.router.navigate(['/app/deck', deck.id]);
   }
 
   /**
    * Mở cài đặt cho bộ thẻ
    */
   openDeckSettings(deck: DeckDTO): void {
-    this.messageService.info(`Mở cài đặt cho bộ thẻ: ${deck.name}`);
-    // TODO: Navigate to deck settings
-    // this.router.navigate(['/deck', deck.id, 'settings']);
+    // Navigate đến deck detail (trong tương lai sẽ có tab settings)
+    this.router.navigate(['/app/deck', deck.id]);
+  }
+  
+  /**
+   * Xem chi tiết deck
+   */
+  viewDeckDetail(deck: DeckDTO): void {
+    this.router.navigate(['/app/deck', deck.id]);
   }
 
   /**

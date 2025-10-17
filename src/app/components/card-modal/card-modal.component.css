@@ -1,0 +1,23 @@
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #f0f0f0;
+}
+
+nz-form-item {
+  margin-bottom: 16px;
+}
+
+textarea {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+nz-form-label {
+  font-weight: 500;
+}
+
+

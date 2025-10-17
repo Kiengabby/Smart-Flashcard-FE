@@ -90,56 +90,84 @@
                 nzType="primary" 
                 nzSize="small" 
                 class="create-deck-btn"
-                id="create-deck-btn">
+                id="create-deck-btn"
+                (click)="openCreateDeckModal()">
                 <span nz-icon nzType="plus"></span>
                 Tạo bộ thẻ mới
               </button>
             </div>
           </ng-template>
 
-          <div class="decks-grid" id="deck-list">
-            <nz-row [nzGutter]="[12, 12]">
-              <nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
-                <div class="deck-item" id="conquest-flow">
-                  <div class="deck-header">
-                    <div class="deck-badge">IELTS</div>
-                    <span nz-icon nzType="more" class="deck-menu"></span>
-                  </div>
-                  <div class="deck-title">Environment Topics</div>
-                  <div class="deck-stats">
-                    <span class="deck-count">
-                      <span nz-icon nzType="file-text"></span>
-                      25 thẻ
-                    </span>
-                    <span class="deck-progress">
-                      <span nz-icon nzType="check-circle" nzTheme="fill"></span>
-                      Đã chinh phục
-                    </span>
-                  </div>
-                  <button nz-button nzBlock nzType="default" class="deck-action">
-                    Ôn tập lại
-                  </button>
-                </div>
-              </nz-col>
+          <!-- Loading State -->
+          <div *ngIf="isLoading" style="text-align: center; padding: 40px;">
+            <nz-spin nzSimple [nzSize]="'large'"></nz-spin>
+            <p style="margin-top: 16px; color: #8c8c8c;">Đang tải danh sách bộ thẻ...</p>
+          </div>
 
-              <nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
-                <div class="deck-item new-deck">
+          <!-- Empty State -->
+          <nz-empty 
+            *ngIf="!isLoading && !decks.length"
+            nzNotFoundImage="simple"
+            style="padding: 40px 20px;">
+            <div nz-empty-footer style="text-align: center;">
+              <h3 style="font-size: 18px; margin-bottom: 12px;">📚 Chưa có bộ thẻ nào</h3>
+              <p style="color: #8c8c8c; margin-bottom: 20px;">Tạo bộ thẻ đầu tiên để bắt đầu hành trình chinh phục từ vựng!</p>
+              <button 
+                nz-button 
+                nzType="primary" 
+                nzSize="large"
+                (click)="openCreateDeckModal()">
+                  <span nz-icon nzType="plus"></span>
+                  Tạo bộ thẻ đầu tiên
+                </button>
+            </div>
+          </nz-empty>
+
+          <!-- Deck List -->
+          <div class="decks-grid" id="deck-list" *ngIf="!isLoading && decks.length">
+            <nz-row [nzGutter]="[12, 12]">
+              <nz-col 
+                *ngFor="let deck of decks" 
+                [nzXs]="24" 
+                [nzSm]="12" 
+                [nzMd]="8">
+                <div 
+                  class="deck-item" 
+                  [class.conquered]="calculateProgress(deck) >= 100"
+                  (click)="viewDeckDetail(deck)"
+                  style="cursor: pointer;">
                   <div class="deck-header">
-                    <div class="deck-badge new">Mới</div>
+                    <div 
+                      class="deck-badge" 
+                      [class.conquered]="calculateProgress(deck) >= 100">
+                      {{ calculateProgress(deck) >= 100 ? '✅ Hoàn thành' : '🚀 Mới' }}
+                    </div>
+                    <span nz-icon nzType="more" class="deck-menu" (click)="$event.stopPropagation(); openDeckSettings(deck)"></span>
                   </div>
-                  <div class="deck-title">Business English</div>
+                  <div class="deck-title">{{ deck.name }}</div>
+                  <div class="deck-description">{{ deck.description }}</div>
                   <div class="deck-stats">
                     <span class="deck-count">
                       <span nz-icon nzType="file-text"></span>
-                      18 thẻ
+                      {{ deck.cardCount || 0 }} thẻ
                     </span>
-                    <span class="deck-progress new">
-                      <span nz-icon nzType="rocket" nzTheme="fill"></span>
-                      Sẵn sàng học
+                    <span 
+                      class="deck-progress" 
+                      [class.conquered]="calculateProgress(deck) >= 100">
+                      <span 
+                        nz-icon 
+                        [nzType]="calculateProgress(deck) >= 100 ? 'check-circle' : 'rocket'" 
+                        nzTheme="fill"></span>
+                      {{ calculateProgress(deck) >= 100 ? 'Đã chinh phục' : 'Sẵn sàng học' }}
                     </span>
                   </div>
-                  <button nz-button nzBlock nzType="primary" class="deck-action">
-                    Bắt đầu Chinh phục
+                  <button 
+                    nz-button 
+                    nzBlock 
+                    [nzType]="calculateProgress(deck) >= 100 ? 'default' : 'primary'" 
+                    class="deck-action"
+                    (click)="$event.stopPropagation(); startStudying(deck)">
+                    {{ calculateProgress(deck) >= 100 ? 'Ôn tập lại' : 'Bắt đầu Chinh phục' }}
                   </button>
                 </div>
               </nz-col>

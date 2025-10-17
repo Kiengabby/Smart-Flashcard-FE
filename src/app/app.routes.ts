@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { GuestLayoutComponent } from './layouts/guest/guest.layout';
 import { AuthLayoutComponent } from './layouts/auth/auth.layout';
 import { UserLayoutComponent } from './layouts/user/user.layout';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -24,9 +25,13 @@ export const routes: Routes = [
   {
     path: 'app',
     component: UserLayoutComponent,
+    canActivate: [authGuard],
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
-      { path: 'dashboard', loadChildren: () => import('./pages/dashboard/dashboard.routes').then(m => m.DASHBOARD_ROUTES) }
+      { path: 'dashboard', loadChildren: () => import('./pages/dashboard/dashboard.routes').then(m => m.DASHBOARD_ROUTES) },
+      { path: 'deck/:id', loadChildren: () => import('./pages/deck-detail/deck-detail.routes').then(m => m.DECK_DETAIL_ROUTES) },
+      { path: 'study-mode/:id', loadChildren: () => import('./pages/study-mode/study-mode.routes').then(m => m.STUDY_MODE_ROUTES) },
+      { path: 'study/:id/flashcard', loadChildren: () => import('./pages/flashcard-study/flashcard-study.routes').then(m => m.FLASHCARD_STUDY_ROUTES) }
     ]
   },
   { path: '**', redirectTo: '' }

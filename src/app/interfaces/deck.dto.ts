@@ -1,5 +1,5 @@
 export interface DeckDTO {
-  id: string;
+  id: number;
   name: string;
   description: string;
   cardCount?: number;

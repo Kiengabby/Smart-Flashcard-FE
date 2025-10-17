@@ -15,7 +15,7 @@ export class DeckService {
    * Lấy danh sách tất cả deck của user
    */
   getDecks(): Observable<DeckDTO[]> {
-    return this.http.get<DeckDTO[]>(this.DECK_API);
+    return this.http.get<DeckDTO[]>(`${this.DECK_API}/`);
   }
 
   /**
@@ -29,7 +29,7 @@ export class DeckService {
    * Tạo deck mới
    */
   createDeck(data: CreateDeckRequest): Observable<DeckDTO> {
-    return this.http.post<DeckDTO>(this.DECK_API, data);
+    return this.http.post<DeckDTO>(`${this.DECK_API}/`, data);
   }
 
   /**
