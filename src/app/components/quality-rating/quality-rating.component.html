@@ -1,0 +1,40 @@
+<div class="quality-rating-container">
+  <div class="rating-header">
+    <h3 class="rating-title">
+      <span nz-icon nzType="star" nzTheme="fill"></span>
+      Đánh giá độ khó
+    </h3>
+    <p class="rating-subtitle">Chọn mức độ phù hợp với cảm nhận của bạn</p>
+  </div>
+
+  <div class="rating-grid">
+    @for (option of ratingOptions; track option.quality) {
+      <div 
+        class="rating-option"
+        [class.disabled]="disabled"
+        [style.background-color]="option.bgColor"
+        [style.border-color]="option.color"
+        (click)="onRatingSelect(option.quality)">
+        
+        <div class="rating-icon" [style.color]="option.color">
+          <span nz-icon [nzType]="option.icon" nzTheme="fill"></span>
+        </div>
+        
+        <div class="rating-content">
+          <div class="rating-label">{{ option.label }}</div>
+          <div class="rating-quality">{{ option.quality }}/5</div>
+          @if (showDescription) {
+            <div class="rating-description">{{ option.description }}</div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="rating-footer">
+    <div class="rating-hint">
+      <span nz-icon nzType="bulb" nzTheme="fill"></span>
+      Đánh giá chính xác giúp hệ thống lên lịch ôn tập tối ưu cho bạn
+    </div>
+  </div>
+</div>

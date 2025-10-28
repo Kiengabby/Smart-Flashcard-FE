@@ -29,6 +29,7 @@ export const routes: Routes = [
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
       { path: 'dashboard', loadChildren: () => import('./pages/dashboard/dashboard.routes').then(m => m.DASHBOARD_ROUTES) },
+      { path: 'daily-review', loadChildren: () => import('./pages/daily-review/daily-review.routes').then(m => m.dailyReviewRoutes) },
       { path: 'deck/:id', loadChildren: () => import('./pages/deck-detail/deck-detail.routes').then(m => m.DECK_DETAIL_ROUTES) },
       { path: 'study-mode/:id', loadChildren: () => import('./pages/study-mode/study-mode.routes').then(m => m.STUDY_MODE_ROUTES) },
       { path: 'study/:id/flashcard', loadChildren: () => import('./pages/flashcard-study/flashcard-study.routes').then(m => m.FLASHCARD_STUDY_ROUTES) }

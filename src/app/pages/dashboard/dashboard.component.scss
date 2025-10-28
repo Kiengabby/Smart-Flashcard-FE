@@ -1,0 +1,1184 @@
+// Dashboard Styles
+.dashboard-container {
+  padding: 32px;
+  background: #f5f7fa;
+  min-height: calc(100vh - 64px);
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+// Welcome Header - New Design
+.welcome-header {
+  margin-bottom: 24px;
+  padding: 24px 32px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.25);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: welcomeSlideIn 0.8s ease-out;
+
+  &.compact {
+    padding: 20px 28px;
+    margin-bottom: 20px;
+  }
+
+  .welcome-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+
+    .floating-shapes {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+
+      .shape {
+        position: absolute;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 50%;
+        animation: float 8s ease-in-out infinite;
+
+        &.shape-1 {
+          width: 60px;
+          height: 60px;
+          top: 15%;
+          right: 15%;
+          animation-delay: 0s;
+        }
+
+        &.shape-2 {
+          width: 40px;
+          height: 40px;
+          top: 60%;
+          right: 25%;
+          animation-delay: 2s;
+        }
+
+        &.shape-3 {
+          width: 80px;
+          height: 80px;
+          top: 30%;
+          left: 80%;
+          animation-delay: 4s;
+        }
+      }
+    }
+  }
+
+  .welcome-content {
+    position: relative;
+    z-index: 2;
+
+    .greeting-section {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+
+      .greeting-icon {
+        width: 48px;
+        height: 48px;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(10px);
+        animation: pulse 3s ease-in-out infinite;
+        flex-shrink: 0;
+
+        span[nz-icon] {
+          font-size: 24px;
+          color: #ffd700;
+        }
+      }
+
+      .welcome-title {
+        margin: 0 0 8px 0;
+        font-size: 26px;
+        font-weight: 700;
+        color: #fff;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        line-height: 1.2;
+
+        .username {
+          background: linear-gradient(135deg, #ffd700 0%, #ffeb3b 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          font-weight: 800;
+        }
+
+        .wave-emoji {
+          display: inline-block;
+          animation: wave 2.5s ease-in-out infinite;
+          transform-origin: 70% 70%;
+          margin-left: 6px;
+        }
+      }
+
+      .welcome-subtitle {
+        margin: 0;
+        font-size: 15px;
+        color: rgba(255, 255, 255, 0.9);
+        line-height: 1.4;
+        font-weight: 400;
+        flex: 1;
+      }
+    }
+  }
+}
+
+// Animations
+@keyframes welcomeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  33% {
+    transform: translateY(-10px) rotate(120deg);
+  }
+  66% {
+    transform: translateY(5px) rotate(240deg);
+  }
+}
+
+@keyframes wave {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(20deg);
+  }
+  75% {
+    transform: rotate(-20deg);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+  }
+}
+
+// Responsive Welcome Header
+@media (max-width: 768px) {
+  .welcome-header {
+    padding: 16px 20px;
+    margin-bottom: 16px;
+    
+    &.compact {
+      padding: 16px 20px;
+    }
+    
+    .welcome-content {
+      .greeting-section {
+        flex-direction: column;
+        text-align: center;
+        gap: 12px;
+        
+        .greeting-icon {
+          width: 40px;
+          height: 40px;
+          
+          span[nz-icon] {
+            font-size: 20px;
+          }
+        }
+        
+        .welcome-title {
+          font-size: 22px;
+          margin-bottom: 6px;
+        }
+        
+        .welcome-subtitle {
+          font-size: 14px;
+          text-align: center;
+        }
+      }
+    }
+  }
+}
+
+// ===========================
+// 📊 QUICK STATS
+// ===========================
+.quick-stats {
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  padding: 24px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    opacity: 0.1;
+    transition: transform 0.3s ease;
+  }
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+
+    &::before {
+      transform: scale(1.2);
+    }
+
+    .stat-icon {
+      transform: scale(1.1) rotate(5deg);
+    }
+  }
+
+  .stat-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    color: #fff;
+    flex-shrink: 0;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .stat-info {
+    flex: 1;
+
+    .stat-value {
+      font-size: 36px;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 8px;
+
+      &.highlight {
+        animation: pulse-scale 2s infinite;
+      }
+    }
+
+    .stat-label {
+      font-size: 14px;
+      color: #8c8c8c;
+      font-weight: 500;
+    }
+  }
+
+  // Variants
+  &.conquered-decks {
+    background: linear-gradient(135deg, #fff5e6 0%, #ffe7ba 100%);
+    
+    &::before {
+      background: #ffa94d;
+    }
+
+    .stat-icon {
+      background: linear-gradient(135deg, #ffa94d 0%, #ff922b 100%);
+    }
+
+    .stat-value {
+      color: #e67700;
+    }
+  }
+
+  &.study-streak {
+    background: linear-gradient(135deg, #fff4e6 0%, #ffe8cc 100%);
+    
+    &::before {
+      background: #ff922b;
+    }
+
+    .stat-icon {
+      background: linear-gradient(135deg, #ff922b 0%, #fd7e14 100%);
+    }
+
+    .stat-value {
+      color: #d9480f;
+    }
+  }
+
+  &.total-words {
+    background: linear-gradient(135deg, #e7f5ff 0%, #d0ebff 100%);
+    
+    &::before {
+      background: #4dabf7;
+    }
+
+    .stat-icon {
+      background: linear-gradient(135deg, #4dabf7 0%, #339af0 100%);
+    }
+
+    .stat-value {
+      color: #1c7ed6;
+    }
+  }
+
+  &.review-today {
+    background: linear-gradient(135deg, #fff0f6 0%, #ffdeeb 100%);
+    
+    &::before {
+      background: #ff6b9d;
+    }
+
+    .stat-icon {
+      background: linear-gradient(135deg, #ff6b9d 0%, #f06595 100%);
+    }
+
+    .stat-value {
+      color: #e64980;
+    }
+  }
+}
+
+@keyframes pulse-scale {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+// ===========================
+// 🎯 ACTION CARDS
+// ===========================
+.action-card {
+  margin-bottom: 16px;
+  border-radius: 16px;
+  border: none;
+  overflow: hidden;
+
+  &.daily-review-card {
+    background: linear-gradient(135deg, #e5f8ff 0%, #b3ecff 100%);
+    border-left: 4px solid #22b8cf;
+
+    ::ng-deep .ant-card-body {
+      padding: 32px;
+    }
+
+    .action-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+
+      .action-header {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        flex: 1;
+
+        .action-icon {
+          font-size: 48px;
+          color: #22b8cf;
+        }
+
+        .action-text {
+          h3 {
+            margin: 0 0 8px 0;
+            font-size: 24px;
+            font-weight: 700;
+            color: #0c8599;
+          }
+
+          p {
+            margin: 0;
+            font-size: 16px;
+            color: #495057;
+
+            strong {
+              color: #0c8599;
+              font-weight: 700;
+            }
+          }
+        }
+      }
+
+      .action-button {
+        flex-shrink: 0;
+        height: 48px;
+        padding: 0 32px;
+        font-size: 16px;
+        font-weight: 600;
+        background: linear-gradient(135deg, #22b8cf 0%, #15aabf 100%);
+        border: none;
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 16px rgba(34, 184, 207, 0.3);
+        }
+      }
+    }
+  }
+}
+
+// ===========================
+// 📦 SECTION CARDS
+// ===========================
+.section-card {
+  border-radius: 16px;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  margin-bottom: 16px;
+
+  ::ng-deep {
+    .ant-card-head {
+      border-bottom: 1px solid #f0f0f0;
+      padding: 20px 24px;
+    }
+
+    .ant-card-body {
+      padding: 24px;
+    }
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #262626;
+
+    span[nz-icon]:first-child {
+      font-size: 20px;
+      color: #667eea;
+    }
+
+    .section-title {
+      flex: 1;
+    }
+
+    .create-deck-btn {
+      margin-left: auto;
+    }
+  }
+}
+
+// ===========================
+// 🗂️ DECKS GRID
+// ===========================
+.decks-grid {
+  .deck-item {
+    padding: 20px;
+    border-radius: 12px;
+    background: #fff;
+    border: 2px solid #f0f0f0;
+    transition: all 0.3s ease;
+    cursor: pointer;
+
+    &:hover {
+      border-color: #667eea;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+      transform: translateY(-2px);
+    }
+
+    &.new-deck {
+      background: linear-gradient(135deg, #f0f5ff 0%, #e6f0ff 100%);
+      border-color: #91d5ff;
+    }
+
+    .deck-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+
+      .deck-badge {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        background: #e6f7ff;
+        color: #1890ff;
+
+        &.new {
+          background: #fff7e6;
+          color: #fa8c16;
+        }
+      }
+
+      .deck-menu {
+        font-size: 18px;
+        color: #8c8c8c;
+        cursor: pointer;
+
+        &:hover {
+          color: #262626;
+        }
+      }
+    }
+
+    .deck-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #262626;
+      margin-bottom: 8px;
+    }
+
+    .deck-description {
+      font-size: 14px;
+      color: #8c8c8c;
+      margin-bottom: 12px;
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .deck-stats {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+      font-size: 13px;
+      color: #8c8c8c;
+
+      .deck-count,
+      .deck-progress {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+
+        span[nz-icon] {
+          font-size: 14px;
+        }
+      }
+
+      .deck-progress {
+        &:not(.new) {
+          color: #52c41a;
+        }
+
+        &.new {
+          color: #fa8c16;
+        }
+      }
+    }
+
+    .deck-action {
+      height: 36px;
+      border-radius: 8px;
+      font-weight: 500;
+    }
+  }
+}
+
+// ===========================
+// 🔥 STREAK CARD
+// ===========================
+.streak-card {
+  .streak-display {
+    text-align: center;
+    padding: 32px 0;
+    margin-bottom: 24px;
+    background: linear-gradient(135deg, #fff4e6 0%, #ffe8cc 100%);
+    border-radius: 12px;
+
+    .streak-number {
+      font-size: 72px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #ff922b 0%, #fd7e14 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .streak-label {
+      font-size: 18px;
+      font-weight: 600;
+      color: #d9480f;
+      margin-bottom: 16px;
+    }
+
+    .streak-message {
+      font-size: 14px;
+      color: #862e00;
+    }
+  }
+}
+
+// ===========================
+// 📅 CALENDAR MINI
+// ===========================
+.calendar-mini {
+  .calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f0f0f0;
+
+    .current-month {
+      font-size: 15px;
+      font-weight: 600;
+      color: #262626;
+    }
+  }
+
+  .calendar-grid {
+    .calendar-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      margin-bottom: 4px;
+
+      .weekday {
+        text-align: center;
+        font-size: 11px;
+        font-weight: 600;
+        color: #8c8c8c;
+        padding: 4px 0;
+      }
+    }
+
+    .calendar-days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+
+      .calendar-day {
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        background: #fafafa;
+        color: #595959;
+
+        &.other-month {
+          color: #d9d9d9;
+          background: transparent;
+        }
+
+        &.today {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: #fff;
+          font-weight: 700;
+          box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        &.has-activity {
+          background: #fff4e6;
+          color: #d9480f;
+          border: 2px solid #ff922b;
+          font-weight: 600;
+
+          &.level-1 { background: #fff9e6; border-color: #ffd666; }
+          &.level-2 { background: #fff4e6; border-color: #ffb366; }
+          &.level-3 { 
+            background: linear-gradient(135deg, #ff922b 0%, #fd7e14 100%);
+            color: #fff;
+            border-color: #ff922b;
+          }
+        }
+
+        &:hover:not(.other-month) {
+          transform: scale(1.1);
+        }
+      }
+    }
+  }
+}
+
+// ===========================
+// ⚔️ CHALLENGES CARD
+// ===========================
+.challenges-card {
+  .challenge-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    background: linear-gradient(135deg, #fff7e6 0%, #ffe8cc 100%);
+    border-radius: 12px;
+    border: 2px solid #ffd666;
+    margin-bottom: 12px;
+
+    .challenge-info {
+      flex: 1;
+
+      .challenge-text {
+        font-size: 14px;
+        color: #262626;
+        margin-bottom: 4px;
+
+        strong {
+          font-weight: 600;
+        }
+      }
+
+      .challenge-topic {
+        font-size: 12px;
+        color: #8c8c8c;
+      }
+    }
+  }
+
+  .challenge-empty {
+    text-align: center;
+    padding: 48px 24px;
+    color: #8c8c8c;
+
+    p {
+      margin: 16px 0 24px 0;
+      font-size: 14px;
+    }
+  }
+}
+
+// ===========================
+// 📱 RESPONSIVE
+// ===========================
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 16px;
+  }
+
+  .welcome-header {
+    padding: 24px;
+
+    .welcome-title {
+      font-size: 24px;
+    }
+
+    .welcome-subtitle {
+      font-size: 14px;
+    }
+  }
+
+  .stat-card {
+    padding: 20px;
+
+    .stat-icon {
+      width: 56px;
+      height: 56px;
+      font-size: 28px;
+    }
+
+    .stat-info .stat-value {
+      font-size: 32px;
+    }
+  }
+
+  .action-card.daily-review-card .action-content {
+    flex-direction: column;
+    text-align: center;
+
+    .action-header {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .action-button {
+      width: 100%;
+    }
+  }
+}
+
+// Challenge Notifications Styles
+.challenge-notifications-card {
+  .section-header {
+    .notification-badge {
+      background: #ff4d4f;
+      color: white;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 2px 8px;
+      border-radius: 10px;
+      margin-left: 8px;
+      min-width: 18px;
+      height: 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
+.challenges-list {
+  .challenge-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid #f0f0f0;
+    margin-bottom: 12px;
+    background: #fff;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      border-color: #d9d9d9;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    }
+    
+    &.new {
+      border-color: #1890ff;
+      background: linear-gradient(135deg, #e6f7ff 0%, #f6ffed 100%);
+      
+      &::before {
+        content: '';
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 8px;
+        height: 8px;
+        background: #ff4d4f;
+        border-radius: 50%;
+      }
+      
+      position: relative;
+    }
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  
+  .challenge-avatar {
+    position: relative;
+    flex-shrink: 0;
+    
+    .challenge-type-icon {
+      position: absolute;
+      bottom: -2px;
+      right: -2px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      border: 2px solid #fff;
+      
+      &.speed {
+        background: #722ed1;
+        color: white;
+      }
+      
+      &.accuracy {
+        background: #52c41a;
+        color: white;
+      }
+      
+      &.streak {
+        background: #fa8c16;
+        color: white;
+      }
+      
+      &.vocabulary {
+        background: #1890ff;
+        color: white;
+      }
+    }
+  }
+  
+  .challenge-content {
+    flex: 1;
+    min-width: 0;
+    
+    .challenge-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4px;
+      
+      .challenge-sender {
+        font-weight: 600;
+        color: #262626;
+        font-size: 14px;
+      }
+      
+      .challenge-time {
+        font-size: 12px;
+        color: #8c8c8c;
+      }
+    }
+    
+    .challenge-message {
+      font-size: 13px;
+      color: #595959;
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+    
+    .challenge-details {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      
+      .challenge-deck,
+      .challenge-target {
+        font-size: 12px;
+        color: #8c8c8c;
+        background: #f5f5f5;
+        padding: 2px 8px;
+        border-radius: 6px;
+      }
+    }
+  }
+  
+  .challenge-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex-shrink: 0;
+    
+    button {
+      min-width: 80px;
+      height: 32px;
+      font-size: 12px;
+      border-radius: 6px;
+    }
+  }
+}
+
+// Compact Streak Card Styles
+.streak-card.compact {
+  .streak-display {
+    text-align: center;
+    margin-bottom: 24px;
+    
+    .streak-number {
+      font-size: 48px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #fa8c16 0%, #ff7a45 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 6px;
+      text-shadow: 0 3px 6px rgba(250, 140, 22, 0.3);
+      line-height: 1;
+    }
+    
+    .streak-label {
+      font-size: 15px;
+      color: #8c8c8c;
+      margin-bottom: 10px;
+      font-weight: 500;
+    }
+    
+    .streak-message {
+      font-size: 14px;
+      color: #595959;
+      font-weight: 500;
+    }
+  }
+  
+  .calendar-mini.compact {
+    .calendar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      padding: 0 8px;
+      
+      button {
+        padding: 6px;
+        height: 32px;
+        width: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        
+        &:hover {
+          background: #f0f0f0;
+        }
+        
+        span[nz-icon] {
+          font-size: 14px;
+        }
+      }
+      
+      .current-month {
+        font-size: 16px;
+        font-weight: 600;
+        color: #262626;
+      }
+    }
+    
+    .calendar-grid {
+      .calendar-weekdays {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 4px;
+        margin-bottom: 8px;
+        
+        .weekday {
+          text-align: center;
+          font-size: 13px;
+          color: #8c8c8c;
+          font-weight: 600;
+          padding: 8px 4px;
+        }
+      }
+      
+      .calendar-days {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 4px;
+        
+        .calendar-day {
+          aspect-ratio: 1;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          font-size: 14px;
+          border-radius: 8px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          position: relative;
+          min-height: 40px;
+          background: #fafafa;
+          border: 1px solid transparent;
+          
+          .day-number {
+            color: #262626;
+            font-weight: 600;
+            margin-bottom: 2px;
+            font-size: 14px;
+          }
+          
+          .fire-icon {
+            font-size: 12px;
+            color: #fa8c16;
+            position: absolute;
+            bottom: 4px;
+            animation: flame 2s ease-in-out infinite alternate;
+            filter: drop-shadow(0 1px 2px rgba(250, 140, 22, 0.3));
+          }
+          
+          &.other-month {
+            background: #f9f9f9;
+            
+            .day-number {
+              color: #d9d9d9;
+              font-weight: 400;
+            }
+            
+            .fire-icon {
+              color: #f0f0f0;
+              animation: none;
+              filter: none;
+            }
+          }
+          
+          &.today {
+            background: linear-gradient(135deg, #1890ff 0%, #722ed1 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(24, 144, 255, 0.4);
+            transform: scale(1.08);
+            border: 2px solid #ffffff;
+            
+            .day-number {
+              color: white;
+              font-weight: 700;
+              font-size: 15px;
+            }
+            
+            .fire-icon {
+              color: #fff;
+              text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+              filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.3));
+            }
+          }
+          
+          &.has-activity {
+            background: linear-gradient(135deg, #fff2e8 0%, #fff7e6 100%);
+            border: 2px solid #ffd591;
+            box-shadow: 0 2px 8px rgba(250, 140, 22, 0.15);
+            
+            &:hover {
+              background: linear-gradient(135deg, #ffe7ba 0%, #ffd591 100%);
+              transform: translateY(-2px);
+              box-shadow: 0 4px 12px rgba(250, 140, 22, 0.25);
+            }
+            
+            .day-number {
+              color: #d48806;
+              font-weight: 700;
+            }
+          }
+          
+          &:hover:not(.has-activity):not(.today) {
+            background: #f0f0f0;
+            transform: translateY(-1px);
+            border-color: #d9d9d9;
+          }
+        }
+      }
+    }
+  }
+}
+
+@keyframes flame {
+  0% {
+    transform: scale(1) rotate(-2deg);
+    opacity: 0.8;
+    filter: hue-rotate(0deg) brightness(1);
+  }
+  50% {
+    transform: scale(1.2) rotate(0deg);
+    opacity: 1;
+    filter: hue-rotate(10deg) brightness(1.1);
+  }
+  100% {
+    transform: scale(1.1) rotate(2deg);
+    opacity: 0.9;
+    filter: hue-rotate(-5deg) brightness(1.05);
+  }
+}
