@@ -1,25 +1,11 @@
 <div class="dashboard-container">
   
-  <div class="welcome-header compact">
-    <div class="welcome-background">
-      <div class="floating-shapes">
-        <div class="shape shape-1"></div>
-        <div class="shape shape-2"></div>
-        <div class="shape shape-3"></div>
-      </div>
-    </div>
-
+  <div class="welcome-header">
     <div class="welcome-content">
-      <div class="greeting-section">
-        <div class="greeting-icon">
-          <span nz-icon nzType="smile" nzTheme="fill"></span>
-        </div>
-        <h1 class="welcome-title">
-          Xin chào, <span class="username">{{ currentUser.name || 'Bạn' }}</span>! 
-          <span class="wave-emoji">👋</span>
-        </h1>
-        <p class="welcome-subtitle">{{ getRandomMotivation() }}</p>
-      </div>
+      <h1 class="welcome-title">
+        Xin chào, {{ currentUser.name }}! 👋
+      </h1>
+      <p class="welcome-subtitle">Hãy tiếp tục hành trình chinh phục ngôn ngữ của bạn hôm nay</p>
     </div>
   </div>
 
@@ -87,90 +73,111 @@
                 <p>Bạn có <strong>{{ stats.reviewToday }} thẻ</strong> cần ôn tập hôm nay</p>
               </div>
             </div>
-            <button nz-button nzType="primary" nzSize="large" class="action-button" (click)="navigateToDailyReview()">
+            <button nz-button nzType="primary" nzSize="large" class="action-button">
               <span nz-icon nzType="play-circle" nzTheme="fill"></span>
               Bắt đầu Ôn tập
             </button>
           </div>
         </nz-card>
 
-        <nz-card class="section-card challenge-notifications-card" [nzTitle]="challengesTitle">
-          <ng-template #challengesTitle>
+        <nz-card class="section-card my-decks-card" [nzTitle]="decksTitle">
+          <ng-template #decksTitle>
             <div class="section-header">
-              <span nz-icon nzType="team" nzTheme="outline"></span>
-              <span class="section-title">Thông báo thách đấu</span>
-              <span class="notification-badge" *ngIf="challengeNotifications.length > 0">
-                {{ challengeNotifications.length }}
-              </span>
+              <span nz-icon nzType="folder" nzTheme="outline"></span>
+              <span class="section-title">Bộ thẻ của tôi</span>
+              <button 
+                nz-button 
+                nzType="primary" 
+                nzSize="small" 
+                class="create-deck-btn"
+                id="create-deck-btn"
+                (click)="openCreateDeckModal()">
+                <span nz-icon nzType="plus"></span>
+                Tạo bộ thẻ mới
+              </button>
             </div>
           </ng-template>
 
+          <!-- Loading State -->
+          <div *ngIf="isLoading" style="text-align: center; padding: 40px;">
+            <nz-spin nzSimple [nzSize]="'large'"></nz-spin>
+            <p style="margin-top: 16px; color: #8c8c8c;">Đang tải danh sách bộ thẻ...</p>
+          </div>
+
           <!-- Empty State -->
           <nz-empty 
-            *ngIf="challengeNotifications.length === 0"
+            *ngIf="!isLoading && !decks.length"
             nzNotFoundImage="simple"
-            style="padding: 20px;">
+            style="padding: 40px 20px;">
             <div nz-empty-footer style="text-align: center;">
-              <h4 style="font-size: 16px; margin-bottom: 8px;">🤝 Chưa có thách đấu nào</h4>
-              <p style="color: #8c8c8c; font-size: 14px;">Mời bạn bè tham gia thách đấu để học tập cùng nhau!</p>
+              <h3 style="font-size: 18px; margin-bottom: 12px;">📚 Chưa có bộ thẻ nào</h3>
+              <p style="color: #8c8c8c; margin-bottom: 20px;">Tạo bộ thẻ đầu tiên để bắt đầu hành trình chinh phục từ vựng!</p>
+              <button 
+                nz-button 
+                nzType="primary" 
+                nzSize="large"
+                (click)="openCreateDeckModal()">
+                  <span nz-icon nzType="plus"></span>
+                  Tạo bộ thẻ đầu tiên
+                </button>
             </div>
           </nz-empty>
 
-          <!-- Challenge Notifications List -->
-          <div class="challenges-list" *ngIf="challengeNotifications.length > 0">
-            <div 
-              *ngFor="let challenge of challengeNotifications" 
-              class="challenge-item"
-              [class.new]="challenge.isNew">
-              
-              <div class="challenge-avatar">
-                <nz-avatar 
-                  [nzSrc]="challenge.senderAvatar" 
-                  [nzText]="challenge.senderName.charAt(0)"
-                  nzSize="small">
-                </nz-avatar>
-                <span class="challenge-type-icon" [class]="challenge.type">
-                  <span nz-icon [nzType]="getChallengeIcon(challenge.type)" nzTheme="fill"></span>
-                </span>
-              </div>
-
-              <div class="challenge-content">
-                <div class="challenge-header">
-                  <span class="challenge-sender">{{ challenge.senderName }}</span>
-                  <span class="challenge-time">{{ challenge.timeAgo }}</span>
+          <!-- Deck List -->
+          <div class="decks-grid" id="deck-list" *ngIf="!isLoading && decks.length">
+            <nz-row [nzGutter]="[12, 12]">
+              <nz-col 
+                *ngFor="let deck of decks" 
+                [nzXs]="24" 
+                [nzSm]="12" 
+                [nzMd]="8">
+                <div 
+                  class="deck-item" 
+                  [class.conquered]="calculateProgress(deck) >= 100"
+                  (click)="viewDeckDetail(deck)"
+                  style="cursor: pointer;">
+                  <div class="deck-header">
+                    <div 
+                      class="deck-badge" 
+                      [class.conquered]="calculateProgress(deck) >= 100">
+                      {{ calculateProgress(deck) >= 100 ? '✅ Hoàn thành' : '🚀 Mới' }}
+                    </div>
+                    <span nz-icon nzType="more" class="deck-menu" (click)="$event.stopPropagation(); openDeckSettings(deck)"></span>
+                  </div>
+                  <div class="deck-title">{{ deck.name }}</div>
+                  <div class="deck-description">{{ deck.description }}</div>
+                  <div class="deck-stats">
+                    <span class="deck-count">
+                      <span nz-icon nzType="file-text"></span>
+                      {{ deck.cardCount || 0 }} thẻ
+                    </span>
+                    <span 
+                      class="deck-progress" 
+                      [class.conquered]="calculateProgress(deck) >= 100">
+                      <span 
+                        nz-icon 
+                        [nzType]="calculateProgress(deck) >= 100 ? 'check-circle' : 'rocket'" 
+                        nzTheme="fill"></span>
+                      {{ calculateProgress(deck) >= 100 ? 'Đã chinh phục' : 'Sẵn sàng học' }}
+                    </span>
+                  </div>
+                  <button 
+                    nz-button 
+                    nzBlock 
+                    [nzType]="calculateProgress(deck) >= 100 ? 'default' : 'primary'" 
+                    class="deck-action"
+                    (click)="$event.stopPropagation(); startStudying(deck)">
+                    {{ calculateProgress(deck) >= 100 ? 'Ôn tập lại' : 'Bắt đầu Chinh phục' }}
+                  </button>
                 </div>
-                <div class="challenge-message">{{ challenge.message }}</div>
-                <div class="challenge-details">
-                  <span class="challenge-deck">📚 {{ challenge.deckName }}</span>
-                  <span class="challenge-target">🎯 {{ challenge.target }}</span>
-                </div>
-              </div>
-
-              <div class="challenge-actions">
-                <button 
-                  nz-button 
-                  nzType="primary" 
-                  nzSize="small"
-                  (click)="acceptChallenge(challenge)">
-                  <span nz-icon nzType="check"></span>
-                  Chấp nhận
-                </button>
-                <button 
-                  nz-button 
-                  nzType="default" 
-                  nzSize="small"
-                  (click)="declineChallenge(challenge)">
-                  <span nz-icon nzType="close"></span>
-                  Từ chối
-                </button>
-              </div>
-            </div>
+              </nz-col>
+            </nz-row>
           </div>
         </nz-card>
       </nz-col>
 
       <nz-col [nzXs]="24" [nzLg]="8">
-        <nz-card class="section-card streak-card compact" [nzTitle]="streakTitle">
+        <nz-card class="section-card streak-card" [nzTitle]="streakTitle">
           <ng-template #streakTitle>
             <div class="section-header">
               <span nz-icon nzType="fire" nzTheme="fill" style="color: #ff922b;"></span>
@@ -181,10 +188,10 @@
           <div class="streak-display">
             <div class="streak-number">{{ stats.studyStreak }}</div>
             <div class="streak-label">ngày liên tiếp</div>
-            <div class="streak-message">Tuyệt vời! Hãy tiếp tục! 💪</div>
+            <div class="streak-message">Tuyệt vời! Hãy tiếp tục phấn đấu! 💪</div>
           </div>
 
-          <div class="calendar-mini compact">
+          <div class="calendar-mini">
             <div class="calendar-header">
               <button nz-button nzType="link" nzSize="small" (click)="previousMonth()">
                 <span nz-icon nzType="left"></span>
@@ -217,8 +224,7 @@
                   [class.level-2]="day.activityLevel === 2"
                   [class.level-3]="day.activityLevel === 3"
                 >
-                  <span class="day-number">{{ day.date }}</span>
-                  <span nz-icon nzType="fire" nzTheme="fill" class="fire-icon" *ngIf="day.hasActivity"></span>
+                  {{ day.date }}
                 </div>
               </div>
             </div>
