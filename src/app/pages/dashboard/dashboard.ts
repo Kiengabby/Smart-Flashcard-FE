@@ -11,41 +11,23 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzTypographyModule } from 'ng-zorro-antd/typography';
+import { NzStatisticModule } from 'ng-zorro-antd/statistic';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 
-// Services & Interfaces
+// Services
 import { DeckService } from '../../services/deck.service';
 import { TokenService } from '../../services/token.service';
 import { OnboardingService } from '../../services/onboarding.service';
 import { DeckDTO } from '../../interfaces/deck.dto';
 import { CreateDeckModalComponent } from '../../components/create-deck-modal/create-deck-modal.component';
 
-// Type Definitions
-interface ChallengeNotification {
-  id: string;
-  senderName: string;
-  senderAvatar: string;
-  message: string;
-  deckName: string;
-  target: string;
-  type: 'speed' | 'accuracy' | 'streak' | 'vocabulary';
-  timeAgo: string;
-  isNew: boolean;
-}
-
-interface CalendarDay {
-  date: number;
-  currentMonth: boolean;
-  isToday: boolean;
-  hasActivity: boolean;
-  activityLevel: number;
-}
-
 @Component({
   selector: 'app-dashboard',
   standalone: true,
   imports: [
     CommonModule,
+    // NG-ZORRO
     NzGridModule,
     NzCardModule,
     NzButtonModule,
@@ -53,17 +35,20 @@ interface CalendarDay {
     NzSpinModule,
     NzEmptyModule,
     NzModalModule,
+    NzTypographyModule,
+    NzStatisticModule,
     NzAvatarModule,
   ],
-  providers: [NzModalService, NzMessageService],
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss'],
+  providers: [
+    NzModalService,
+    NzMessageService
+  ],
+  templateUrl: './dashboard-clean.html',
+  styleUrls: ['./dashboard-new.scss'],
 })
 export class DashboardComponent implements OnInit {
   
-  // ===========================
-  // APPLICATION STATE
-  // ===========================
+  // Stats và User Info
   stats = {
     conqueredDecks: 3,
     studyStreak: 7,
@@ -74,67 +59,27 @@ export class DashboardComponent implements OnInit {
   };
 
   currentUser = {
-    name: 'Kien',
+    name: '',
     totalDecks: 0,
-    studiedToday: 15
+    studiedToday: 0
   };
 
-  // ===========================
-  // UI STATE
-  // ===========================
-  decks: DeckDTO[] = [];
-  isLoading = true;
-  isWelcomeMinimized = false;
-
-  // ===========================
-  // CALENDAR STATE
-  // ===========================
+  // Calendar
   currentMonth: number = new Date().getMonth() + 1;
   currentYear: number = new Date().getFullYear();
-  calendarDays: CalendarDay[] = [];
+  calendarDays: Array<{
+    date: number;
+    currentMonth: boolean;
+    isToday: boolean;
+    hasActivity: boolean;
+    activityLevel: number;
+  }> = [];
 
-  // ===========================
-  // CHALLENGE NOTIFICATIONS
-  // ===========================
-  challengeNotifications: ChallengeNotification[] = [
-    {
-      id: '1',
-      senderName: 'Minh Anh',
-      senderAvatar: '',
-      message: 'thách đấu bạn trong bộ thẻ Tiếng Anh cơ bản',
-      deckName: 'Tiếng Anh cơ bản',
-      target: 'Học 50 từ trong 3 ngày',
-      type: 'vocabulary',
-      timeAgo: '2 phút trước',
-      isNew: true
-    },
-    {
-      id: '2',
-      senderName: 'Quang Huy',
-      senderAvatar: '',
-      message: 'thách đấu tốc độ ôn tập',
-      deckName: 'TOEIC Vocabulary',
-      target: 'Hoàn thành 100 thẻ trong 30 phút',
-      type: 'speed',
-      timeAgo: '1 giờ trước',
-      isNew: false
-    },
-    {
-      id: '3',
-      senderName: 'Thu Hà',
-      senderAvatar: '',
-      message: 'thách đấu chuỗi ngày học',
-      deckName: 'Japanese N5',
-      target: 'Duy trì streak 10 ngày',
-      type: 'streak',
-      timeAgo: '3 giờ trước',
-      isNew: true
-    }
-  ];
+  // Decks
+  decks: DeckDTO[] = [];
+  isLoading = true;
 
-  // ===========================
-  // COMPUTED PROPERTIES
-  // ===========================
+  // Getter
   get usagePercentage(): number {
     return this.stats.conqueredDecks > 0 
       ? Math.round((this.stats.conqueredDecks / this.stats.totalDecks) * 100) 
@@ -157,17 +102,8 @@ export class DashboardComponent implements OnInit {
     this.checkAndStartOnboarding();
   }
 
-  // ===========================
-  // LIFECYCLE & INITIALIZATION
-  // ===========================
-  private loadUserInfo(): void {
-    const userInfo = this.tokenService.getUserInfo();
-    if (userInfo) {
-      this.currentUser.name = userInfo.displayName || userInfo.email || 'Kien';
-    }
-  }
-
-  private checkAndStartOnboarding(): void {
+  // Onboarding check
+  checkAndStartOnboarding(): void {
     setTimeout(() => {
       if (!this.onboardingService.hasCompletedOnboarding()) {
         this.onboardingService.startDashboardTour();
@@ -175,51 +111,15 @@ export class DashboardComponent implements OnInit {
     }, 500);
   }
 
-  // ===========================
-  // WELCOME HEADER METHODS
-  // ===========================
-  getGreetingIcon(): string {
-    const hour = new Date().getHours();
-    if (hour < 12) return '🌅';
-    if (hour < 17) return '☀️';
-    if (hour < 20) return '🌆';
-    return '🌙';
+  // Load user info
+  loadUserInfo(): void {
+    const userInfo = this.tokenService.getUserInfo();
+    if (userInfo) {
+      this.currentUser.name = userInfo.displayName || userInfo.email;
+    }
   }
 
-  getGreetingText(): string {
-    const hour = new Date().getHours();
-    if (hour < 12) return 'Chào buổi sáng';
-    if (hour < 17) return 'Chào buổi chiều';
-    if (hour < 20) return 'Chào buổi tối';
-    return 'Chúc ngủ ngon';
-  }
-
-  getMotivationalQuote(): string {
-    const quotes = [
-      'Mỗi từ mới là một bước tiến trong hành trình của bạn! 🚀',
-      'Hôm nay là ngày tuyệt vời để học thêm điều gì đó mới! ✨',
-      'Kiên trì là chìa khóa để thành công trong việc học ngôn ngữ! 💪',
-      'Bạn đang làm rất tốt, hãy tiếp tục phấn đấu! 🌟',
-      'Từng ngày một chút, bạn sẽ đạt được mục tiêu của mình! 🎯',
-      'Học tập là hành trình, không phải đích đến! 🛤️',
-      'Hãy tự hào về những gì bạn đã đạt được! 🏆'
-    ];
-    return quotes[Math.floor(Math.random() * quotes.length)];
-  }
-
-  getDailyProgress(): number {
-    const studiedToday = this.currentUser.studiedToday || 0;
-    const dailyGoal = 30; // 30 từ mỗi ngày
-    return Math.min((studiedToday / dailyGoal) * 100, 100);
-  }
-
-  minimizeWelcome(): void {
-    this.isWelcomeMinimized = !this.isWelcomeMinimized;
-  }
-
-  // ===========================
-  // CALENDAR METHODS
-  // ===========================
+  // Calendar methods
   generateCalendar(): void {
     this.calendarDays = [];
     const year = this.currentYear;
@@ -234,13 +134,12 @@ export class DashboardComponent implements OnInit {
     const isCurrentMonth = today.getMonth() === month && today.getFullYear() === year;
     const todayDate = today.getDate();
     
-    // Random activity for demo
-    const activityDates = [1, 3, 5, 7, 10, 13, 14, 15, 16, 17, 18, 22, 25, 28];
+    const activityDates = [13, 14, 15, 16, 17, 18];
     
     // Previous month days
-    for (let day = daysInPrevMonth - startingDayOfWeek + 1; day <= daysInPrevMonth; day++) {
+    for (let i = startingDayOfWeek - 1; i >= 0; i--) {
       this.calendarDays.push({
-        date: day,
+        date: daysInPrevMonth - i,
         currentMonth: false,
         isToday: false,
         hasActivity: false,
@@ -293,44 +192,13 @@ export class DashboardComponent implements OnInit {
     this.generateCalendar();
   }
 
-  // ===========================
-  // CHALLENGE METHODS
-  // ===========================
-  getChallengeIcon(type: string): string {
-    switch (type) {
-      case 'speed': return 'rocket';
-      case 'accuracy': return 'bullseye';
-      case 'streak': return 'fire';
-      case 'vocabulary': return 'book';
-      default: return 'trophy';
-    }
-  }
-
-  acceptChallenge(challenge: ChallengeNotification): void {
-    this.messageService.success(`Đã chấp nhận thách đấu từ ${challenge.senderName}!`);
-    this.challengeNotifications = this.challengeNotifications.filter(c => c.id !== challenge.id);
-  }
-
-  declineChallenge(challenge: ChallengeNotification): void {
-    this.messageService.info(`Đã từ chối thách đấu từ ${challenge.senderName}`);
-    this.challengeNotifications = this.challengeNotifications.filter(c => c.id !== challenge.id);
-  }
-
-  // ===========================
-  // NAVIGATION METHODS
-  // ===========================
+  // Navigation
   navigateToAction(action: string): void {
     console.log('Navigate to:', action);
     this.messageService.info(`Chức năng ${action} đang được phát triển!`);
   }
 
-  navigateToDailyReview(): void {
-    this.router.navigate(['/app/daily-review']);
-  }
-
-  // ===========================
-  // DECK MANAGEMENT
-  // ===========================
+  // Deck operations
   loadDecks(): void {
     this.isLoading = true;
     
@@ -386,3 +254,6 @@ export class DashboardComponent implements OnInit {
     this.currentUser.studiedToday = Math.floor(Math.random() * 50) + 10;
   }
 }
+
+
+
