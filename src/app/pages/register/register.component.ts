@@ -38,8 +38,8 @@ export function passwordMatchValidator(control: AbstractControl): ValidationErro
     NzDividerModule,
     NzCheckboxModule
   ],
-  templateUrl: './register.html',
-  styleUrl: './register.scss'
+  templateUrl: './register.component.html',
+  styleUrl: './register.component.scss'
 })
 export class RegisterComponent implements OnInit {
   registerForm!: FormGroup;

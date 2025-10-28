@@ -14,8 +14,8 @@ import { NzProgressModule } from 'ng-zorro-antd/progress';
     NzIconModule,
     NzProgressModule
   ],
-  templateUrl: './onboarding.html',
-  styleUrl: './onboarding.scss'
+  templateUrl: './onboarding.component.html',
+  styleUrl: './onboarding.component.scss'
 })
 export class OnboardingComponent implements OnInit {
 

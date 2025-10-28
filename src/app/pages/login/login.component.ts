@@ -25,8 +25,8 @@ import { NzMessageService } from 'ng-zorro-antd/message';
     NzIconModule,
     NzCheckboxModule
   ],
-  templateUrl: './login.html',
-  styleUrl: './login.scss'
+  templateUrl: './login.component.html',
+  styleUrl: './login.component.scss'
 })
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
