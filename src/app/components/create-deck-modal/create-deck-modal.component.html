@@ -1,40 +1,95 @@
 <div class="create-deck-modal">
+  <!-- Modal Header with Icon -->
+  <div class="modal-header">
+    <div class="header-icon">
+      <span nz-icon nzType="plus-circle" nzTheme="outline"></span>
+    </div>
+    <div class="header-content">
+      <h3>Tạo bộ thẻ mới</h3>
+      <p>Bắt đầu hành trình học tập với bộ thẻ mới của bạn</p>
+    </div>
+  </div>
+
+  <!-- Form -->
   <form nz-form [formGroup]="deckForm" (ngSubmit)="handleOk()" class="create-deck-form">
     <nz-form-item>
-      <nz-form-label nzFor="name" nzRequired>Tên bộ thẻ</nz-form-label>
-      <nz-form-control nzErrorTip="Tên bộ thẻ là bắt buộc và không được vượt quá 100 ký tự">
+      <nz-form-label nzFor="name" nzRequired>
+        <span nz-icon nzType="edit" nzTheme="outline"></span>
+        Tên bộ thẻ
+      </nz-form-label>
+      <nz-form-control 
+        nzErrorTip="Tên bộ thẻ là bắt buộc và không được vượt quá 100 ký tự"
+        nzHasFeedback>
         <input 
           nz-input 
           id="name"
           formControlName="name" 
-          placeholder="Nhập tên bộ thẻ"
-          maxlength="100" />
+          placeholder="Ví dụ: Từ vựng tiếng Anh cơ bản"
+          maxlength="100"
+          class="name-input" />
+        <div class="char-count">
+          {{ deckForm.get('name')?.value?.length || 0 }}/100
+        </div>
       </nz-form-control>
     </nz-form-item>
 
     <nz-form-item>
-      <nz-form-label nzFor="description">Mô tả</nz-form-label>
-      <nz-form-control nzErrorTip="Mô tả không được vượt quá 500 ký tự">
+      <nz-form-label nzFor="description">
+        <span nz-icon nzType="file-text" nzTheme="outline"></span>
+        Mô tả
+      </nz-form-label>
+      <nz-form-control 
+        nzErrorTip="Mô tả không được vượt quá 500 ký tự"
+        [nzExtra]="'Mô tả giúp bạn dễ dàng nhận diện và quản lý bộ thẻ'">
         <textarea 
           nz-input 
           id="description"
           formControlName="description" 
-          placeholder="Nhập mô tả cho bộ thẻ (tùy chọn)"
-          rows="3"
-          maxlength="500">
+          placeholder="Ví dụ: Tổng hợp 500 từ vựng tiếng Anh thông dụng nhất cho người mới bắt đầu..."
+          rows="4"
+          maxlength="500"
+          class="description-input">
         </textarea>
+        <div class="char-count">
+          {{ deckForm.get('description')?.value?.length || 0 }}/500
+        </div>
       </nz-form-control>
     </nz-form-item>
 
+    <!-- Quick Tips -->
+    <div class="tips-section">
+      <h4>
+        <span nz-icon nzType="bulb" nzTheme="outline"></span>
+        Gợi ý tạo bộ thẻ hiệu quả
+      </h4>
+      <ul class="tips-list">
+        <li>📚 Chọn tên rõ ràng, dễ nhớ</li>
+        <li>📝 Mô tả chi tiết nội dung và mục tiêu học</li>
+        <li>🎯 Tập trung vào một chủ đề cụ thể</li>
+        <li>⚡ Bắt đầu với 5-10 thẻ đầu tiên</li>
+      </ul>
+    </div>
+
+    <!-- Footer Actions -->
     <div class="modal-footer">
-      <button nz-button type="button" (click)="handleCancel()">Hủy</button>
+      <button 
+        nz-button 
+        type="button" 
+        nzSize="large"
+        (click)="handleCancel()"
+        class="cancel-btn">
+        Hủy
+      </button>
       <button 
         nz-button 
         nzType="primary" 
+        nzSize="large"
         type="submit"
         [nzLoading]="isConfirmLoading"
-        [disabled]="deckForm.invalid">
-        Tạo bộ thẻ
+        [disabled]="deckForm.invalid"
+        class="submit-btn">
+        <span nz-icon nzType="rocket" nzTheme="outline"></span>
+        Tạo và bắt đầu
       </button>
     </div>
   </form>

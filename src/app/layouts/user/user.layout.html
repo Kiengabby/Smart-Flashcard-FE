@@ -22,11 +22,23 @@
         *ngFor="let item of menuItems" 
         nz-menu-item 
         [nzSelected]="item.isActive"
-        [routerLink]="item.routerLink"
         class="menu-item"
+        [class.high-priority]="item.isHighPriority"
+        nz-tooltip 
+        [nzTooltipTitle]="isCollapsed ? item.description : ''"
+        nzTooltipPlacement="right"
+        (click)="onMenuItemClick(item)"
       >
-        <nz-icon [nzType]="item.icon" class="menu-icon"></nz-icon>
-        <span class="menu-title">{{ item.title }}</span>
+        <div class="menu-item-content">
+          <div class="menu-icon-wrapper">
+            <nz-badge [nzCount]="item.badge ? +item.badge : 0" [nzShowZero]="false">
+              <nz-icon [nzType]="item.icon" class="menu-icon"></nz-icon>
+            </nz-badge>
+          </div>
+          <div *ngIf="!isCollapsed" class="menu-text-section">
+            <span class="menu-title">{{ item.title }}</span>
+          </div>
+        </div>
       </li>
     </ul>
 

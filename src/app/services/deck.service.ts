@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, timeout, catchError, throwError, retry, delay } from 'rxjs';
 import { DeckDTO, CreateDeckRequest, UpdateDeckRequest } from '../interfaces/deck.dto';
 
 @Injectable({
@@ -15,14 +15,51 @@ export class DeckService {
    * Lấy danh sách tất cả deck của user
    */
   getDecks(): Observable<DeckDTO[]> {
-    return this.http.get<DeckDTO[]>(`${this.DECK_API}/`);
+    return this.http.get<DeckDTO[]>(`${this.DECK_API}/`).pipe(
+      timeout(10000), // 10 second timeout
+      retry(2), // Retry 2 times
+      catchError(this.handleError)
+    );
   }
 
   /**
    * Lấy thông tin chi tiết một deck
    */
   getDeckById(id: string): Observable<DeckDTO> {
-    return this.http.get<DeckDTO>(`${this.DECK_API}/${id}`);
+    return this.http.get<DeckDTO>(`${this.DECK_API}/${id}`).pipe(
+      timeout(5000), // 5 second timeout
+      catchError(this.handleError)
+    );
+  }
+
+  /**
+   * Handle HTTP errors
+   */
+  private handleError(error: HttpErrorResponse): Observable<never> {
+    let errorMessage = 'Đã xảy ra lỗi không xác định';
+    
+    if (error.error instanceof ErrorEvent) {
+      // Client-side error
+      errorMessage = `Lỗi: ${error.error.message}`;
+    } else {
+      // Server-side error
+      switch (error.status) {
+        case 0:
+          errorMessage = 'Không thể kết nối đến server';
+          break;
+        case 404:
+          errorMessage = 'Không tìm thấy dữ liệu';
+          break;
+        case 500:
+          errorMessage = 'Lỗi server nội bộ';
+          break;
+        default:
+          errorMessage = `Lỗi ${error.status}: ${error.message}`;
+      }
+    }
+    
+    console.error('DeckService Error:', errorMessage, error);
+    return throwError(() => error);
   }
 
   /**

@@ -1,22 +1,217 @@
+/* Create Deck Modal Styles */
 .create-deck-modal {
-  padding: 16px 0;
+  padding: 0;
 }
 
+/* Modal Header */
+.modal-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 24px 24px 20px 24px;
+  border-bottom: 1px solid #f0f0f0;
+  margin-bottom: 24px;
+}
+
+.modal-header .header-icon {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #1890ff, #36cfc9);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 24px;
+}
+
+.modal-header .header-content {
+  flex: 1;
+}
+
+.modal-header .header-content h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #262626;
+  margin: 0 0 4px 0;
+}
+
+.modal-header .header-content p {
+  font-size: 14px;
+  color: #8c8c8c;
+  margin: 0;
+}
+
+/* Form Styles */
 .create-deck-form {
+  padding: 0 24px;
   margin-bottom: 0;
 }
 
+.create-deck-form ::ng-deep .ant-form-item {
+  margin-bottom: 24px;
+}
+
+.create-deck-form ::ng-deep .ant-form-item-label {
+  padding: 0 0 8px 0;
+}
+
+.create-deck-form ::ng-deep .ant-form-item-label label {
+  font-weight: 600;
+  color: #262626;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.create-deck-form ::ng-deep .ant-form-item-label label span[nz-icon] {
+  color: #1890ff;
+  font-size: 14px;
+}
+
+.name-input,
+.description-input {
+  font-size: 14px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.name-input:focus,
+.description-input:focus {
+  border-color: #1890ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+.description-input {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.char-count {
+  text-align: right;
+  font-size: 12px;
+  color: #bfbfbf;
+  margin-top: 4px;
+}
+
+/* Tips Section */
+.tips-section {
+  background: #f6ffed;
+  border: 1px solid #b7eb8f;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.tips-section h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #52c41a;
+  margin: 0 0 12px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tips-section h4 span[nz-icon] {
+  font-size: 16px;
+}
+
+.tips-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tips-list li {
+  font-size: 13px;
+  color: #389e0d;
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+
+.tips-list li:last-child {
+  margin-bottom: 0;
+}
+
+/* Modal Footer */
 .modal-footer {
   display: flex;
   justify-content: flex-end;
-  gap: 8px;
-  margin-top: 24px;
-  padding-top: 16px;
+  gap: 12px;
+  padding: 20px 24px 24px 24px;
   border-top: 1px solid #f0f0f0;
+  margin: 0 -24px -24px -24px;
+  margin-top: 24px;
 }
 
-nz-form-item {
-  margin-bottom: 16px;
+.cancel-btn {
+  color: #595959;
+  border-color: #d9d9d9;
+}
+
+.cancel-btn:hover {
+  color: #262626;
+  border-color: #bfbfbf;
+}
+
+.submit-btn {
+  background: linear-gradient(135deg, #1890ff, #36cfc9);
+  border: none;
+  font-weight: 600;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #40a9ff, #5cdbd3);
+  box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
+}
+
+.submit-btn:disabled {
+  background: #f5f5f5;
+  color: #bfbfbf;
+}
+
+.submit-btn span[nz-icon] {
+  margin-right: 6px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .modal-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .modal-header .header-icon {
+    align-self: center;
+  }
+
+  .modal-footer {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .cancel-btn,
+  .submit-btn {
+    width: 100%;
+  }
+}
+
+/* Animation */
+.create-deck-modal {
+  animation: modalFadeIn 0.3s ease-out;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 textarea {

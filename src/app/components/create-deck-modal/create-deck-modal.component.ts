@@ -5,9 +5,10 @@ import { NzModalRef } from 'ng-zorro-antd/modal';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { DeckService } from '../../services/deck.service';
-import { CreateDeckRequest } from '../../interfaces/deck.dto';
+import { CreateDeckRequest, DeckDTO } from '../../interfaces/deck.dto';
 
 @Component({
   selector: 'app-create-deck-modal',
@@ -17,7 +18,8 @@ import { CreateDeckRequest } from '../../interfaces/deck.dto';
     ReactiveFormsModule,
     NzFormModule,
     NzInputModule,
-    NzButtonModule
+    NzButtonModule,
+    NzIconModule
   ],
   templateUrl: './create-deck-modal.component.html',
   styleUrls: ['./create-deck-modal.component.css']
@@ -57,9 +59,10 @@ export class CreateDeckModalComponent implements OnInit {
     const formData: CreateDeckRequest = this.deckForm.value;
     
     this.deckService.createDeck(formData).subscribe({
-      next: (response) => {
+      next: (response: DeckDTO) => {
         this.message.success('Tạo bộ thẻ thành công!');
-        this.modalRef.close(true); // Trả về true để báo hiệu thành công
+        // Trả về object deck để parent component có thể cập nhật UI ngay lập tức
+        this.modalRef.close(response);
       },
       error: (error) => {
         console.error('Lỗi khi tạo bộ thẻ:', error);

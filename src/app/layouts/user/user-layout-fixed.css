@@ -219,6 +219,150 @@
   .menu-sidebar {
     transform: translateX(-100%);
   }
+
+  .menu-sidebar.ant-layout-sider-collapsed {
+    transform: translateX(0);
+  }
+
+  .main-layout {
+    margin-left: 0;
+  }
+}
+
+/* Enhanced Menu Items for Smart Flashcard */
+.sidebar-menu ::ng-deep .ant-menu-item {
+  margin: 4px 8px !important;
+  border-radius: 12px !important;
+  height: auto !important;
+  line-height: normal !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.sidebar-menu ::ng-deep .ant-menu-item:hover {
+  background: rgba(102, 126, 234, 0.15) !important;
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+}
+
+.sidebar-menu ::ng-deep .ant-menu-item-selected {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  transform: translateX(4px);
+}
+
+.sidebar-menu ::ng-deep .ant-menu-item-selected::after {
+  display: none !important;
+}
+
+.menu-item-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px;
+  width: 100%;
+}
+
+.menu-icon-wrapper {
+  position: relative;
+  min-width: 24px;
+  display: flex;
+  justify-content: center;
+}
+
+.menu-icon {
+  font-size: 20px !important;
+  color: #fff;
+  transition: all 0.3s ease;
+}
+
+.menu-text-section {
+  flex: 1;
+  min-width: 0;
+}
+
+.menu-title {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  line-height: 1.3;
+  margin-bottom: 4px;
+}
+
+.menu-description {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.4;
+  word-wrap: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* High Priority Menu Items */
+.menu-item.high-priority {
+  position: relative;
+}
+
+.menu-item.high-priority::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 60%;
+  background: linear-gradient(45deg, #ff6b6b, #feca57);
+  border-radius: 0 4px 4px 0;
+  opacity: 0.8;
+}
+
+/* Badge Styling */
+.menu-icon-wrapper ::ng-deep .ant-badge {
+  display: block;
+}
+
+.menu-icon-wrapper ::ng-deep .ant-badge-count {
+  background: #ff4757 !important;
+  border: 2px solid #1a1f36;
+  box-shadow: 0 2px 8px rgba(255, 71, 87, 0.4);
+  font-size: 11px;
+  font-weight: 700;
+  min-width: 18px;
+  height: 18px;
+  line-height: 14px;
+  right: -6px;
+  top: -6px;
+}
+
+/* Collapsed State Adjustments */
+.menu-sidebar.ant-layout-sider-collapsed .menu-item-content {
+  justify-content: center;
+  padding: 16px 12px;
+}
+
+.menu-sidebar.ant-layout-sider-collapsed .menu-icon-wrapper {
+  min-width: auto;
+}
+
+.menu-sidebar.ant-layout-sider-collapsed .menu-icon {
+  font-size: 22px !important;
+}
+  font-size: 22px !important;
+}
+}
+
+.menu-sidebar.ant-layout-sider-collapsed .menu-icon {
+  font-size: 22px !important;
+}
+  }
   
   .menu-sidebar:not(.ant-layout-sider-collapsed) {
     transform: translateX(0);

@@ -1,0 +1,317 @@
+<div class="deck-library-container">
+  
+  <!-- Welcome Header -->
+  <div class="welcome-header">
+    <div class="welcome-content">
+      <h1 class="welcome-title">
+        <span nz-icon nzType="book" nzTheme="fill"></span>
+        Thư viện thẻ của bạn
+      </h1>
+      <p class="welcome-subtitle">Quản lý và tổ chức tất cả bộ thẻ học tập một cách thông minh</p>
+    </div>
+    <div class="header-actions">
+      <button 
+        nz-button 
+        nzType="primary" 
+        nzSize="large"
+        class="create-deck-btn"
+        (click)="openCreateDeckModal()">
+        <span nz-icon nzType="plus" nzTheme="outline"></span>
+        Tạo bộ thẻ mới
+      </button>
+    </div>
+  </div>
+
+  <!-- Quick Stats -->
+  <div class="quick-stats">
+    <nz-row [nzGutter]="[16, 16]">
+      <nz-col [nzXs]="24" [nzSm]="8" [nzLg]="8">
+        <div class="stat-card total-decks">
+          <div class="stat-icon">
+            <span nz-icon nzType="folder" nzTheme="fill"></span>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value">{{ totalDecks }}</div>
+            <div class="stat-label">Tổng số bộ thẻ</div>
+          </div>
+        </div>
+      </nz-col>
+      
+      <nz-col [nzXs]="24" [nzSm]="8" [nzLg]="8">
+        <div class="stat-card total-cards">
+          <div class="stat-icon">
+            <span nz-icon nzType="credit-card" nzTheme="fill"></span>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value">{{ totalCards }}</div>
+            <div class="stat-label">Tổng số thẻ</div>
+          </div>
+        </div>
+      </nz-col>
+      
+      <nz-col [nzXs]="24" [nzSm]="8" [nzLg]="8">
+        <div class="stat-card studying-decks">
+          <div class="stat-icon">
+            <span nz-icon nzType="fire" nzTheme="fill"></span>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value highlight">{{ studyingDecks }}</div>
+            <div class="stat-label">Đang học</div>
+          </div>
+        </div>
+      </nz-col>
+    </nz-row>
+  </div>
+
+  <!-- Search & Filter Section -->
+  <nz-card class="filter-card" [nzBordered]="false">
+    <div class="filter-content">
+      <div class="filter-left">
+        <div class="search-section">
+          <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton" nzSize="large">
+            <input 
+              type="text" 
+              nz-input 
+              placeholder="Tìm kiếm trong thư viện..." 
+              [(ngModel)]="searchText"
+              (keyup.enter)="onSearch()"
+              (input)="onSearch()"
+              class="search-input">
+          </nz-input-group>
+          <ng-template #suffixIconButton>
+            <button nz-button nzType="primary" nzSearch nzSize="large" (click)="onSearch()">
+              <span nz-icon nzType="search"></span>
+            </button>
+          </ng-template>
+        </div>
+      </div>
+      
+      <div class="filter-right">
+        <nz-select 
+          [(ngModel)]="selectedCategory" 
+          (ngModelChange)="onCategoryChange()"
+          nzPlaceHolder="Trạng thái"
+          nzSize="large"
+          class="category-select">
+          <nz-option 
+            *ngFor="let option of categoryOptions" 
+            [nzLabel]="option.label" 
+            [nzValue]="option.value">
+          </nz-option>
+        </nz-select>
+        
+        <nz-select 
+          [(ngModel)]="selectedSort" 
+          (ngModelChange)="onSortChange()"
+          nzPlaceHolder="Sắp xếp"
+          nzSize="large"
+          class="sort-select">
+          <nz-option 
+            *ngFor="let option of sortOptions" 
+            [nzLabel]="option.label" 
+            [nzValue]="option.value">
+          </nz-option>
+        </nz-select>
+      </div>
+    </div>
+    
+    <!-- Results Info -->
+    <div class="results-info">
+      <span class="results-text">
+        Hiển thị <strong>{{ filteredDecks.length }}</strong> trong tổng số <strong>{{ totalDecks }}</strong> bộ thẻ
+      </span>
+    </div>
+  </nz-card>
+
+  <!-- Content Section -->
+  <div class="content-section">
+    
+    <!-- Loading State with Shimmer -->
+    <div *ngIf="isLoading" class="loading-skeleton">
+      <nz-row [nzGutter]="[24, 24]">
+        <nz-col *ngFor="let item of [1,2,3,4,5,6]" [nzXs]="24" [nzSm]="12" [nzMd]="8" [nzLg]="6" [nzXl]="6">
+          <nz-card class="deck-card-premium skeleton-card" [nzLoading]="true">
+            <div class="skeleton-content">
+              <div class="skeleton-title"></div>
+              <div class="skeleton-description"></div>
+              <div class="skeleton-stats">
+                <div class="skeleton-bar"></div>
+                <div class="skeleton-bar short"></div>
+              </div>
+            </div>
+          </nz-card>
+        </nz-col>
+      </nz-row>
+    </div>
+
+    <!-- Empty State - No Decks -->
+    <nz-card 
+      *ngIf="!isLoading && filteredDecks.length === 0 && searchText === '' && selectedCategory === 'all'" 
+      class="empty-state-card">
+      <div class="empty-content">
+        <div class="empty-icon">
+          <span nz-icon nzType="book" nzTheme="outline"></span>
+        </div>
+        <h3>Bắt đầu xây dựng thư viện của bạn!</h3>
+        <p>Tạo bộ thẻ đầu tiên để bắt đầu hành trình chinh phục ngôn ngữ</p>
+        <div class="empty-actions">
+          <button 
+            nz-button 
+            nzType="primary" 
+            nzSize="large"
+            (click)="openCreateDeckModal()"
+            class="primary-action">
+            <span nz-icon nzType="plus" nzTheme="outline"></span>
+            Tạo bộ thẻ đầu tiên
+          </button>
+        </div>
+        
+        <!-- Quick Tips -->
+        <div class="quick-tips">
+          <h4>💡 Gợi ý để bắt đầu</h4>
+          <ul>
+            <li>🎯 Chọn chủ đề bạn muốn học (Tiếng Anh, Lịch sử, Khoa học...)</li>
+            <li>📝 Bắt đầu với 5-10 thẻ cơ bản</li>
+            <li>🚀 Sử dụng AI để gợi ý nội dung thông minh</li>
+          </ul>
+        </div>
+      </div>
+    </nz-card>
+
+    <!-- No Results State -->
+    <nz-card 
+      *ngIf="!isLoading && filteredDecks.length === 0 && (searchText !== '' || selectedCategory !== 'all')" 
+      class="no-results-card">
+      <div class="no-results-content">
+        <div class="no-results-icon">
+          <span nz-icon nzType="search" nzTheme="outline"></span>
+        </div>
+        <h3>Không tìm thấy kết quả</h3>
+        <p>Thử thay đổi từ khóa hoặc bộ lọc để tìm được bộ thẻ bạn cần</p>
+        <button 
+          nz-button 
+          nzType="default"
+          nzSize="large"
+          (click)="searchText = ''; selectedCategory = 'all'; onSearch()">
+          <span nz-icon nzType="reload" nzTheme="outline"></span>
+          Xóa bộ lọc
+        </button>
+      </div>
+    </nz-card>
+
+    <!-- Deck Grid -->
+    <div *ngIf="!isLoading && filteredDecks.length > 0" class="decks-section">
+      <nz-row [nzGutter]="[24, 24]">
+        <nz-col 
+          *ngFor="let deck of filteredDecks; let i = index" 
+          [nzXs]="24" 
+          [nzSm]="12" 
+          [nzMd]="8" 
+          [nzLg]="6"
+          [nzXl]="6"
+          [style.animation-delay.ms]="i * 100">
+          
+          <nz-card 
+            class="deck-card-premium"
+            nzHoverable>
+            
+            <!-- Card Header -->
+            <div class="deck-header">
+              <div class="deck-title-section">
+                <h3 class="deck-title" [nzTooltipTitle]="deck.name" nz-tooltip (click)="viewDeckDetail(deck)" style="cursor: pointer;">
+                  {{ deck.name }}
+                </h3>
+                <nz-tag [nzColor]="getTagColor(deck)" class="deck-status">
+                  {{ getTagText(deck) }}
+                </nz-tag>
+              </div>
+            </div>
+
+            <!-- Card Content -->
+            <div class="deck-content">
+              <p class="deck-description" [nzTooltipTitle]="deck.description" nz-tooltip>
+                {{ deck.description || 'Chưa có mô tả' }}
+              </p>
+              
+              <!-- Stats Row -->
+              <div class="deck-stats-row">
+                <div class="stat-item">
+                  <span nz-icon nzType="credit-card" nzTheme="outline"></span>
+                  <span class="stat-text">{{ deck.cardCount || 0 }} thẻ</span>
+                </div>
+                <div class="stat-item">
+                  <span nz-icon nzType="clock-circle" nzTheme="outline"></span>
+                  <span class="stat-text">{{ Math.ceil((deck.cardCount || 0) * 2) }}p</span>
+                </div>
+              </div>
+
+              <!-- Progress Section -->
+              <div class="progress-section">
+                <div class="progress-header">
+                  <span class="progress-label">Tiến độ học tập</span>
+                  <span class="progress-percent">{{ calculateProgress(deck) }}%</span>
+                </div>
+                <nz-progress 
+                  [nzPercent]="calculateProgress(deck)" 
+                  [nzStatus]="calculateProgress(deck) === 100 ? 'success' : 'active'"
+                  [nzStrokeColor]="getProgressColor(calculateProgress(deck))"
+                  [nzShowInfo]="false"
+                  [nzStrokeWidth]="8"
+                  nzSize="small">
+                </nz-progress>
+              </div>
+            </div>
+
+            <!-- Card Footer Actions -->
+            <div class="card-footer-actions">
+              <div class="footer-left">
+                <button
+                  nz-button
+                  nzType="primary"
+                  nzSize="large"
+                  [disabled]="(deck.cardCount || 0) < 5"
+                  (click)="startStudying(deck)">
+                  <span nz-icon nzType="rocket" nzTheme="outline"></span>
+                  Bắt đầu Chinh phục
+                </button>
+              </div>
+              <div class="footer-right">
+                <button
+                  nz-button
+                  nzType="default"
+                  nzSize="default"
+                  nz-dropdown
+                  [nzDropdownMenu]="menu">
+                  <span nz-icon nzType="more" nzTheme="outline"></span>
+                </button>
+                <nz-dropdown-menu #menu="nzDropdownMenu">
+                  <ul nz-menu>
+                    <li nz-menu-item (click)="viewDeckDetail(deck)">
+                      <span nz-icon nzType="edit" nzTheme="outline"></span>
+                      Chỉnh sửa
+                    </li>
+                    <li nz-menu-item (click)="duplicateDeck(deck)">
+                      <span nz-icon nzType="copy" nzTheme="outline"></span>
+                      Sao chép
+                    </li>
+                    <li nz-menu-item (click)="exportDeck(deck)">
+                      <span nz-icon nzType="export" nzTheme="outline"></span>
+                      Xuất file
+                    </li>
+                    <li nz-menu-divider></li>
+                    <li nz-menu-item class="danger-item" nz-popconfirm nzPopconfirmTitle="Bạn có chắc muốn xóa bộ thẻ này?" nzPopconfirmPlacement="left" (nzOnConfirm)="deleteDeck(deck)">
+                      <span nz-icon nzType="delete" nzTheme="outline"></span>
+                      Xóa bộ thẻ
+                    </li>
+                  </ul>
+                </nz-dropdown-menu>
+              </div>
+            </div>
+
+          </nz-card>
+        </nz-col>
+      </nz-row>
+    </div>
+
+  </div>
+</div>
