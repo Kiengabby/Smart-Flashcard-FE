@@ -16,7 +16,7 @@ import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 // Services & Interfaces
 import { DeckService } from '../../services/deck.service';
 import { TokenService } from '../../services/token.service';
-import { OnboardingService } from '../../services/onboarding.service';
+// import { OnboardingService } from '../../services/onboarding.service'; // Đã tắt
 import { DeckDTO } from '../../interfaces/deck.dto';
 import { CreateDeckModalComponent } from '../../components/create-deck-modal/create-deck-modal.component';
 
@@ -144,7 +144,7 @@ export class DashboardComponent implements OnInit {
   constructor(
     private deckService: DeckService,
     private tokenService: TokenService,
-    private onboardingService: OnboardingService,
+    // private onboardingService: OnboardingService, // Đã tắt
     private modalService: NzModalService,
     private messageService: NzMessageService,
     private router: Router
@@ -154,7 +154,8 @@ export class DashboardComponent implements OnInit {
     this.loadUserInfo();
     this.generateCalendar();
     this.loadDecks();
-    this.checkAndStartOnboarding();
+    // Onboarding đã được tắt theo yêu cầu người dùng
+    // this.checkAndStartOnboarding();
   }
 
   // ===========================
@@ -168,11 +169,12 @@ export class DashboardComponent implements OnInit {
   }
 
   private checkAndStartOnboarding(): void {
-    setTimeout(() => {
-      if (!this.onboardingService.hasCompletedOnboarding()) {
-        this.onboardingService.startDashboardTour();
-      }
-    }, 500);
+    // Đã tắt onboarding theo yêu cầu người dùng
+    // setTimeout(() => {
+    //   if (!this.onboardingService.hasCompletedOnboarding()) {
+    //     this.onboardingService.startDashboardTour();
+    //   }
+    // }, 500);
   }
 
   // ===========================

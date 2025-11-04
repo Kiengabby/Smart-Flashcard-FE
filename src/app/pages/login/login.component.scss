@@ -17,17 +17,21 @@ $white: #ffffff;
   font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   position: relative;
   overflow: hidden;
+  // Tối ưu rendering
+  will-change: transform;
+  transform: translateZ(0);
 
   &::before {
     content: "";
     position: absolute;
     width: 600px;
     height: 600px;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.08); // Giảm opacity
     border-radius: 50%;
     top: -150px;
     right: -150px;
-    animation: float-slow 25s ease-in-out infinite;
+    // Đơn giản hóa animation
+    animation: float-simple 30s linear infinite;
   }
 
   &::after {
@@ -35,11 +39,12 @@ $white: #ffffff;
     position: absolute;
     width: 400px;
     height: 400px;
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.05); // Giảm opacity
     border-radius: 50%;
     bottom: -100px;
     left: -100px;
-    animation: float-slow 20s ease-in-out infinite 3s;
+    // Đơn giản hóa animation
+    animation: float-simple 25s linear infinite reverse;
   }
 }
 
@@ -51,11 +56,12 @@ $white: #ffffff;
   grid-template-columns: 480px 1fr;
   background: $white;
   border-radius: 24px;
-  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15); // Giảm shadow complexity
   overflow: hidden;
   position: relative;
   z-index: 1;
-  animation: slideUp 0.6s ease-out;
+  // Tối ưu animation
+  animation: slideUp 0.4s ease-out;
 }
 
 .login-form-section {
@@ -84,14 +90,16 @@ $white: #ffffff;
 .brand-section {
   text-align: center;
   margin-bottom: 32px;
-  animation: fadeIn 0.8s ease-out 0.2s both;
+  // Đơn giản hóa animation
+  animation: fadeIn 0.5s ease-out;
 }
 
 .brand-icon {
   font-size: 56px;
   margin-bottom: 16px;
   display: inline-block;
-  animation: bounce 2s ease-in-out infinite;
+  // Tắt animation bounce gây lag
+  // animation: bounce 2s ease-in-out infinite;
 }
 
 .brand-name {
@@ -113,7 +121,8 @@ $white: #ffffff;
 }
 
 .login-form {
-  animation: fadeIn 0.8s ease-out 0.4s both;
+  // Loại bỏ staggered animation
+  // animation: fadeIn 0.8s ease-out 0.4s both;
 
   nz-form-item {
     margin-bottom: 18px;
@@ -124,8 +133,11 @@ $white: #ffffff;
     height: 48px;
     border-radius: 12px;
     border: none !important;
-    transition: all 0.3s ease;
+    // Tối ưu transition
+    transition: all 0.2s ease;
     box-shadow: none !important;
+    // Tối ưu rendering
+    will-change: border-color;
 
     &:focus {
       border: none !important;
@@ -140,13 +152,22 @@ $white: #ffffff;
   .ant-input-affix-wrapper {
     border-radius: 12px;
     border: 2px solid #e5e7eb;
-    transition: all 0.3s ease;
+    // Tối ưu transition
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
     padding: 12px 16px;
+    // Tối ưu rendering
+    will-change: border-color, box-shadow;
 
     &:focus,
     &:focus-within {
       border-color: #667eea;
-      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+      // Đơn giản hóa shadow
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    // Thêm smooth hover effect
+    &:hover:not(:focus):not(:focus-within) {
+      border-color: #d1d5db;
     }
 
     input {
@@ -167,7 +188,8 @@ $white: #ffffff;
   cursor: pointer;
   color: $text-light;
   font-size: 16px;
-  transition: color 0.3s ease;
+  // Tối ưu transition
+  transition: color 0.2s ease;
 
   &:hover {
     color: #667eea;
@@ -214,20 +236,25 @@ $white: #ffffff;
   background: $primary-gradient;
   border: none;
   color: #ffffff !important;
-  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
-  transition: all 0.3s ease;
+  // Đơn giản hóa shadow
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+  // Tối ưu transition
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
   letter-spacing: 0.5px;
   text-transform: uppercase;
-  animation: fadeIn 0.8s ease-out 0.6s both;
+  // Loại bỏ staggered animation
+  // animation: fadeIn 0.8s ease-out 0.6s both;
+  // Tối ưu rendering
+  will-change: transform, box-shadow;
 
   &:hover:not(:disabled) {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 32px rgba(102, 126, 234, 0.5);
+    transform: translateY(-2px); // Giảm transform distance
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
     color: #ffffff !important;
   }
 
   &:active:not(:disabled) {
-    transform: translateY(-1px);
+    transform: translateY(0px); // Đơn giản hóa active state
   }
 
   &:disabled {
@@ -327,16 +354,19 @@ $white: #ffffff;
   align-items: center;
   gap: 16px;
   background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(20px);
+  backdrop-filter: blur(10px); // Giảm blur intensity
   padding: 20px;
   border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  // Đơn giản hóa transition
+  transition: transform 0.2s ease, background 0.2s ease;
+  // Tối ưu rendering
+  will-change: transform, background;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: translateX(8px) scale(1.02);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+    background: rgba(255, 255, 255, 0.18);
+    transform: translateY(-2px); // Đơn giản hóa hover effect
+    // Loại bỏ complex shadow
   }
 }
 
@@ -491,14 +521,15 @@ $white: #ffffff;
 .circle {
   position: absolute;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
 
   &.circle-1 {
     width: 300px;
     height: 300px;
     top: -50px;
     right: -50px;
-    animation: pulse 10s ease-in-out infinite;
+    // Đơn giản hóa animation
+    animation: pulse-simple 8s ease-in-out infinite;
   }
 
   &.circle-2 {
@@ -506,7 +537,8 @@ $white: #ffffff;
     height: 200px;
     bottom: -30px;
     left: -30px;
-    animation: pulse 8s ease-in-out infinite 2s;
+    // Đơn giản hóa animation
+    animation: pulse-simple 6s ease-in-out infinite 2s;
   }
 
   &.circle-3 {
@@ -515,14 +547,16 @@ $white: #ffffff;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    animation: pulse 12s ease-in-out infinite 4s;
+    // Đơn giản hóa animation
+    animation: pulse-simple 10s ease-in-out infinite 4s;
   }
 }
 
+// OPTIMIZED ANIMATIONS
 @keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -533,54 +567,29 @@ $white: #ffffff;
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
   }
 }
 
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes bounce {
+// Đơn giản hóa float animation
+@keyframes float-simple {
   0%, 100% {
-    transform: translateY(0);
+    transform: translateY(0px);
   }
   50% {
     transform: translateY(-10px);
   }
 }
 
-@keyframes float-slow {
+// Đơn giản hóa pulse animation
+@keyframes pulse-simple {
   0%, 100% {
-    transform: translate(0, 0) rotate(0deg);
-  }
-  33% {
-    transform: translate(30px, -30px) rotate(120deg);
-  }
-  66% {
-    transform: translate(-20px, 20px) rotate(240deg);
-  }
-}
-
-@keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 0.5;
+    opacity: 0.3;
   }
   50% {
-    transform: scale(1.1);
-    opacity: 0.8;
+    opacity: 0.6;
   }
 }
 
@@ -638,5 +647,82 @@ $white: #ffffff;
   .submit-btn {
     height: 48px;
     font-size: 15px;
+  }
+}
+
+/* PERFORMANCE OPTIMIZATIONS */
+
+/* GPU Acceleration */
+.login-wrapper {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+.login-container {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Input Performance */
+.ant-input-affix-wrapper {
+  contain: layout style;
+  transform: translateZ(0);
+}
+
+.ant-input-affix-wrapper input {
+  contain: layout;
+  transform: translateZ(0);
+}
+
+/* Button Performance */
+.submit-btn {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  contain: layout style;
+}
+
+/* Accessibility: Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .login-wrapper::before,
+  .login-wrapper::after,
+  .stat-card,
+  .testimonial-card,
+  .feature-badge {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Mobile Optimization */
+@media (max-width: 768px) {
+  .login-wrapper::before,
+  .login-wrapper::after {
+    display: none;
+  }
+  
+  .login-container {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  }
+  
+  .stat-card,
+  .testimonial-card,
+  .feature-badge {
+    transition: none;
+  }
+  
+  .stat-card:hover,
+  .testimonial-card:hover,
+  .feature-badge:hover {
+    transform: none;
+  }
+}
+
+/* Low-power device optimization */
+@media (prefers-reduced-motion: reduce) or (update: slow) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

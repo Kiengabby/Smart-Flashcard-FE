@@ -9,7 +9,7 @@ export const routes: Routes = [
     path: '',
     component: GuestLayoutComponent,
     children: [
-      { path: '', pathMatch: 'full', redirectTo: 'onboarding' },
+      { path: '', pathMatch: 'full', redirectTo: 'auth/login' },
       { path: 'welcome', loadChildren: () => import('./pages/welcome/welcome.routes').then(m => m.WELCOME_ROUTES) },
       { path: 'onboarding', loadChildren: () => import('./pages/onboarding/onboarding.routes').then(m => m.ONBOARDING_ROUTES) }
     ]
