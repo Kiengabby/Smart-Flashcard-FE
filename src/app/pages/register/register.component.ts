@@ -8,7 +8,6 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
-import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { AuthService } from '../../services/auth.service';
 
@@ -35,8 +34,7 @@ export function passwordMatchValidator(control: AbstractControl): ValidationErro
     NzInputModule,
     NzButtonModule,
     NzIconModule,
-    NzDividerModule,
-    NzCheckboxModule
+    NzDividerModule
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
@@ -67,8 +65,7 @@ export class RegisterComponent implements OnInit {
       displayName: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', [Validators.required]],
-      agreeToTerms: [false, [Validators.requiredTrue]]
+      confirmPassword: ['', [Validators.required]]
     }, {
       validators: passwordMatchValidator // Custom validator cho toàn bộ form
     });

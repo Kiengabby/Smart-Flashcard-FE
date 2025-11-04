@@ -197,29 +197,6 @@ $white: #ffffff;
   }
 }
 
-.form-remember {
-  margin-bottom: 20px;
-  animation: fadeIn 0.8s ease-out 0.5s both;
-
-  label {
-    font-size: 14px;
-    color: $text-dark;
-    font-weight: 500;
-  }
-
-  .link-primary {
-    color: #667eea;
-    text-decoration: none;
-    font-weight: 600;
-    transition: all 0.3s ease;
-
-    &:hover {
-      color: #5568d3;
-      text-decoration: underline;
-    }
-  }
-}
-
 .submit-btn {
   height: 50px;
   font-size: 15px;
