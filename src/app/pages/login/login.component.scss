@@ -1,4 +1,6 @@
-// Variables
+/* ===== BALANCED LOGIN STYLES - BEAUTIFUL & PERFORMANT ===== */
+
+/* Variables */
 $primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 $secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
 $success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
@@ -6,10 +8,10 @@ $text-dark: #1f2937;
 $text-light: #6b7280;
 $white: #ffffff;
 
+/* Main wrapper - Beautiful gradient background */
 .login-wrapper {
   height: 100vh;
-  max-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: $primary-gradient;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -17,99 +19,79 @@ $white: #ffffff;
   font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   position: relative;
   overflow: hidden;
-  // Tối ưu rendering
-  will-change: transform;
-  transform: translateZ(0);
 
+  /* Subtle floating elements - performance optimized */
   &::before {
     content: "";
     position: absolute;
-    width: 600px;
-    height: 600px;
-    background: rgba(255, 255, 255, 0.08); // Giảm opacity
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
     border-radius: 50%;
-    top: -150px;
-    right: -150px;
-    // Đơn giản hóa animation
-    animation: float-simple 30s linear infinite;
+    top: -100px;
+    right: -100px;
+    animation: gentle-float 20s ease-in-out infinite;
   }
 
   &::after {
     content: "";
     position: absolute;
-    width: 400px;
-    height: 400px;
-    background: rgba(255, 255, 255, 0.05); // Giảm opacity
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
     border-radius: 50%;
-    bottom: -100px;
-    left: -100px;
-    // Đơn giản hóa animation
-    animation: float-simple 25s linear infinite reverse;
+    bottom: -80px;
+    left: -80px;
+    animation: gentle-float 15s ease-in-out infinite reverse;
   }
 }
 
+/* Container - Compact and beautiful */
 .login-container {
-  max-width: 1400px;
-  max-height: 90vh;
-  width: 95%;
+  max-width: 1000px;
+  width: 90%;
   display: grid;
-  grid-template-columns: 480px 1fr;
+  grid-template-columns: 360px 1fr;
   background: $white;
-  border-radius: 24px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15); // Giảm shadow complexity
+  border-radius: 20px;
   overflow: hidden;
-  position: relative;
-  z-index: 1;
-  // Tối ưu animation
-  animation: slideUp 0.4s ease-out;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  animation: slide-up 0.6s ease-out;
 }
 
+/* Form section - Compact padding */
 .login-form-section {
-  padding: 40px 36px;
+  padding: 40px 32px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background: $white;
-  position: relative;
-  border-radius: 24px 0 0 24px;
-  overflow-y: auto;
-  max-height: 90vh;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
-  -ms-overflow-style: none;
-  scrollbar-width: none;
 }
 
 .form-content {
-  max-width: 100%;
   width: 100%;
 }
 
+/* Brand section - More compact */
 .brand-section {
   text-align: center;
-  margin-bottom: 32px;
-  // Đơn giản hóa animation
-  animation: fadeIn 0.5s ease-out;
+  margin-bottom: 24px;
+  animation: fade-in 0.8s ease-out;
 }
 
 .brand-icon {
-  font-size: 56px;
-  margin-bottom: 16px;
-  display: inline-block;
-  // Tắt animation bounce gây lag
-  // animation: bounce 2s ease-in-out infinite;
+  font-size: 48px;
+  margin-bottom: 12px;
+  animation: gentle-bounce 3s ease-in-out infinite;
 }
 
 .brand-name {
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 800;
   background: $primary-gradient;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   letter-spacing: -0.5px;
 }
 
@@ -120,166 +102,98 @@ $white: #ffffff;
   font-weight: 500;
 }
 
+/* Form styles - More compact */
 .login-form {
-  // Loại bỏ staggered animation
-  // animation: fadeIn 0.8s ease-out 0.4s both;
-
   nz-form-item {
-    margin-bottom: 18px;
-  }
-
-  input {
-    font-size: 14px;
-    height: 48px;
-    border-radius: 12px;
-    border: none !important;
-    // Tối ưu transition
-    transition: all 0.2s ease;
-    box-shadow: none !important;
-    // Tối ưu rendering
-    will-change: border-color;
-
-    &:focus {
-      border: none !important;
-      box-shadow: none !important;
-    }
-
-    &::placeholder {
-      color: #9ca3af;
-    }
+    margin-bottom: 16px;
   }
 
   .ant-input-affix-wrapper {
-    border-radius: 12px;
     border: 2px solid #e5e7eb;
-    // Tối ưu transition
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    border-radius: 12px;
     padding: 12px 16px;
-    // Tối ưu rendering
-    will-change: border-color, box-shadow;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(5px);
+
+    &:hover {
+      border-color: #d1d5db;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
 
     &:focus,
     &:focus-within {
       border-color: #667eea;
-      // Đơn giản hóa shadow
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-    }
-
-    // Thêm smooth hover effect
-    &:hover:not(:focus):not(:focus-within) {
-      border-color: #d1d5db;
-    }
-
-    input {
-      border: none !important;
-      box-shadow: none !important;
-      outline: none !important;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1), 0 4px 12px rgba(0, 0, 0, 0.05);
+      transform: translateY(-1px);
     }
   }
 
-  .ant-input-prefix {
-    color: #9ca3af;
-    font-size: 16px;
-    margin-right: 12px;
+  input {
+    border: none !important;
+    box-shadow: none !important;
+    font-size: 14px;
+    height: 40px;
+    background: transparent;
+
+    &::placeholder {
+      color: $text-light;
+    }
   }
 }
 
-.password-toggle {
-  cursor: pointer;
-  color: $text-light;
-  font-size: 16px;
-  // Tối ưu transition
-  transition: color 0.2s ease;
-
-  &:hover {
-    color: #667eea;
-  }
-}
-
+/* Form actions - Hidden for cleaner look */
 .form-actions {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-  animation: fadeIn 0.8s ease-out 0.5s both;
-
-  label {
-    font-size: 14px;
-    color: $text-dark;
-    font-weight: 500;
-  }
-
-  .remember-text {
-    color: $text-dark;
-    font-weight: 500;
-  }
-
-  .forgot-password {
-    color: #667eea;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 14px;
-    transition: all 0.3s ease;
-
-    &:hover {
-      color: #5568d3;
-      text-decoration: underline;
-    }
-  }
+  display: none;
 }
 
+/* Submit button - Beautiful gradient with hover effects */
 .submit-btn {
+  width: 100%;
   height: 50px;
-  font-size: 15px;
-  font-weight: 700;
-  border-radius: 12px;
   background: $primary-gradient;
   border: none;
-  color: #ffffff !important;
-  // Đơn giản hóa shadow
-  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
-  // Tối ưu transition
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 12px;
+  color: $white !important;
+  font-size: 15px;
+  font-weight: 700;
   letter-spacing: 0.5px;
   text-transform: uppercase;
-  // Loại bỏ staggered animation
-  // animation: fadeIn 0.8s ease-out 0.6s both;
-  // Tối ưu rendering
-  will-change: transform, box-shadow;
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+  transition: all 0.3s ease;
+  margin-bottom: 20px;
 
   &:hover:not(:disabled) {
-    transform: translateY(-2px); // Giảm transform distance
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-    color: #ffffff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
   }
 
   &:active:not(:disabled) {
-    transform: translateY(0px); // Đơn giản hóa active state
+    transform: translateY(0);
   }
 
   &:disabled {
     opacity: 0.6;
-    cursor: not-allowed;
   }
 
   span {
-    color: #ffffff !important;
+    color: $white !important;
   }
 }
 
+/* Form footer */
 .form-footer {
   text-align: center;
+  margin-top: 0;
   font-size: 14px;
   color: $text-light;
-  font-weight: 500;
-  margin-top: 24px;
-  animation: fadeIn 0.8s ease-out 0.7s both;
+  animation: fade-in 1s ease-out;
 
   .link-primary {
     color: #667eea;
     text-decoration: none;
     font-weight: 700;
-    margin-left: 4px;
     transition: all 0.3s ease;
 
     &:hover {
@@ -289,100 +203,109 @@ $white: #ffffff;
   }
 }
 
+/* Hero section - Compact and beautiful */
 .login-hero-section {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 40px 36px;
+  background: $primary-gradient;
+  padding: 40px 32px;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  color: $white;
   position: relative;
-  overflow-y: auto;
-  max-height: 90vh;
-  border-radius: 0 24px 24px 0;
+  overflow: hidden;
 
-  &::-webkit-scrollbar {
-    display: none;
+  /* Decorative circles */
+  &::before {
+    content: "";
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    top: 20%;
+    right: -40px;
+    animation: gentle-pulse 8s ease-in-out infinite;
   }
-  -ms-overflow-style: none;
-  scrollbar-width: none;
 }
 
 .hero-content {
   position: relative;
   z-index: 2;
+  text-align: center;
 }
 
 .hero-header {
-  text-align: center;
   margin-bottom: 32px;
-  animation: fadeIn 0.8s ease-out 0.3s both;
+  animation: slide-in-right 0.8s ease-out;
 }
 
 .hero-title {
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 800;
-  color: $white;
   margin-bottom: 12px;
-  letter-spacing: -0.5px;
   line-height: 1.2;
+  letter-spacing: -0.5px;
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
   .gradient-text {
     background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
   }
 }
 
 .hero-description {
   font-size: 15px;
-  color: rgba(255, 255, 255, 0.9);
-  margin: 0;
+  color: rgba(255, 255, 255, 0.85);
   line-height: 1.6;
+  margin: 0;
   font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
+/* Stats - Compact glass cards */
 .stats-container {
   display: grid;
-  gap: 16px;
+  gap: 14px;
   margin-bottom: 32px;
-  animation: slideInRight 0.8s ease-out 0.4s both;
+  animation: slide-in-right 0.8s ease-out 0.2s both;
 }
 
 .stat-card {
   display: flex;
   align-items: center;
-  gap: 16px;
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(10px); // Giảm blur intensity
-  padding: 20px;
-  border-radius: 16px;
+  gap: 14px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  padding: 16px;
+  border-radius: 14px;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  // Đơn giản hóa transition
-  transition: transform 0.2s ease, background 0.2s ease;
-  // Tối ưu rendering
-  will-change: transform, background;
+  transition: all 0.4s ease;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.18);
-    transform: translateY(-2px); // Đơn giản hóa hover effect
-    // Loại bỏ complex shadow
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
   }
 }
 
 .stat-icon {
-  width: 52px;
-  height: 52px;
-  border-radius: 14px;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
+  font-size: 20px;
   color: $white;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease;
 
-  i {
-    font-size: 26px;
+  .stat-card:hover & {
+    transform: scale(1.05) rotate(3deg);
   }
 }
 
@@ -391,40 +314,44 @@ $white: #ffffff;
 }
 
 .stat-number {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 800;
-  color: $white;
   margin-bottom: 2px;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.3px;
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .stat-label {
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.85);
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
   font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
+/* Testimonials - Compact cards */
 .testimonials {
   margin-bottom: 32px;
-  animation: slideInRight 0.8s ease-out 0.5s both;
+  animation: slide-in-right 0.8s ease-out 0.4s both;
 }
 
 .testimonial-card {
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(20px);
-  padding: 20px;
-  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  padding: 16px;
+  border-radius: 14px;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  margin-bottom: 16px;
-  transition: all 0.3s ease;
+  margin-bottom: 12px;
+  transition: all 0.4s ease;
 
   &:last-child {
     margin-bottom: 0;
   }
 
   &:hover {
-    background: rgba(255, 255, 255, 0.18);
-    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   }
 }
 
@@ -438,46 +365,50 @@ $white: #ffffff;
 .avatar {
   width: 44px;
   height: 44px;
+  background: rgba(255, 255, 255, 0.25);
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
-  flex-shrink: 0;
-}
+  font-size: 20px;
+  transition: transform 0.3s ease;
 
-.user-info {
-  flex: 1;
+  .testimonial-card:hover & {
+    transform: scale(1.1);
+  }
 }
 
 .user-name {
   font-size: 15px;
   font-weight: 700;
-  color: $white;
   margin-bottom: 2px;
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .user-role {
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(255, 255, 255, 0.7);
   font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .testimonial-text {
   font-size: 13px;
-  color: rgba(255, 255, 255, 0.9);
-  margin: 0;
+  color: rgba(255, 255, 255, 0.85);
   line-height: 1.6;
+  margin: 0;
   font-style: italic;
   font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
+/* Quick features - Beautiful badges */
 .quick-features {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  animation: slideInRight 0.8s ease-out 0.6s both;
+  animation: slide-in-right 0.8s ease-out 0.6s both;
 }
 
 .feature-badge {
@@ -485,78 +416,47 @@ $white: #ffffff;
   align-items: center;
   gap: 8px;
   background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(8px);
   padding: 10px 16px;
   border-radius: 24px;
   border: 1px solid rgba(255, 255, 255, 0.25);
   transition: all 0.3s ease;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
 
   i {
     font-size: 16px;
     color: #10b981;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
   }
+}
 
-  span {
-    font-size: 13px;
-    font-weight: 600;
-    color: $white;
-  }
+/* Password toggle */
+.password-toggle {
+  cursor: pointer;
+  color: $text-light;
+  font-size: 16px;
+  transition: all 0.3s ease;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.22);
-    transform: translateY(-2px);
+    color: #667eea;
+    transform: scale(1.1);
   }
 }
 
-.decorative-circles {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.circle {
-  position: absolute;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
-
-  &.circle-1 {
-    width: 300px;
-    height: 300px;
-    top: -50px;
-    right: -50px;
-    // Đơn giản hóa animation
-    animation: pulse-simple 8s ease-in-out infinite;
-  }
-
-  &.circle-2 {
-    width: 200px;
-    height: 200px;
-    bottom: -30px;
-    left: -30px;
-    // Đơn giản hóa animation
-    animation: pulse-simple 6s ease-in-out infinite 2s;
-  }
-
-  &.circle-3 {
-    width: 150px;
-    height: 150px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    // Đơn giản hóa animation
-    animation: pulse-simple 10s ease-in-out infinite 4s;
-  }
-}
-
-// OPTIMIZED ANIMATIONS
-@keyframes slideUp {
+/* Beautiful animations - optimized */
+@keyframes slide-up {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(30px);
   }
   to {
     opacity: 1;
@@ -564,52 +464,58 @@ $white: #ffffff;
   }
 }
 
-@keyframes fadeIn {
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-in-right {
   from {
     opacity: 0;
+    transform: translateX(30px);
   }
   to {
     opacity: 1;
+    transform: translateX(0);
   }
 }
 
-// Đơn giản hóa float animation
-@keyframes float-simple {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
+@keyframes gentle-float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(5deg); }
 }
 
-// Đơn giản hóa pulse animation
-@keyframes pulse-simple {
-  0%, 100% {
-    opacity: 0.3;
-  }
-  50% {
-    opacity: 0.6;
-  }
+@keyframes gentle-bounce {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-3px); }
 }
 
-@media (max-width: 1200px) {
+@keyframes gentle-pulse {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.05); }
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
   .login-container {
-    grid-template-columns: 440px 1fr;
-    max-width: 1100px;
-    width: 90%;
+    grid-template-columns: 340px 1fr;
+    max-width: 850px;
   }
 
   .hero-title {
-    font-size: 28px;
+    font-size: 26px;
+  }
+
+  .login-form-section,
+  .login-hero-section {
+    padding: 36px 28px;
   }
 }
 
 @media (max-width: 768px) {
   .login-container {
     grid-template-columns: 1fr;
-    max-width: 540px;
-    width: 95%;
+    max-width: 480px;
   }
 
   .login-hero-section {
@@ -617,18 +523,18 @@ $white: #ffffff;
   }
 
   .login-form-section {
-    padding: 48px 40px;
-    border-radius: 24px;
+    padding: 40px 32px;
+    border-radius: 20px;
   }
 }
 
-@media (max-width: 576px) {
+@media (max-width: 480px) {
   .login-wrapper {
-    padding: 12px;
+    padding: 16px;
   }
 
   .login-form-section {
-    padding: 40px 28px;
+    padding: 32px 24px;
   }
 
   .brand-icon {
@@ -638,91 +544,74 @@ $white: #ffffff;
   .brand-name {
     font-size: 24px;
   }
+}
 
-  .login-form input {
-    font-size: 14px;
-    height: 46px;
+/* HIGH-DPI PERFORMANCE OPTIMIZATION - Only simplify on high-DPI */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  
+  /* Disable expensive effects only on high-DPI displays */
+  .stat-card,
+  .testimonial-card,
+  .feature-badge {
+    backdrop-filter: none !important;
+    
+    &:hover {
+      transform: translateY(-1px) !important;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+    }
+  }
+
+  .ant-input-affix-wrapper {
+    backdrop-filter: none !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+  }
+
+  /* Simplify animations on high-DPI */
+  .login-wrapper::before,
+  .login-wrapper::after,
+  .login-hero-section::before {
+    animation-duration: 30s !important;
+  }
+
+  .brand-icon {
+    animation: none !important;
+  }
+
+  /* Optimize shadows */
+  .login-container {
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1) !important;
   }
 
   .submit-btn {
-    height: 48px;
-    font-size: 15px;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.25) !important;
+    
+    &:hover:not(:disabled) {
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.35) !important;
+      transform: translateY(-1px) !important;
+    }
   }
 }
 
-/* PERFORMANCE OPTIMIZATIONS */
-
-/* GPU Acceleration */
-.login-wrapper {
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  perspective: 1000px;
-}
-
-.login-container {
-  transform: translateZ(0);
-  backface-visibility: hidden;
-}
-
-/* Input Performance */
-.ant-input-affix-wrapper {
-  contain: layout style;
-  transform: translateZ(0);
-}
-
-.ant-input-affix-wrapper input {
-  contain: layout;
-  transform: translateZ(0);
-}
-
-/* Button Performance */
-.submit-btn {
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  contain: layout style;
-}
-
-/* Accessibility: Respect reduced motion preference */
-@media (prefers-reduced-motion: reduce) {
-  .login-wrapper::before,
-  .login-wrapper::after,
-  .stat-card,
-  .testimonial-card,
-  .feature-badge {
-    animation: none !important;
-    transition: none !important;
-  }
-}
-
-/* Mobile Optimization */
-@media (max-width: 768px) {
-  .login-wrapper::before,
-  .login-wrapper::after {
-    display: none;
-  }
-  
-  .login-container {
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  }
-  
-  .stat-card,
-  .testimonial-card,
-  .feature-badge {
-    transition: none;
-  }
-  
-  .stat-card:hover,
-  .testimonial-card:hover,
-  .feature-badge:hover {
-    transform: none;
-  }
-}
-
-/* Low-power device optimization */
-@media (prefers-reduced-motion: reduce) or (update: slow) {
+/* Ultra high-DPI optimization (4K displays) */
+@media (-webkit-min-device-pixel-ratio: 3), (min-resolution: 288dpi) {
   * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    animation: none !important;
+    backdrop-filter: none !important;
+    transition-duration: 0.1s !important;
+  }
+
+  .login-wrapper {
+    background: #667eea !important;
+  }
+
+  .stat-card,
+  .testimonial-card,
+  .feature-badge {
+    background: rgba(255, 255, 255, 0.2) !important;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.25) !important;
+      transform: none !important;
+    }
   }
 }

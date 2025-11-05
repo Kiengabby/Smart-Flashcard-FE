@@ -1,4 +1,6 @@
-﻿// Variables
+﻿/* ===== BALANCED REGISTER STYLES - BEAUTIFUL & PERFORMANT ===== */
+
+/* Variables */
 $primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 $secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
 $success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
@@ -6,10 +8,10 @@ $text-dark: #1f2937;
 $text-light: #6b7280;
 $white: #ffffff;
 
+/* Main wrapper - Beautiful gradient background */
 .register-wrapper {
   height: 100vh;
-  max-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: $primary-gradient;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -17,92 +19,69 @@ $white: #ffffff;
   font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   position: relative;
   overflow: hidden;
-  // Tối ưu rendering
-  will-change: transform;
-  transform: translateZ(0);
 
+  /* Subtle floating elements - performance optimized */
   &::before {
     content: "";
     position: absolute;
-    width: 500px;
-    height: 500px;
-    background: rgba(255, 255, 255, 0.08); // Giảm opacity
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
     border-radius: 50%;
-    top: -100px;
-    right: -100px;
-    // Đơn giản hóa animation
-    animation: float-simple 25s linear infinite;
+    top: -80px;
+    right: -80px;
+    animation: gentle-float 18s ease-in-out infinite;
   }
 
   &::after {
     content: "";
     position: absolute;
-    width: 300px;
-    height: 300px;
-    background: rgba(255, 255, 255, 0.05); // Giảm opacity
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%);
     border-radius: 50%;
-    bottom: -50px;
-    left: -50px;
-    // Đơn giản hóa animation
-    animation: float-simple 20s linear infinite reverse;
+    bottom: -60px;
+    left: -60px;
+    animation: gentle-float 12s ease-in-out infinite reverse;
   }
 }
 
+/* Container - Beautiful with optimized shadows */
 .register-container {
-  max-width: 1400px;
-  max-height: 90vh;
-  width: 95%;
+  max-width: 1200px;
+  width: 100%;
   display: grid;
-  grid-template-columns: 480px 1fr;
+  grid-template-columns: 400px 1fr;
   background: $white;
-  border-radius: 24px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15); // Giảm shadow complexity
+  border-radius: 20px;
   overflow: hidden;
-  position: relative;
-  z-index: 1;
-  // Tối ưu animation
-  animation: slideUp 0.4s ease-out;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  animation: slide-up 0.6s ease-out;
 }
 
+/* Form section */
 .register-form-section {
-  padding: 40px 36px;
+  padding: 48px 40px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background: $white;
-  position: relative;
-  border-radius: 24px 0 0 24px;
-  overflow-y: auto;
-  max-height: 90vh;
-
-  /* Hide scrollbar for Chrome, Safari and Opera */
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
-  /* Hide scrollbar for IE, Edge and Firefox */
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
 }
 
 .form-content {
-  max-width: 100%;
   width: 100%;
 }
 
+/* Brand section - Beautiful typography */
 .brand-section {
   text-align: center;
-  margin-bottom: 28px;
-  // Đơn giản hóa animation
-  animation: fadeIn 0.5s ease-out;
+  margin-bottom: 32px;
+  animation: fade-in 0.8s ease-out;
 }
 
 .brand-icon {
   font-size: 48px;
-  margin-bottom: 12px;
-  display: inline-block;
-  // Tắt animation bounce gây lag
-  // animation: bounce 2s ease-in-out infinite;
+  margin-bottom: 16px;
+  animation: gentle-bounce 4s ease-in-out infinite;
 }
 
 .brand-name {
@@ -112,7 +91,7 @@ $white: #ffffff;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   letter-spacing: -0.5px;
 }
 
@@ -123,16 +102,17 @@ $white: #ffffff;
   font-weight: 500;
 }
 
+/* Form header */
 .form-header {
-  margin-bottom: 24px;
-  animation: fadeIn 0.8s ease-out 0.3s both;
+  margin-bottom: 28px;
+  animation: fade-in 0.8s ease-out 0.2s both;
 }
 
 .form-title {
   font-size: 28px;
   font-weight: 800;
   color: $text-dark;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   letter-spacing: -0.5px;
 }
 
@@ -143,175 +123,94 @@ $white: #ffffff;
   font-weight: 500;
 }
 
+/* Form styles - Beautiful inputs with optimized focus effects */
 .register-form {
-  // Loại bỏ staggered animation
-  // animation: fadeIn 0.8s ease-out 0.4s both;
+  animation: fade-in 0.8s ease-out 0.4s both;
 
   nz-form-item {
-    margin-bottom: 16px;
-  }
-
-  input {
-    font-size: 14px;
-    height: 48px;
-    border-radius: 12px;
-    border: none !important;
-    // Tối ưu transition
-    transition: all 0.2s ease;
-    box-shadow: none !important;
-    // Tối ưu rendering
-    will-change: border-color;
-
-    &:focus {
-      border: none !important;
-      box-shadow: none !important;
-    }
-
-    &::placeholder {
-      color: #9ca3af;
-    }
+    margin-bottom: 18px;
   }
 
   .ant-input-affix-wrapper {
-    border-radius: 12px;
     border: 2px solid #e5e7eb;
-    // Tối ưu transition
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    border-radius: 12px;
     padding: 12px 16px;
-    // Tối ưu rendering
-    will-change: border-color, box-shadow;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(5px);
+
+    &:hover {
+      border-color: #d1d5db;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
 
     &:focus,
     &:focus-within {
       border-color: #667eea;
-      // Đơn giản hóa shadow
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-    }
-
-    // Thêm smooth hover effect
-    &:hover:not(:focus):not(:focus-within) {
-      border-color: #d1d5db;
-    }
-
-    input {
-      border: none !important;
-      box-shadow: none !important;
-      outline: none !important;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1), 0 4px 12px rgba(0, 0, 0, 0.05);
+      transform: translateY(-1px);
     }
   }
 
-  .ant-input-prefix {
-    color: #9ca3af;
-    font-size: 16px;
-    margin-right: 12px;
+  input {
+    border: none !important;
+    box-shadow: none !important;
+    font-size: 14px;
+    height: 40px;
+    background: transparent;
+
+    &::placeholder {
+      color: $text-light;
+    }
   }
 }
 
-.password-toggle {
-  cursor: pointer;
-  color: $text-light;
-  font-size: 16px;
-  // Tối ưu transition
-  transition: color 0.2s ease;
-
-  &:hover {
-    color: #667eea;
-  }
-}
-
+/* Submit button - Beautiful gradient with hover effects */
 .submit-btn {
+  width: 100%;
   height: 50px;
-  font-size: 15px;
-  font-weight: 700;
-  border-radius: 12px;
   background: $primary-gradient;
   border: none;
-  color: #ffffff !important;
-  // Đơn giản hóa shadow
-  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
-  // Tối ưu transition
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 12px;
+  color: $white !important;
+  font-size: 15px;
+  font-weight: 700;
   letter-spacing: 0.5px;
   text-transform: uppercase;
-  // Loại bỏ staggered animation
-  // animation: fadeIn 0.8s ease-out 0.6s both;
-  // Tối ưu rendering
-  will-change: transform, box-shadow;
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+  transition: all 0.3s ease;
+  margin-bottom: 20px;
 
   &:hover:not(:disabled) {
-    transform: translateY(-2px); // Giảm transform distance
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-    color: #ffffff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
   }
 
   &:active:not(:disabled) {
-    transform: translateY(0px); // Đơn giản hóa active state
+    transform: translateY(0);
   }
 
   &:disabled {
     opacity: 0.6;
-    cursor: not-allowed;
   }
 
   span {
-    color: #ffffff !important;
+    color: $white !important;
   }
 }
 
-nz-divider {
-  margin: 28px 0;
-  font-size: 13px;
-  color: $text-light;
-  font-weight: 500;
-  // Loại bỏ staggered animation
-  // animation: fadeIn 0.8s ease-out 0.7s both;
-}
-
-.social-buttons {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 28px;
-  // Loại bỏ staggered animation
-  // animation: fadeIn 0.8s ease-out 0.8s both;
-}
-
-.social-btn {
-  flex: 1;
-  height: 50px;
-  font-size: 15px;
-  font-weight: 600;
-  border-radius: 12px;
-  border: 2px solid #e5e7eb;
-  // Tối ưu transition
-  transition: all 0.2s ease;
-  background: $white;
-
-  &:hover {
-    border-color: #667eea;
-    color: #667eea;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-  }
-
-  i {
-    font-size: 20px;
-    margin-right: 8px;
-  }
-}
-
+/* Form footer */
 .form-footer {
   text-align: center;
   font-size: 14px;
   color: $text-light;
-  font-weight: 500;
-  margin-top: 20px;
-  animation: fadeIn 0.8s ease-out 0.7s both;
+  animation: fade-in 1s ease-out;
 
   .link-primary {
     color: #667eea;
     text-decoration: none;
     font-weight: 700;
-    margin-left: 4px;
     transition: all 0.3s ease;
 
     &:hover {
@@ -321,101 +220,92 @@ nz-divider {
   }
 }
 
+/* Features section - Beautiful with glass effects */
 .register-features-section {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 40px 36px;
+  background: $primary-gradient;
+  padding: 48px 40px;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  color: $white;
   position: relative;
-  overflow-y: auto;
-  max-height: 90vh;
-  border-radius: 0 24px 24px 0;
+  overflow: hidden;
 
-  /* Hide scrollbar for Chrome, Safari and Opera */
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
-  /* Hide scrollbar for IE, Edge and Firefox */
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
-
+  /* Decorative elements */
   &::before {
-    content: "";
-    position: absolute;
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
-    border-radius: 50%;
-    top: -100px;
-    right: -100px;
-    animation: pulse 8s ease-in-out infinite;
-  }
-
-  &::after {
     content: "";
     position: absolute;
     width: 300px;
     height: 300px;
     background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
     border-radius: 50%;
-    bottom: -80px;
-    left: -80px;
-    animation: pulse 10s ease-in-out infinite 2s;
+    top: -80px;
+    right: -80px;
+    animation: gentle-pulse 10s ease-in-out infinite;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+    bottom: -60px;
+    left: -60px;
+    animation: gentle-pulse 8s ease-in-out infinite 2s;
   }
 }
 
 .features-content {
   position: relative;
   z-index: 2;
+  text-align: center;
 }
 
 .features-header {
-  text-align: center;
-  margin-bottom: 32px;
-  color: $white;
-  animation: slideInRight 0.8s ease-out;
+  margin-bottom: 40px;
+  animation: slide-in-right 0.8s ease-out;
 }
 
 .star-icon {
   font-size: 36px;
   color: #fbbf24;
-  margin-bottom: 12px;
-  display: inline-block;
-  animation: rotate-star 3s linear infinite;
-  filter: drop-shadow(0 4px 8px rgba(251, 191, 36, 0.4));
+  margin-bottom: 16px;
+  animation: gentle-rotate 6s ease-in-out infinite;
+  filter: drop-shadow(0 4px 8px rgba(251, 191, 36, 0.3));
 }
 
 .features-title {
   font-size: 30px;
   font-weight: 800;
   margin: 0;
-  color: $white;
   letter-spacing: -0.5px;
+  color: rgba(255, 255, 255, 0.95);
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* Features list - Beautiful grid with animations */
 .features-list {
   display: grid;
-  gap: 14px;
-  max-height: none;
-  overflow-y: visible;
-  padding-right: 0;
+  gap: 16px;
+  animation: slide-in-right 0.8s ease-out 0.2s both;
 }
 
 .feature-item {
   display: flex;
-  gap: 14px;
+  gap: 16px;
   background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(20px);
-  padding: 16px;
-  border-radius: 14px;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  backdrop-filter: blur(15px);
+  padding: 20px;
+  border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  animation: slideInRight 0.6s ease-out both;
+  text-align: left;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  animation: slide-in-up 0.6s ease-out both;
 
-  @for $i from 1 through 7 {
+  // Staggered animation delays
+  @for $i from 1 through 6 {
     &:nth-child(#{$i}) {
       animation-delay: #{0.1 * $i}s;
     }
@@ -423,8 +313,8 @@ nz-divider {
 
   &:hover {
     background: rgba(255, 255, 255, 0.2);
-    transform: translateX(12px) scale(1.02);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+    transform: translateX(8px) scale(1.02);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
   }
 }
 
@@ -435,17 +325,14 @@ nz-divider {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
+  font-size: 20px;
   color: $white;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  flex-shrink: 0;
   transition: transform 0.3s ease;
 
   .feature-item:hover & {
     transform: rotate(10deg) scale(1.1);
-  }
-
-  i {
-    font-size: 24px;
   }
 }
 
@@ -456,22 +343,64 @@ nz-divider {
 .feature-title {
   font-size: 15px;
   font-weight: 700;
-  color: $white;
   margin-bottom: 4px;
   line-height: 1.4;
   letter-spacing: -0.2px;
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .feature-description {
   font-size: 12.5px;
-  color: rgba(255, 255, 255, 0.85);
-  margin: 0;
+  color: rgba(255, 255, 255, 0.8);
   line-height: 1.5;
+  margin: 0;
   font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-// OPTIMIZED ANIMATIONS
-@keyframes slideUp {
+/* Password toggle */
+.password-toggle {
+  cursor: pointer;
+  color: $text-light;
+  font-size: 16px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    color: #667eea;
+    transform: scale(1.1);
+  }
+}
+
+/* Beautiful animations - optimized */
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in-up {
   from {
     opacity: 0;
     transform: translateY(20px);
@@ -482,80 +411,51 @@ nz-divider {
   }
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+@keyframes gentle-float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(3deg); }
 }
 
-// Đơn giản hóa float animation
-@keyframes float-simple {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
+@keyframes gentle-bounce {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-2px); }
 }
 
-// Đơn giản hóa pulse animation
-@keyframes pulse-simple {
-  0%, 100% {
-    opacity: 0.3;
-  }
-  50% {
-    opacity: 0.6;
-  }
+@keyframes gentle-pulse {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.03); }
 }
 
-@media (max-width: 1400px) {
+@keyframes gentle-rotate {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(5deg); }
+  75% { transform: rotate(-3deg); }
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
   .register-container {
-    max-width: 1300px;
-    width: 92%;
-  }
-  
-  .register-features-section {
-    min-width: 500px;
-  }
-}
-
-@media (max-width: 1200px) {
-  .register-container {
-    grid-template-columns: 460px 1fr;
-    max-width: 1100px;
-    width: 90%;
-  }
-
-  .register-features-section {
-    padding: 40px 32px;
-    min-width: 450px;
+    grid-template-columns: 380px 1fr;
+    max-width: 900px;
   }
 
   .features-title {
-    font-size: 28px;
+    font-size: 26px;
   }
 
   .feature-item {
-    padding: 16px;
-  }
-  
-  .feature-title {
-    font-size: 14px;
-  }
-  
-  .feature-description {
-    font-size: 12px;
+    padding: 18px;
+
+    &:hover {
+      transform: translateX(6px) scale(1.01);
+    }
   }
 }
 
 @media (max-width: 768px) {
   .register-container {
     grid-template-columns: 1fr;
-    max-width: 540px;
-    width: 95%;
+    max-width: 480px;
   }
 
   .register-features-section {
@@ -563,118 +463,122 @@ nz-divider {
   }
 
   .register-form-section {
-    padding: 48px 40px;
-    border-radius: 24px;
+    padding: 40px 32px;
+    border-radius: 20px;
   }
 }
 
-@media (max-width: 576px) {
+@media (max-width: 480px) {
   .register-wrapper {
-    padding: 12px;
+    padding: 16px;
   }
 
   .register-form-section {
-    padding: 40px 28px;
+    padding: 32px 24px;
   }
 
   .brand-icon {
-    font-size: 48px;
+    font-size: 40px;
   }
 
   .brand-name {
-    font-size: 22px;
+    font-size: 20px;
   }
 
   .form-title {
-    font-size: 26px;
+    font-size: 24px;
+  }
+}
+
+/* HIGH-DPI PERFORMANCE OPTIMIZATION - Only simplify on high-DPI */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  
+  /* Disable expensive effects only on high-DPI displays */
+  .feature-item {
+    backdrop-filter: none !important;
+    transition: background 0.2s ease, transform 0.2s ease !important;
+    
+    &:hover {
+      transform: translateX(4px) scale(1.01) !important;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1) !important;
+    }
   }
 
-  .register-form input {
-    font-size: 14px;
-    height: 46px;
+  .ant-input-affix-wrapper {
+    backdrop-filter: none !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+  }
+
+  .feature-icon {
+    .feature-item:hover & {
+      transform: scale(1.05) !important;
+    }
+  }
+
+  /* Simplify animations on high-DPI */
+  .register-wrapper::before,
+  .register-wrapper::after,
+  .register-features-section::before,
+  .register-features-section::after {
+    animation-duration: 25s !important;
+  }
+
+  .brand-icon,
+  .star-icon {
+    animation: none !important;
+  }
+
+  /* Optimize shadows */
+  .register-container {
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1) !important;
   }
 
   .submit-btn {
-    height: 48px;
-    font-size: 15px;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.25) !important;
+    
+    &:hover:not(:disabled) {
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.35) !important;
+      transform: translateY(-1px) !important;
+    }
   }
 
-  .social-btn {
-    height: 46px;
-    font-size: 14px;
+  .feature-icon {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
   }
-}
 
-/* PERFORMANCE OPTIMIZATIONS */
-
-/* GPU Acceleration */
-.register-wrapper {
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  perspective: 1000px;
-}
-
-.register-container {
-  transform: translateZ(0);
-  backface-visibility: hidden;
-}
-
-/* Input Performance */
-.ant-input-affix-wrapper {
-  contain: layout style;
-  transform: translateZ(0);
-}
-
-.ant-input-affix-wrapper input {
-  contain: layout;
-  transform: translateZ(0);
-}
-
-/* Button Performance */
-.submit-btn {
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  contain: layout style;
-}
-
-/* Accessibility: Respect reduced motion preference */
-@media (prefers-reduced-motion: reduce) {
-  .register-wrapper::before,
-  .register-wrapper::after,
-  .feature-card,
-  .social-btn {
-    animation: none !important;
-    transition: none !important;
+  /* Disable staggered animations */
+  .feature-item {
+    animation: fade-in 0.4s ease-out !important;
+    animation-delay: 0s !important;
   }
 }
 
-/* Mobile Optimization */
-@media (max-width: 768px) {
-  .register-wrapper::before,
-  .register-wrapper::after {
-    display: none;
-  }
-  
-  .register-container {
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  }
-  
-  .feature-card,
-  .social-btn {
-    transition: none;
-  }
-  
-  .feature-card:hover,
-  .social-btn:hover {
-    transform: none;
-  }
-}
-
-/* Low-power device optimization */
-@media (prefers-reduced-motion: reduce) or (update: slow) {
+/* Ultra high-DPI optimization (4K displays) */
+@media (-webkit-min-device-pixel-ratio: 3), (min-resolution: 288dpi) {
   * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    animation: none !important;
+    backdrop-filter: none !important;
+    transition-duration: 0.1s !important;
+  }
+
+  .register-wrapper {
+    background: #667eea !important;
+  }
+
+  .feature-item {
+    background: rgba(255, 255, 255, 0.15) !important;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.2) !important;
+      transform: none !important;
+    }
+  }
+
+  .feature-icon {
+    background: rgba(255, 255, 255, 0.2) !important;
+    
+    .feature-item:hover & {
+      transform: none !important;
+    }
   }
 }

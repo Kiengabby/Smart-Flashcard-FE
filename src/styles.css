@@ -8,3 +8,36 @@ button.mat-primary.mat-raised-button {
   text-transform: uppercase;
   font-weight: bold;
 }
+
+/* Global optimizations */
+* {
+  box-sizing: border-box;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Performance hints for browser */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeSpeed;
+}
+
+/* Progressive performance optimization based on display capability */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  /* Light optimization for Retina displays */
+  body {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+}
+
+@media (-webkit-min-device-pixel-ratio: 3), (min-resolution: 288dpi) {
+  /* Aggressive optimization for 4K+ displays */
+  body {
+    contain: layout style;
+  }
+}
