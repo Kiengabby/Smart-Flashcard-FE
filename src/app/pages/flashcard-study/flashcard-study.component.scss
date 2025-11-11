@@ -191,58 +191,95 @@
   margin-top: auto;
 }
 
-.knowledge-rating {
+.difficulty-rating {
   margin-bottom: 24px;
 
   .rating-label {
-    font-size: 16px;
-    font-weight: 600;
-    color: #262626;
     text-align: center;
+    font-size: 16px;
+    font-weight: 500;
     margin-bottom: 16px;
+    color: #262626;
   }
 
   .rating-buttons {
     display: flex;
-    gap: 16px;
+    gap: 8px;
     justify-content: center;
+    flex-wrap: wrap;
 
     button {
-      flex: 1;
-      max-width: 200px;
-      height: 56px;
-      font-size: 16px;
-      font-weight: 600;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-
+      min-width: 100px;
+      height: 48px;
+      border-radius: 8px;
+      font-weight: 500;
+      font-size: 14px;
+      border: 2px solid;
+      
       span[nz-icon] {
-        font-size: 20px;
+        font-size: 16px;
+        margin-right: 4px;
+      }
+      
+      &.btn-easy {
+        border-color: #52c41a;
+        color: #52c41a;
+        background-color: #f6ffed;
+        
+        &:hover {
+          background-color: #52c41a;
+          color: white;
+        }
       }
 
-      &.btn-unknown {
+      &.btn-medium {
+        border-color: #fa8c16;
+        color: #fa8c16;
+        background-color: #fff7e6;
+        
+        &:hover {
+          background-color: #fa8c16;
+          color: white;
+        }
+      }
+
+      &.btn-hard {
         border-color: #ff4d4f;
         color: #ff4d4f;
-
+        background-color: #fff2f0;
+        
         &:hover {
-          background: #fff1f0;
-          border-color: #ff4d4f;
-          color: #ff4d4f;
+          background-color: #ff4d4f;
+          color: white;
         }
       }
 
       &.btn-known {
-        background: #52c41a;
-        border-color: #52c41a;
-
+        border-color: #1890ff;
+        color: #1890ff;
+        background-color: #e6f7ff;
+        
         &:hover {
-          background: #73d13d;
-          border-color: #73d13d;
+          background-color: #1890ff;
+          color: white;
         }
       }
+    }
+  }
+}
+
+.flip-instruction {
+  margin-bottom: 24px;
+  text-align: center;
+
+  .instruction-text {
+    font-size: 16px;
+    color: #8c8c8c;
+    margin: 0;
+
+    span[nz-icon] {
+      margin-right: 8px;
+      color: #1890ff;
     }
   }
 }

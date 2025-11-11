@@ -72,29 +72,51 @@
 
   <!-- Controls -->
   <div *ngIf="!isLoading && currentCard" class="study-controls">
-    <!-- Knowledge Rating -->
-    <div class="knowledge-rating">
-      <p class="rating-label">Bạn đã biết từ này chưa?</p>
+    <!-- SM-2 Difficulty Rating - Always visible -->
+    <div class="difficulty-rating">
+      <p class="rating-label">Đánh giá mức độ khó của từ này:</p>
       <div class="rating-buttons">
         <button 
           nz-button 
-          nzType="default" 
           nzSize="large"
-          class="btn-unknown"
-          (click)="markAsUnknown()">
-          <span nz-icon nzType="close-circle" nzTheme="outline"></span>
-          Chưa biết
+          class="btn-easy"
+          (click)="rateCard(5)">
+          <span nz-icon nzType="smile" nzTheme="outline"></span>
+          Dễ
         </button>
         <button 
           nz-button 
-          nzType="primary" 
+          nzSize="large"
+          class="btn-medium"
+          (click)="rateCard(3)">
+          <span nz-icon nzType="meh" nzTheme="outline"></span>
+          Trung bình
+        </button>
+        <button 
+          nz-button 
+          nzSize="large"
+          class="btn-hard"
+          (click)="rateCard(1)">
+          <span nz-icon nzType="frown" nzTheme="outline"></span>
+          Khó
+        </button>
+        <button 
+          nz-button 
           nzSize="large"
           class="btn-known"
-          (click)="markAsKnown()">
+          (click)="rateCard(4)">
           <span nz-icon nzType="check-circle" nzTheme="outline"></span>
           Đã biết
         </button>
       </div>
+    </div>
+
+    <!-- Flip Instruction - Show hint to flip card if not flipped -->
+    <div class="flip-instruction" *ngIf="!isFlipped">
+      <p class="instruction-text">
+        <span nz-icon nzType="eye" nzTheme="outline"></span>
+        Nhấn vào thẻ để xem câu trả lời (không bắt buộc)
+      </p>
     </div>
 
     <!-- Navigation -->

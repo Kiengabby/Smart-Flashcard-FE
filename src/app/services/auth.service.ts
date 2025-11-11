@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError, of } from 'rxjs';
+import { tap, catchError, delay } from 'rxjs/operators';
 import { TokenService } from './token.service';
 
 export interface LoginRequest {
@@ -52,6 +52,14 @@ export class AuthService {
             this.tokenService.saveRefreshToken(response.refreshToken);
           }
           this.tokenService.saveUserInfo(response.user);
+        }),
+        catchError((error: HttpErrorResponse) => {
+          // Nếu không kết nối được server (ERR_CONNECTION_REFUSED)
+          if (error.status === 0) {
+            console.warn('Backend không khả dụng, sử dụng mock login...');
+            return this.mockLogin(data);
+          }
+          return throwError(() => error);
         })
       );
   }
@@ -69,8 +77,64 @@ export class AuthService {
             this.tokenService.saveRefreshToken(response.refreshToken);
           }
           this.tokenService.saveUserInfo(response.user);
+        }),
+        catchError((error: HttpErrorResponse) => {
+          // Nếu không kết nối được server (ERR_CONNECTION_REFUSED)
+          if (error.status === 0) {
+            console.warn('Backend không khả dụng, sử dụng mock register...');
+            return this.mockRegister(data);
+          }
+          return throwError(() => error);
         })
       );
+  }
+
+  /**
+   * Mock login cho development khi backend không chạy
+   */
+  private mockLogin(data: LoginRequest): Observable<AuthResponse> {
+    // Simulate API delay
+    return of({
+      token: 'mock_jwt_token_' + Date.now(),
+      user: {
+        id: '1',
+        email: data.email,
+        displayName: 'Demo User',
+        avatar: ''
+      },
+      message: 'Đăng nhập thành công (Mock Mode)'
+    }).pipe(
+      delay(1000), // Simulate network delay
+      tap(response => {
+        this.tokenService.saveToken(response.token);
+        this.tokenService.saveUserInfo(response.user);
+        console.info('Mock login successful for:', data.email);
+      })
+    );
+  }
+
+  /**
+   * Mock register cho development khi backend không chạy
+   */
+  private mockRegister(data: RegisterRequest): Observable<AuthResponse> {
+    // Simulate API delay
+    return of({
+      token: 'mock_jwt_token_' + Date.now(),
+      user: {
+        id: '1',
+        email: data.email,
+        displayName: data.displayName,
+        avatar: ''
+      },
+      message: 'Đăng ký thành công (Mock Mode)'
+    }).pipe(
+      delay(1500), // Simulate network delay
+      tap(response => {
+        this.tokenService.saveToken(response.token);
+        this.tokenService.saveUserInfo(response.user);
+        console.info('Mock register successful for:', data.email);
+      })
+    );
   }
 
   /**

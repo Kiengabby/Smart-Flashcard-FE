@@ -70,22 +70,42 @@ export class LoginComponent implements OnInit {
     // Gọi API đăng nhập
     this.authService.login(this.loginForm.value).subscribe({
       next: (response) => {
-        setTimeout(() => {
-          this.isLoading = false;
-          this.cdr.detectChanges();
+        this.isLoading = false;
+        
+        // Kiểm tra nếu đang dùng mock mode
+        if (response.message.includes('Mock Mode')) {
+          this.message.warning('Đăng nhập thành công (Demo Mode - Backend chưa chạy)');
+        } else {
           this.message.success('Đăng nhập thành công!');
-          
-          // Điều hướng đến dashboard sau khi đăng nhập thành công
-          this.router.navigate(['/app/dashboard']);
-        }, 0);
+        }
+        
+        // Điều hướng đến dashboard sau khi đăng nhập thành công
+        this.router.navigate(['/app/dashboard']);
       },
       error: (error) => {
-        setTimeout(() => {
-          this.isLoading = false;
-          this.cdr.detectChanges();
-          this.message.error(error.error?.message || 'Đăng nhập thất bại. Vui lòng thử lại!');
-          console.error('Login error:', error);
-        }, 0);
+        this.isLoading = false;
+        
+        // Hiển thị lỗi chi tiết dựa trên status code
+        let errorMessage = 'Đăng nhập thất bại. Vui lòng thử lại!';
+        
+        if (error.status === 0) {
+          errorMessage = 'Không thể kết nối đến server. Vui lòng kiểm tra kết nối mạng!';
+        } else if (error.status === 401) {
+          errorMessage = 'Email hoặc mật khẩu không chính xác!';
+        } else if (error.status === 403) {
+          errorMessage = 'Tài khoản đã bị khóa. Vui lòng liên hệ admin!';
+        } else if (error.error?.message) {
+          errorMessage = error.error.message;
+        }
+        
+        this.message.error(errorMessage);
+        console.error('Login error:', error);
+        
+        // Reset form validation để có thể submit lại
+        this.loginForm.markAsUntouched();
+        
+        // Clear password field for security
+        this.loginForm.patchValue({ password: '' });
       }
     });
   }

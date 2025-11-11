@@ -48,23 +48,23 @@
     <div class="progress-detail">
       <div class="progress-item">
         <div class="progress-label">Đã biết</div>
-        <div class="progress-value">{{ stats.mastered }}</div>
+        <div class="progress-value">{{ difficultyStats.known }}</div>
       </div>
       <div class="progress-item">
         <div class="progress-label">Dễ</div>
-        <div class="progress-value">0</div>
+        <div class="progress-value">{{ difficultyStats.easy }}</div>
       </div>
       <div class="progress-item">
         <div class="progress-label">Trung bình</div>
-        <div class="progress-value">{{ cards.length - stats.mastered > 0 ? cards.length - stats.mastered : 0 }}</div>
+        <div class="progress-value">{{ difficultyStats.medium }}</div>
       </div>
       <div class="progress-item">
         <div class="progress-label">Khó</div>
-        <div class="progress-value">0</div>
+        <div class="progress-value">{{ difficultyStats.hard }}</div>
       </div>
       <div class="progress-item highlight">
         <div class="progress-label">Chưa bắt đầu</div>
-        <div class="progress-value">{{ stats.totalWords > stats.mastered ? stats.totalWords - stats.mastered : 0 }}</div>
+        <div class="progress-value">{{ difficultyStats.notStarted }}</div>
       </div>
     </div>
   </div>

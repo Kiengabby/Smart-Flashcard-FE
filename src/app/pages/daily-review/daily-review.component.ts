@@ -347,7 +347,7 @@ export class DailyReviewComponent {
       };
 
       // Submit review to backend
-      const response = await this.cardService.reviewCard(card.id!, reviewRequest).toPromise();
+      const response = await this.cardService.reviewCard(Number(card.deckId!), card.id!, reviewRequest).toPromise();
       
       if (response) {
         // Update local statistics

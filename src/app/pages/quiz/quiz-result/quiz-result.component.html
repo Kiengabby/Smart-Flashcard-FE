@@ -1,0 +1,146 @@
+<div class="quiz-result-container">
+  <!-- Loading State -->
+  <div class="loading-container" *ngIf="isLoading">
+    <nz-spin nzSize="large">
+      <div class="loading-text">
+        <h3>Đang tải kết quả...</h3>
+        <p>Vui lòng chờ trong giây lát</p>
+      </div>
+    </nz-spin>
+  </div>
+
+  <!-- Result Content -->
+  <div class="result-content" *ngIf="!isLoading && result">
+    
+    <!-- Main Result -->
+    <nz-result 
+      [nzStatus]="getResultStatus()" 
+      [nzIcon]="getResultIcon()"
+      [nzTitle]="'Bạn đã hoàn thành quiz!'"
+      [nzSubTitle]="result.message"
+      class="main-result">
+      
+      <!-- Score Progress -->
+      <div nz-result-content>
+        <div class="score-section">
+          <div class="score-circle">
+            <nz-progress
+              [nzPercent]="result.accuracyPercentage"
+              nzType="circle"
+              [nzWidth]="120"
+              [nzStrokeColor]="getProgressColor()"
+              [nzFormat]="progressFormatter">
+            </nz-progress>
+          </div>
+        </div>
+      </div>
+    </nz-result>
+
+    <!-- Detailed Stats -->
+    <div class="stats-grid">
+      <nz-card class="stat-card">
+        <nz-statistic
+          nzTitle="Tổng câu hỏi"
+          [nzValue]="result.totalQuestions"
+          [nzValueStyle]="{ color: '#3f8600' }"
+          nzPrefix="📝">
+        </nz-statistic>
+      </nz-card>
+
+      <nz-card class="stat-card">
+        <nz-statistic
+          nzTitle="Câu trả lời đúng"
+          [nzValue]="result.correctAnswers"
+          [nzValueStyle]="{ color: '#52c41a' }"
+          nzPrefix="✅">
+        </nz-statistic>
+      </nz-card>
+
+      <nz-card class="stat-card">
+        <nz-statistic
+          nzTitle="Câu trả lời sai"
+          [nzValue]="result.wrongAnswers"
+          [nzValueStyle]="{ color: '#ff4d4f' }"
+          nzPrefix="❌">
+        </nz-statistic>
+      </nz-card>
+
+      <nz-card class="stat-card">
+        <nz-statistic
+          nzTitle="Thời gian hoàn thành"
+          [nzValue]="formatTime(result.totalTimeSeconds)"
+          [nzValueStyle]="{ color: '#1890ff' }"
+          nzPrefix="⏱️">
+        </nz-statistic>
+      </nz-card>
+    </div>
+
+    <!-- Performance Analysis -->
+    <nz-card class="analysis-card" nzTitle="Phân tích kết quả">
+      <div class="analysis-content">
+        <div class="performance-bar">
+          <div class="bar-label">Độ chính xác</div>
+          <nz-progress 
+            [nzPercent]="result.accuracyPercentage" 
+            [nzStrokeColor]="getProgressColor()"
+            [nzShowInfo]="true"
+            class="performance-progress">
+          </nz-progress>
+        </div>
+
+        <div class="recommendations" *ngIf="result.accuracyPercentage < 80">
+          <h4>💡 Gợi ý cải thiện:</h4>
+          <ul>
+            <li *ngIf="result.accuracyPercentage < 60">
+              Hãy ôn lại các thẻ bằng chế độ Flashcard trước khi làm quiz lần nữa
+            </li>
+            <li *ngIf="result.accuracyPercentage >= 60 && result.accuracyPercentage < 80">
+              Bạn đã tiến bộ! Tiếp tục luyện tập để đạt kết quả tốt hơn
+            </li>
+            <li>
+              Tập trung vào {{ result.wrongAnswers }} thẻ bạn đã trả lời sai
+            </li>
+          </ul>
+        </div>
+
+        <div class="congratulations" *ngIf="result.accuracyPercentage >= 80">
+          <h4>🎉 Chúc mừng!</h4>
+          <p>Bạn đã thành thạo rất tốt bộ thẻ này. Hãy tiếp tục với các bộ thẻ khác!</p>
+        </div>
+      </div>
+    </nz-card>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button 
+        nz-button 
+        nzType="default" 
+        nzSize="large"
+        (click)="backToStudyMode()"
+        class="action-button">
+        <span nz-icon nzType="arrow-left" nzTheme="outline"></span>
+        Quay lại Study Mode
+      </button>
+
+      <button 
+        nz-button 
+        nzType="primary" 
+        nzSize="large"
+        (click)="retakeQuiz()"
+        class="action-button">
+        <span nz-icon nzType="redo" nzTheme="outline"></span>
+        Làm lại Quiz
+      </button>
+
+      <button 
+        nz-button 
+        nzType="dashed" 
+        nzSize="large"
+        (click)="continueWithFlashcard()"
+        class="action-button">
+        <span nz-icon nzType="file-text" nzTheme="outline"></span>
+        Học Flashcard
+      </button>
+    </div>
+  </div>
+</div>

@@ -85,22 +85,37 @@ export class RegisterComponent implements OnInit {
     // Gọi API đăng ký
     this.authService.register(this.registerForm.value).subscribe({
       next: (response) => {
-        setTimeout(() => {
-          this.isLoading = false;
-          this.cdr.detectChanges();
+        this.isLoading = false;
+        
+        // Kiểm tra nếu đang dùng mock mode
+        if (response.message.includes('Mock Mode')) {
+          this.message.warning('Đăng ký thành công (Demo Mode - Backend chưa chạy)');
+        } else {
           this.message.success('Đăng ký thành công!');
-          
-          // Điều hướng đến dashboard sau khi đăng ký thành công
-          this.router.navigate(['/app/dashboard']);
-        });
+        }
+        
+        // Điều hướng đến dashboard sau khi đăng ký thành công
+        this.router.navigate(['/app/dashboard']);
       },
       error: (error) => {
-        setTimeout(() => {
-          this.isLoading = false;
-          this.cdr.detectChanges();
-          this.message.error(error.error?.message || 'Đăng ký thất bại. Vui lòng thử lại!');
-          console.error('Register error:', error);
-        });
+        this.isLoading = false;
+        
+        // Hiển thị lỗi chi tiết dựa trên status code
+        let errorMessage = 'Đăng ký thất bại. Vui lòng thử lại!';
+        
+        if (error.status === 0) {
+          errorMessage = 'Không thể kết nối đến server. Vui lòng kiểm tra kết nối mạng!';
+        } else if (error.status === 409) {
+          errorMessage = 'Email này đã được sử dụng. Vui lòng chọn email khác!';
+        } else if (error.error?.message) {
+          errorMessage = error.error.message;
+        }
+        
+        this.message.error(errorMessage);
+        console.error('Register error:', error);
+        
+        // Reset form validation để có thể submit lại
+        this.registerForm.markAsUntouched();
       }
     });
   }

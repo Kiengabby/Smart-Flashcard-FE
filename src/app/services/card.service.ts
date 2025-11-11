@@ -49,8 +49,8 @@ export class CardService {
   /**
    * Ghi nhận kết quả ôn tập thẻ
    */
-  reviewCard(cardId: number, request: ReviewCardRequest): Observable<ReviewCardResponse> {
-    return this.http.post<ReviewCardResponse>(`${this.BASE_API}/cards/${cardId}/review`, request);
+  reviewCard(deckId: number, cardId: number, request: ReviewCardRequest): Observable<ReviewCardResponse> {
+    return this.http.post<ReviewCardResponse>(`${this.BASE_API}/${deckId}/cards/${cardId}/review`, request);
   }
 
   /**

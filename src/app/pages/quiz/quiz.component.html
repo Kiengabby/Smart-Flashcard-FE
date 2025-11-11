@@ -1,0 +1,106 @@
+<div class="quiz-container" *ngIf="!isLoading">
+  <!-- Header với Progress -->
+  <div class="quiz-header">
+    <button nz-button nzType="text" nzSize="large" (click)="goBack()" class="back-button">
+      <span nz-icon nzType="arrow-left" nzTheme="outline"></span>
+      Quay lại
+    </button>
+    
+    <div class="quiz-progress">
+      <div class="progress-info">
+        <span class="question-counter">Câu {{ currentQuestionNumber }}/{{ totalQuestions }}</span>
+        <div class="stats">
+          <span class="correct">✓ {{ correctAnswers }}</span>
+          <span class="wrong">✗ {{ wrongAnswers }}</span>
+        </div>
+      </div>
+      <nz-progress 
+        [nzPercent]="progressPercentage" 
+        nzStatus="active"
+        [nzShowInfo]="false"
+        nzStrokeColor="#52c41a">
+      </nz-progress>
+    </div>
+  </div>
+
+  <!-- Câu hỏi -->
+  <nz-card class="question-card" *ngIf="currentQuestion">
+    <div class="question-content">
+      <h2 class="question-title">{{ currentQuestion.question }}</h2>
+      <p class="question-subtitle">Chọn nghĩa đúng:</p>
+    </div>
+  </nz-card>
+
+  <!-- Đáp án -->
+  <div class="answers-container" *ngIf="currentQuestion">
+    <div class="answers-grid">
+      <button 
+        *ngFor="let option of currentQuestion.options; let i = index"
+        [class]="getAnswerButtonClass(i)"
+        (click)="selectAnswer(i)"
+        [disabled]="isSubmitting || showResult">
+        <span class="option-letter">{{ getOptionLetter(i) }}</span>
+        <span class="option-text">{{ option }}</span>
+        <span *ngIf="showResult && i === answerResult?.correctAnswerIndex" 
+              class="correct-icon" nz-icon nzType="check-circle" nzTheme="fill"></span>
+        <span *ngIf="showResult && i === selectedAnswerIndex && !answerResult?.isCorrect" 
+              class="wrong-icon" nz-icon nzType="close-circle" nzTheme="fill"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Kết quả câu trả lời -->
+  <nz-alert 
+    *ngIf="showResult && answerResult"
+    [nzType]="answerResult.isCorrect ? 'success' : 'error'"
+    [nzMessage]="answerResult.isCorrect ? 'Chính xác!' : 'Sai rồi!'"
+    [nzDescription]="answerResult.isCorrect ? 
+      'Bạn đã chọn đúng đáp án.' : 
+      'Đáp án đúng là: ' + answerResult.correctAnswer"
+    nzShowIcon
+    class="result-alert">
+  </nz-alert>
+
+  <!-- Action Buttons -->
+  <div class="action-buttons">
+    <button 
+      *ngIf="!showResult"
+      nz-button 
+      nzType="primary" 
+      nzSize="large"
+      [nzLoading]="isSubmitting"
+      [disabled]="!canSubmit()"
+      (click)="submitAnswer()"
+      class="submit-button">
+      <span nz-icon nzType="check" nzTheme="outline"></span>
+      Xác nhận
+    </button>
+
+    <button 
+      *ngIf="showResult"
+      nz-button 
+      nzType="primary" 
+      nzSize="large"
+      (click)="nextQuestion()"
+      class="next-button">
+      <span *ngIf="answerResult?.nextQuestion; else finishText">
+        Câu tiếp theo
+        <span nz-icon nzType="arrow-right" nzTheme="outline"></span>
+      </span>
+      <ng-template #finishText>
+        Xem kết quả
+        <span nz-icon nzType="trophy" nzTheme="outline"></span>
+      </ng-template>
+    </button>
+  </div>
+</div>
+
+<!-- Loading State -->
+<div class="loading-container" *ngIf="isLoading">
+  <nz-spin nzSize="large">
+    <div class="loading-text">
+      <h3>Đang chuẩn bị câu hỏi...</h3>
+      <p>Vui lòng chờ trong giây lát</p>
+    </div>
+  </nz-spin>
+</div>

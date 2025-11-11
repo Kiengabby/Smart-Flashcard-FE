@@ -1,0 +1,230 @@
+.quiz-result-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  min-height: calc(100vh - 64px);
+}
+
+/* Loading State */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  
+  .loading-text {
+    text-align: center;
+    margin-top: 24px;
+    
+    h3 {
+      color: #333;
+      margin-bottom: 8px;
+    }
+    
+    p {
+      color: #666;
+      margin: 0;
+    }
+  }
+}
+
+/* Main Result */
+.result-content {
+  .main-result {
+    margin-bottom: 32px;
+    
+    ::ng-deep .ant-result-title {
+      font-size: 28px;
+      font-weight: 700;
+    }
+    
+    ::ng-deep .ant-result-subtitle {
+      font-size: 16px;
+      margin-bottom: 24px;
+    }
+    
+    .score-section {
+      display: flex;
+      justify-content: center;
+      margin-top: 24px;
+      
+      .score-circle {
+        ::ng-deep .ant-progress-text {
+          font-size: 16px;
+          font-weight: 700;
+        }
+      }
+    }
+  }
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 32px;
+  
+  .stat-card {
+    text-align: center;
+    border-radius: 12px;
+    border: 2px solid #f0f0f0;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      border-color: #1890ff;
+      box-shadow: 0 4px 12px rgba(24, 144, 255, 0.15);
+    }
+    
+    ::ng-deep .ant-statistic-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #666;
+      margin-bottom: 8px;
+    }
+    
+    ::ng-deep .ant-statistic-content {
+      font-size: 24px;
+      font-weight: 700;
+    }
+  }
+}
+
+/* Analysis Card */
+.analysis-card {
+  margin-bottom: 32px;
+  border-radius: 12px;
+  border: 2px solid #f0f0f0;
+  
+  ::ng-deep .ant-card-head-title {
+    font-size: 18px;
+    font-weight: 700;
+  }
+  
+  .analysis-content {
+    .performance-bar {
+      margin-bottom: 24px;
+      
+      .bar-label {
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #333;
+      }
+      
+      .performance-progress {
+        ::ng-deep .ant-progress-text {
+          font-weight: 700;
+        }
+      }
+    }
+    
+    .recommendations,
+    .congratulations {
+      padding: 16px;
+      border-radius: 8px;
+      
+      h4 {
+        margin-bottom: 12px;
+        font-size: 16px;
+      }
+      
+      ul {
+        margin: 0;
+        padding-left: 20px;
+        
+        li {
+          margin-bottom: 8px;
+          color: #666;
+        }
+      }
+      
+      p {
+        margin: 0;
+        color: #666;
+      }
+    }
+    
+    .recommendations {
+      background: #fff7e6;
+      border: 1px solid #ffd591;
+      
+      h4 {
+        color: #fa8c16;
+      }
+    }
+    
+    .congratulations {
+      background: #f6ffed;
+      border: 1px solid #b7eb8f;
+      
+      h4 {
+        color: #52c41a;
+      }
+    }
+  }
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  
+  .action-button {
+    min-width: 160px;
+    height: 48px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 8px;
+    
+    span[nz-icon] {
+      margin-right: 8px;
+    }
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .quiz-result-container {
+    padding: 16px;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+    align-items: center;
+    
+    .action-button {
+      width: 100%;
+      max-width: 280px;
+    }
+  }
+  
+  .result-content .main-result {
+    ::ng-deep .ant-result-title {
+      font-size: 24px;
+    }
+    
+    ::ng-deep .ant-result-subtitle {
+      font-size: 14px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .result-content .main-result .score-section .score-circle {
+    ::ng-deep .ant-progress-circle {
+      width: 100px !important;
+      height: 100px !important;
+    }
+  }
+}

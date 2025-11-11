@@ -63,7 +63,7 @@ export class DeckLibraryComponent implements OnInit {
   // Data properties
   decks: DeckDTO[] = [];
   filteredDecks: DeckDTO[] = [];
-  isLoading = true;
+  private _isLoading = false; // Start with false to avoid initial expression change error
 
   // Search & Filter properties
   searchText = '';
@@ -74,6 +74,17 @@ export class DeckLibraryComponent implements OnInit {
   totalDecks = 0;
   totalCards = 0;
   studyingDecks = 0;
+
+  // Getter for isLoading to ensure stable expression evaluation
+  get isLoading(): boolean {
+    return this._isLoading;
+  }
+
+  set isLoading(value: boolean) {
+    if (this._isLoading !== value) {
+      this._isLoading = value;
+    }
+  }
 
   // Expose Math to template
   Math = Math;
@@ -108,8 +119,12 @@ export class DeckLibraryComponent implements OnInit {
     this.totalDecks = 0;
     this.totalCards = 0;
     this.studyingDecks = 0;
+    this.filteredDecks = [];
     
-    this.loadDecks();
+    // Use setTimeout to avoid initial expression changed error
+    setTimeout(() => {
+      this.loadDecks();
+    }, 0);
   }
 
   /**
@@ -117,17 +132,15 @@ export class DeckLibraryComponent implements OnInit {
    */
   loadDecks(): void {
     this.isLoading = true;
+    this.cdr.detectChanges(); // Force change detection
     
     this.deckService.getDecks().subscribe({
       next: (data: DeckDTO[]) => {
         this.decks = data;
+        this.updateStats();
+        this.applyFilters();
         this.isLoading = false;
-        
-        // Use setTimeout to avoid ExpressionChangedAfterItHasBeenCheckedError
-        setTimeout(() => {
-          this.updateStats();
-          this.applyFilters();
-        }, 0);
+        this.cdr.detectChanges(); // Force change detection after data update
       },
       error: (error) => {
         console.error('Lỗi khi tải danh sách bộ thẻ:', error);
@@ -137,19 +150,22 @@ export class DeckLibraryComponent implements OnInit {
           console.warn('API không khả dụng hoặc timeout, sử dụng mock data...');
           this.message.warning('Không thể kết nối server, hiển thị dữ liệu mẫu');
           this.decks = this.getMockDecks();
-          setTimeout(() => {
-            this.updateStats();
-            this.applyFilters();
-          }, 0);
+          this.updateStats();
+          this.applyFilters();
         } else if (error.status === 404) {
           this.message.info('Chưa có bộ thẻ nào');
           this.decks = [];
+          this.updateStats();
+          this.applyFilters();
         } else {
           this.message.error(`Không thể tải danh sách bộ thẻ: ${error.message || 'Lỗi không xác định'}`);
           this.decks = [];
+          this.updateStats();
+          this.applyFilters();
         }
         
         this.isLoading = false;
+        this.cdr.detectChanges(); // Force change detection after error handling
       }
     });
   }
@@ -180,9 +196,20 @@ export class DeckLibraryComponent implements OnInit {
    * Cập nhật thống kê
    */
   updateStats(): void {
-    this.totalDecks = this.decks.length;
-    this.totalCards = this.decks.reduce((sum, deck) => sum + (deck.cardCount || 0), 0);
-    this.studyingDecks = this.decks.filter(deck => this.getDeckStatus(deck) === 'studying').length;
+    const newTotalDecks = this.decks.length;
+    const newTotalCards = this.decks.reduce((sum, deck) => sum + (deck.cardCount || 0), 0);
+    const newStudyingDecks = this.decks.filter(deck => this.getDeckStatus(deck) === 'studying').length;
+    
+    // Only update if values have changed
+    if (this.totalDecks !== newTotalDecks) {
+      this.totalDecks = newTotalDecks;
+    }
+    if (this.totalCards !== newTotalCards) {
+      this.totalCards = newTotalCards;
+    }
+    if (this.studyingDecks !== newStudyingDecks) {
+      this.studyingDecks = newStudyingDecks;
+    }
   }
 
   /**
@@ -292,14 +319,11 @@ export class DeckLibraryComponent implements OnInit {
         const newDeck = result as DeckDTO;
         // Prepend to decks so user sees it immediately
         this.decks.unshift(newDeck);
-        
-        // Use setTimeout to avoid change detection issues
-        setTimeout(() => {
-          this.updateStats();
-          this.applyFilters();
-          // Navigate to the new deck detail page
-          this.router.navigate(['/app/deck', newDeck.id]);
-        }, 0);
+        this.updateStats();
+        this.applyFilters();
+        this.cdr.detectChanges();
+        // Navigate to the new deck detail page
+        this.router.navigate(['/app/deck', newDeck.id]);
         return;
       }
 

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, RouterOutlet, Router } from '@angular/router';
+import { RouterOutlet, Router } from '@angular/router';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
@@ -16,7 +16,6 @@ import { CardService } from '../../services/card.service';
   standalone: true,
   imports: [
     CommonModule,
-    RouterLink, 
     RouterOutlet, 
     NzLayoutModule, 
     NzIconModule, 

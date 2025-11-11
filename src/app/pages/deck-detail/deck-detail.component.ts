@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NzCardModule } from 'ng-zorro-antd/card';
@@ -43,10 +43,32 @@ import { CardModalComponent } from '../../components/card-modal/card-modal.compo
 })
 export class DeckDetailComponent implements OnInit {
   deckId!: number;
-  deck?: DeckDTO;
+  deck?: DeckDTO = undefined; // Explicitly initialize
   cards: CardDTO[] = [];
-  isLoadingDeck = true;
-  isLoadingCards = true;
+  private _isLoadingDeck = false; // Start with false
+  private _isLoadingCards = false; // Start with false
+
+  // Getter/setter for isLoadingDeck to prevent expression changed error
+  get isLoadingDeck(): boolean {
+    return this._isLoadingDeck;
+  }
+
+  set isLoadingDeck(value: boolean) {
+    if (this._isLoadingDeck !== value) {
+      this._isLoadingDeck = value;
+    }
+  }
+
+  // Getter/setter for isLoadingCards to prevent expression changed error
+  get isLoadingCards(): boolean {
+    return this._isLoadingCards;
+  }
+
+  set isLoadingCards(value: boolean) {
+    if (this._isLoadingCards !== value) {
+      this._isLoadingCards = value;
+    }
+  }
 
   constructor(
     private route: ActivatedRoute,
@@ -54,34 +76,46 @@ export class DeckDetailComponent implements OnInit {
     private deckService: DeckService,
     private cardService: CardService,
     private modalService: NzModalService,
-    private message: NzMessageService
+    private message: NzMessageService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    // Lấy deckId từ route params
-    this.route.params.subscribe(params => {
-      this.deckId = +params['id'];
-      if (this.deckId) {
-        this.loadDeckInfo();
-        this.loadCards();
-      }
-    });
+    // Initialize properties
+    this.deck = undefined;
+    this.cards = [];
+    
+    // Use setTimeout to avoid initial expression changed error
+    setTimeout(() => {
+      // Lấy deckId từ route params
+      this.route.params.subscribe(params => {
+        this.deckId = +params['id'];
+        if (this.deckId) {
+          this.loadDeckInfo();
+          this.loadCards();
+        }
+      });
+    }, 0);
   }
 
   /**
    * Load thông tin deck
    */
   loadDeckInfo(): void {
-    this.isLoadingDeck = true;
+    this._isLoadingDeck = true;
+    this.cdr.detectChanges();
+    
     this.deckService.getDeckById(this.deckId.toString()).subscribe({
       next: (data) => {
         this.deck = data;
-        this.isLoadingDeck = false;
+        this._isLoadingDeck = false;
+        this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Lỗi khi tải thông tin deck:', error);
         this.message.error('Không thể tải thông tin bộ thẻ!');
-        this.isLoadingDeck = false;
+        this._isLoadingDeck = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -90,16 +124,20 @@ export class DeckDetailComponent implements OnInit {
    * Load danh sách cards
    */
   loadCards(): void {
-    this.isLoadingCards = true;
+    this._isLoadingCards = true;
+    this.cdr.detectChanges();
+    
     this.cardService.getCardsByDeck(this.deckId).subscribe({
       next: (data) => {
         this.cards = data;
-        this.isLoadingCards = false;
+        this._isLoadingCards = false;
+        this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Lỗi khi tải danh sách thẻ:', error);
         this.message.error('Không thể tải danh sách thẻ!');
-        this.isLoadingCards = false;
+        this._isLoadingCards = false;
+        this.cdr.detectChanges();
       }
     });
   }
