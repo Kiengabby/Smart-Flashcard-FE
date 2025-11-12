@@ -5,6 +5,14 @@
   min-height: calc(100vh - 64px);
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
+  word-wrap: break-word;
+  box-sizing: border-box;
+  
+  * {
+    box-sizing: border-box;
+    max-width: 100%;
+  }
 }
 
 /* Header */
@@ -56,10 +64,19 @@
   margin-bottom: 24px;
   border: 2px solid #f0f0f0;
   border-radius: 12px;
+  width: 100%;
+  
+  ::ng-deep .ant-card-body {
+    padding: 20px;
+    overflow: hidden;
+    word-wrap: break-word;
+  }
   
   .question-content {
     text-align: center;
-    padding: 20px;
+    padding: 0;
+    width: 100%;
+    box-sizing: border-box;
     
     .question-title {
       font-size: 28px;
@@ -67,6 +84,17 @@
       color: #1890ff;
       margin-bottom: 12px;
       line-height: 1.3;
+      word-wrap: break-word;
+      word-break: break-word;
+      overflow-wrap: break-word;
+      white-space: pre-wrap;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      line-clamp: 3;
+      -webkit-box-orient: vertical;
     }
     
     .question-subtitle {
@@ -81,11 +109,14 @@
 .answers-container {
   flex: 1;
   margin-bottom: 24px;
+  width: 100%;
+  overflow: hidden;
   
   .answers-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 16px;
+    width: 100%;
     
     @media (max-width: 768px) {
       grid-template-columns: 1fr;
@@ -95,7 +126,7 @@
 
 .answer-button {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   padding: 20px;
   border: 2px solid #d9d9d9;
   border-radius: 12px;
@@ -105,6 +136,10 @@
   text-align: left;
   width: 100%;
   min-height: 80px;
+  max-height: 150px;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
   
   &:hover {
     border-color: #1890ff;
@@ -129,6 +164,7 @@
     margin-right: 16px;
     flex-shrink: 0;
     color: #666;
+    margin-top: 2px;
   }
   
   .option-text {
@@ -136,13 +172,30 @@
     font-size: 16px;
     line-height: 1.4;
     color: #333;
+    word-wrap: break-word;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    max-width: calc(100% - 60px);
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    white-space: pre-wrap;
+    padding-right: 8px;
   }
   
   .correct-icon,
   .wrong-icon {
-    margin-left: 12px;
+    margin-left: 8px;
     font-size: 20px;
     flex-shrink: 0;
+    margin-top: 2px;
+    position: absolute;
+    right: 20px;
+    top: 20px;
   }
   
   .correct-icon {
@@ -265,20 +318,102 @@
     padding: 16px;
   }
   
-  .question-card .question-content {
-    padding: 16px;
+  .question-card {
+    ::ng-deep .ant-card-body {
+      padding: 16px;
+    }
     
-    .question-title {
-      font-size: 24px;
+    .question-content .question-title {
+      font-size: 22px;
+      word-break: break-word;
+      overflow-wrap: break-word;
+      -webkit-line-clamp: 4;
+      line-clamp: 4;
     }
   }
   
   .answer-button {
     padding: 16px;
     min-height: 60px;
+    max-height: 120px;
     
     .option-text {
       font-size: 14px;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      max-width: calc(100% - 50px);
+    }
+    
+    .option-letter {
+      width: 28px;
+      height: 28px;
+      font-size: 12px;
+      margin-right: 12px;
+    }
+    
+    .correct-icon,
+    .wrong-icon {
+      right: 16px;
+      top: 16px;
+      font-size: 18px;
     }
   }
+}
+
+/* Additional breakpoints for better responsive design */
+@media (max-width: 768px) {
+  .question-card .question-content .question-title {
+    font-size: 26px;
+  }
+  
+  .answers-grid {
+    gap: 12px;
+  }
+  
+  .answer-button {
+    .option-text {
+      font-size: 15px;
+    }
+  }
+}
+
+/* Utility classes for text handling */
+.text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.text-wrap {
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Enhanced scroll behavior */
+* {
+  box-sizing: border-box;
+}
+
+/* Ensure proper text selection */
+.option-text,
+.question-title {
+  user-select: text;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+}
+
+/* Better focus styles for accessibility */
+.answer-button:focus {
+  outline: 2px solid #1890ff;
+  outline-offset: 2px;
+}
+
+/* Improve text readability */
+.quiz-container {
+  font-feature-settings: "liga" 1, "kern" 1;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }

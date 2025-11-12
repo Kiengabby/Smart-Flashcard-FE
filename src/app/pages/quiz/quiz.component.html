@@ -26,7 +26,7 @@
   <!-- Câu hỏi -->
   <nz-card class="question-card" *ngIf="currentQuestion">
     <div class="question-content">
-      <h2 class="question-title">{{ currentQuestion.question }}</h2>
+      <h2 class="question-title" [title]="currentQuestion.question">{{ currentQuestion.question }}</h2>
       <p class="question-subtitle">Chọn nghĩa đúng:</p>
     </div>
   </nz-card>
@@ -38,7 +38,8 @@
         *ngFor="let option of currentQuestion.options; let i = index"
         [class]="getAnswerButtonClass(i)"
         (click)="selectAnswer(i)"
-        [disabled]="isSubmitting || showResult">
+        [disabled]="isSubmitting || showResult"
+        [title]="option">
         <span class="option-letter">{{ getOptionLetter(i) }}</span>
         <span class="option-text">{{ option }}</span>
         <span *ngIf="showResult && i === answerResult?.correctAnswerIndex" 
@@ -63,19 +64,8 @@
 
   <!-- Action Buttons -->
   <div class="action-buttons">
-    <button 
-      *ngIf="!showResult"
-      nz-button 
-      nzType="primary" 
-      nzSize="large"
-      [nzLoading]="isSubmitting"
-      [disabled]="!canSubmit()"
-      (click)="submitAnswer()"
-      class="submit-button">
-      <span nz-icon nzType="check" nzTheme="outline"></span>
-      Xác nhận
-    </button>
-
+    <!-- Nút xác nhận đã được loại bỏ - auto submit khi chọn đáp án -->
+    
     <button 
       *ngIf="showResult"
       nz-button 

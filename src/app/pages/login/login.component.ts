@@ -8,8 +8,8 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { AuthService } from '../../services/auth.service';
-import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-login',
@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private authService: AuthService,
-    private message: NzMessageService,
+    private notification: NzNotificationService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -70,42 +70,43 @@ export class LoginComponent implements OnInit {
     // Gọi API đăng nhập
     this.authService.login(this.loginForm.value).subscribe({
       next: (response) => {
-        this.isLoading = false;
-        
-        // Kiểm tra nếu đang dùng mock mode
-        if (response.message.includes('Mock Mode')) {
-          this.message.warning('Đăng nhập thành công (Demo Mode - Backend chưa chạy)');
-        } else {
-          this.message.success('Đăng nhập thành công!');
-        }
-        
-        // Điều hướng đến dashboard sau khi đăng nhập thành công
-        this.router.navigate(['/app/dashboard']);
+        setTimeout(() => {
+          this.isLoading = false;
+          this.cdr.detectChanges();
+          
+          // Kiểm tra nếu đang dùng mock mode
+          if (response.message && response.message.includes('Mock Mode')) {
+            this.notification.warning(
+              'Demo Mode',
+              'Đăng nhập thành công (Demo Mode - Backend chưa chạy)',
+              {
+                nzDuration: 4000
+              }
+            );
+          } else {
+            this.showLoginSuccess();
+          }
+          
+          // Điều hướng đến dashboard sau khi đăng nhập thành công
+          this.router.navigate(['/app/dashboard']);
+        }, 0);
       },
       error: (error) => {
-        this.isLoading = false;
-        
-        // Hiển thị lỗi chi tiết dựa trên status code
-        let errorMessage = 'Đăng nhập thất bại. Vui lòng thử lại!';
-        
-        if (error.status === 0) {
-          errorMessage = 'Không thể kết nối đến server. Vui lòng kiểm tra kết nối mạng!';
-        } else if (error.status === 401) {
-          errorMessage = 'Email hoặc mật khẩu không chính xác!';
-        } else if (error.status === 403) {
-          errorMessage = 'Tài khoản đã bị khóa. Vui lòng liên hệ admin!';
-        } else if (error.error?.message) {
-          errorMessage = error.error.message;
-        }
-        
-        this.message.error(errorMessage);
-        console.error('Login error:', error);
-        
-        // Reset form validation để có thể submit lại
-        this.loginForm.markAsUntouched();
-        
-        // Clear password field for security
-        this.loginForm.patchValue({ password: '' });
+        setTimeout(() => {
+          this.isLoading = false;
+          this.cdr.detectChanges();
+          
+          // Xử lý lỗi với notification service
+          this.handleApiError(error);
+          
+          console.error('Login error:', error);
+          
+          // Reset form validation để có thể submit lại
+          this.loginForm.markAsUntouched();
+          
+          // Clear password field for security
+          this.loginForm.patchValue({ password: '' });
+        }, 0);
       }
     });
   }
@@ -189,7 +190,11 @@ export class LoginComponent implements OnInit {
     if (!field || !field.errors || !field.touched) return '';
 
     if (field.errors['required']) {
-      return fieldName === 'email' ? 'Email là bắt buộc' : 'Mật khẩu là bắt buộc';
+      switch (fieldName) {
+        case 'email': return 'Email là bắt buộc';
+        case 'password': return 'Mật khẩu là bắt buộc';
+        default: return 'Trường này là bắt buộc';
+      }
     }
 
     if (field.errors['email']) {
@@ -197,5 +202,72 @@ export class LoginComponent implements OnInit {
     }
 
     return '';
+  }
+
+  /**
+   * Hiển thị thông báo đăng nhập thành công
+   */
+  private showLoginSuccess(): void {
+    this.notification.success(
+      'Đăng nhập thành công! 🎉',
+      'Chào mừng bạn trở lại Word Quest',
+      {
+        nzDuration: 3000,
+        nzStyle: {
+          background: 'linear-gradient(135deg, #52c41a 0%, #73d13d 100%)',
+          border: 'none',
+          borderRadius: '8px',
+          boxShadow: '0 4px 12px rgba(82, 196, 26, 0.3)'
+        },
+        nzClass: 'custom-notification success-notification'
+      }
+    );
+  }
+
+  /**
+   * Xử lý và hiển thị lỗi từ API
+   */
+  private handleApiError(error: any): void {
+    let title = 'Có lỗi xảy ra';
+    let content = '';
+
+    if (error?.error?.message) {
+      const errorMessage = error.error.message.toLowerCase();
+      
+      if (errorMessage.includes('user') && errorMessage.includes('not found')) {
+        title = 'Tài khoản không tồn tại';
+        content = 'Email hoặc mật khẩu không chính xác.';
+      } else if (errorMessage.includes('password') && errorMessage.includes('incorrect')) {
+        title = 'Mật khẩu không chính xác';
+        content = 'Vui lòng thử lại hoặc đặt lại mật khẩu.';
+      } else if (errorMessage.includes('invalid credentials') || errorMessage.includes('unauthorized')) {
+        title = 'Thông tin đăng nhập sai';
+        content = 'Email hoặc mật khẩu không chính xác.';
+      } else {
+        title = 'Lỗi';
+        content = error.error.message;
+      }
+    } else if (error?.status === 0) {
+      title = 'Lỗi kết nối';
+      content = 'Không thể kết nối đến máy chủ.';
+    } else if (error?.status === 401) {
+      title = 'Thông tin không đúng';
+      content = 'Email hoặc mật khẩu không chính xác.';
+    } else {
+      title = 'Có lỗi xảy ra';
+      content = 'Vui lòng thử lại sau.';
+    }
+
+    this.notification.error(title, content, {
+      nzDuration: 4000,
+      nzStyle: {
+        background: 'linear-gradient(135deg, #ff4d4f 0%, #ff7875 100%)',
+        border: 'none',
+        borderRadius: '8px',
+        boxShadow: '0 4px 12px rgba(255, 77, 79, 0.3)',
+        color: 'white'
+      },
+      nzClass: 'custom-notification error-notification'
+    });
   }
 }

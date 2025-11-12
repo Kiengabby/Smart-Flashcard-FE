@@ -16,7 +16,7 @@
 
         <form nz-form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
           <nz-form-item>
-            <nz-form-control nzErrorTip="Họ và tên là bắt buộc!">
+            <nz-form-control [nzErrorTip]="getFieldErrorMessage('displayName')" [nzValidateStatus]="hasFieldError('displayName') ? 'error' : ''">
               <nz-input-group nzPrefixIcon="user" nzSize="large">
                 <input 
                   type="text" 
@@ -29,7 +29,7 @@
           </nz-form-item>
 
           <nz-form-item>
-            <nz-form-control nzErrorTip="Email không hợp lệ!">
+            <nz-form-control [nzErrorTip]="getFieldErrorMessage('email')" [nzValidateStatus]="hasFieldError('email') ? 'error' : ''">
               <nz-input-group nzPrefixIcon="mail" nzSize="large">
                 <input 
                   type="email" 
@@ -42,7 +42,7 @@
           </nz-form-item>
 
           <nz-form-item>
-            <nz-form-control nzErrorTip="Mật khẩu phải có ít nhất 6 ký tự!">
+            <nz-form-control [nzErrorTip]="getFieldErrorMessage('password')" [nzValidateStatus]="hasFieldError('password') ? 'error' : ''">
               <nz-input-group nzPrefixIcon="lock" nzSize="large" [nzSuffix]="passwordSuffixTemplate">
                 <input 
                   [type]="showPassword ? 'text' : 'password'" 
@@ -58,7 +58,7 @@
           </nz-form-item>
 
           <nz-form-item>
-            <nz-form-control nzErrorTip="Mật khẩu xác nhận không khớp!">
+            <nz-form-control [nzErrorTip]="hasPasswordMismatchError ? 'Mật khẩu xác nhận không khớp!' : getFieldErrorMessage('confirmPassword')" [nzValidateStatus]="(hasFieldError('confirmPassword') || hasPasswordMismatchError) ? 'error' : ''">
               <nz-input-group nzPrefixIcon="lock" nzSize="large" [nzSuffix]="confirmPasswordSuffixTemplate">
                 <input 
                   [type]="showConfirmPassword ? 'text' : 'password'" 

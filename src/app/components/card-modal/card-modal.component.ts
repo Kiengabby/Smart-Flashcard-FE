@@ -5,6 +5,7 @@ import { NzModalRef, NZ_MODAL_DATA } from 'ng-zorro-antd/modal';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { CardService } from '../../services/card.service';
 import { CardDTO, CreateCardRequest } from '../../interfaces/card.dto';
@@ -22,7 +23,8 @@ interface ModalData {
     ReactiveFormsModule,
     NzFormModule,
     NzInputModule,
-    NzButtonModule
+    NzButtonModule,
+    NzIconModule
   ],
   templateUrl: './card-modal.component.html',
   styleUrls: ['./card-modal.component.css']
@@ -62,6 +64,14 @@ export class CardModalComponent implements OnInit {
         [Validators.required, Validators.minLength(1), Validators.maxLength(1000)]
       ]
     });
+  }
+
+  /**
+   * Lấy số ký tự đã nhập cho field
+   */
+  getCharCount(fieldName: string): number {
+    const value = this.cardForm.get(fieldName)?.value || '';
+    return value.length;
   }
 
   /**

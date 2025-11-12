@@ -11,7 +11,7 @@
 
         <form nz-form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
           <nz-form-item>
-            <nz-form-control nzErrorTip="Email không hợp lệ!">
+            <nz-form-control [nzErrorTip]="getFieldErrorMessage('email')" [nzValidateStatus]="hasFieldError('email') ? 'error' : ''">
               <nz-input-group nzPrefixIcon="mail" nzSize="large">
                 <input 
                   type="email" 
@@ -24,7 +24,7 @@
           </nz-form-item>
 
           <nz-form-item>
-            <nz-form-control nzErrorTip="Mật khẩu là bắt buộc!">
+            <nz-form-control [nzErrorTip]="getFieldErrorMessage('password')" [nzValidateStatus]="hasFieldError('password') ? 'error' : ''">
               <nz-input-group nzPrefixIcon="lock" nzSize="large" [nzSuffix]="passwordSuffixTemplate">
                 <input 
                   [type]="passwordVisible ? 'text' : 'password'" 

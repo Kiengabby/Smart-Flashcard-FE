@@ -81,6 +81,7 @@ export class DeckDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    console.log('DeckDetailComponent ngOnInit called');
     // Initialize properties
     this.deck = undefined;
     this.cards = [];
@@ -89,10 +90,14 @@ export class DeckDetailComponent implements OnInit {
     setTimeout(() => {
       // Lấy deckId từ route params
       this.route.params.subscribe(params => {
+        console.log('Route params received:', params);
         this.deckId = +params['id'];
+        console.log('Parsed deckId:', this.deckId);
         if (this.deckId) {
           this.loadDeckInfo();
           this.loadCards();
+        } else {
+          console.error('Invalid deckId:', params['id']);
         }
       });
     }, 0);
@@ -102,11 +107,13 @@ export class DeckDetailComponent implements OnInit {
    * Load thông tin deck
    */
   loadDeckInfo(): void {
+    console.log('loadDeckInfo called for deckId:', this.deckId);
     this._isLoadingDeck = true;
     this.cdr.detectChanges();
     
     this.deckService.getDeckById(this.deckId.toString()).subscribe({
       next: (data) => {
+        console.log('Deck info loaded:', data);
         this.deck = data;
         this._isLoadingDeck = false;
         this.cdr.detectChanges();
@@ -124,11 +131,13 @@ export class DeckDetailComponent implements OnInit {
    * Load danh sách cards
    */
   loadCards(): void {
+    console.log('loadCards called for deckId:', this.deckId);
     this._isLoadingCards = true;
     this.cdr.detectChanges();
     
     this.cardService.getCardsByDeck(this.deckId).subscribe({
       next: (data) => {
+        console.log('Cards loaded:', data);
         this.cards = data;
         this._isLoadingCards = false;
         this.cdr.detectChanges();
@@ -224,10 +233,20 @@ export class DeckDetailComponent implements OnInit {
   }
 
   /**
-   * Quay lại dashboard
+   * Quay lại thư viện bộ thẻ
    */
   goBack(): void {
-    this.router.navigate(['/app/dashboard']);
+    // Kiểm tra xem người dùng đến từ đâu
+    const navigationState = window.history.state;
+    const referrer = document.referrer;
+    
+    // Nếu có state navigation hoặc referrer chứa deck-library, quay về deck-library
+    if (referrer.includes('/deck-library') || navigationState?.fromDeckLibrary) {
+      this.router.navigate(['/app/deck-library']);
+    } else {
+      // Mặc định quay về deck-library thay vì dashboard  
+      this.router.navigate(['/app/deck-library']);
+    }
   }
 }
 

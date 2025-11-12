@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NzCardModule } from 'ng-zorro-antd/card';
@@ -38,16 +38,48 @@ export class QuizResultComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private quizService: QuizService,
-    private message: NzMessageService
+    private message: NzMessageService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    // Lấy deckId từ route params
+    console.log('QuizResultComponent ngOnInit called');
+    console.log('Current route:', this.router.url);
+    
+    // Thử nhiều cách lấy deckId từ route
     this.route.parent?.parent?.params.subscribe(params => {
+      console.log('parent.parent.params:', params);
       this.deckId = +params['id'];
-      console.log('Got deckId from parent params:', this.deckId);
-      this.loadQuizResult();
+      if (this.deckId) {
+        console.log('Got deckId from parent.parent params:', this.deckId);
+        this.loadQuizResult();
+      }
     });
+    
+    // Backup: thử lấy từ route khác
+    if (!this.deckId) {
+      this.route.parent?.params.subscribe(params => {
+        console.log('parent.params:', params);
+        this.deckId = +params['id'];
+        if (this.deckId) {
+          console.log('Got deckId from parent params:', this.deckId);
+          this.loadQuizResult();
+        }
+      });
+    }
+    
+    // Backup 2: thử lấy từ URL trực tiếp
+    if (!this.deckId) {
+      const urlSegments = this.router.url.split('/');
+      const studyIndex = urlSegments.findIndex(segment => segment === 'study');
+      if (studyIndex >= 0 && urlSegments[studyIndex + 1]) {
+        this.deckId = +urlSegments[studyIndex + 1];
+        console.log('Got deckId from URL parsing:', this.deckId);
+        if (this.deckId) {
+          this.loadQuizResult();
+        }
+      }
+    }
   }
 
   /**
@@ -66,11 +98,14 @@ export class QuizResultComponent implements OnInit {
         console.log('Quiz result loaded:', result);
         this.result = result;
         this.isLoading = false;
+        console.log('isLoading set to false, triggering change detection');
+        this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error loading quiz result:', error);
         this.message.error('Lỗi khi tải kết quả quiz. Vui lòng thử lại!');
         this.isLoading = false;
+        this.cdr.detectChanges();
         
         // Navigate back sau 2 giây
         setTimeout(() => {

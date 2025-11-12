@@ -41,3 +41,156 @@ body {
     contain: layout style;
   }
 }
+
+/* ===== MODERN NOTIFICATION STYLES ===== */
+
+/* Custom notification styles - Compact & Beautiful */
+.custom-notification {
+  border-radius: 8px !important;
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+  border: none !important;
+  max-width: 350px !important;
+  min-width: 280px !important;
+}
+
+.custom-notification .ant-notification-notice-content {
+  border-radius: 8px;
+  padding: 14px 16px !important;
+}
+
+.custom-notification .ant-notification-notice-message {
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  margin-bottom: 4px !important;
+  color: white !important;
+  line-height: 1.4 !important;
+}
+
+.custom-notification .ant-notification-notice-description {
+  font-size: 12px !important;
+  line-height: 1.5 !important;
+  color: rgba(255, 255, 255, 0.85) !important;
+  margin: 0 !important;
+}
+
+.custom-notification .ant-notification-notice-icon {
+  margin-top: 1px !important;
+  font-size: 16px !important;
+  margin-right: 8px !important;
+}
+
+/* Success notification - Green theme */
+.success-notification .ant-notification-notice-message {
+  color: white !important;
+}
+
+.success-notification .ant-notification-notice-description {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.success-notification .ant-notification-notice-icon {
+  color: white !important;
+}
+
+/* Error notification - Red theme */
+.error-notification .ant-notification-notice-message {
+  color: white !important;
+}
+
+.error-notification .ant-notification-notice-description {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.error-notification .ant-notification-notice-icon {
+  color: white !important;
+}
+
+/* Warning notification - Orange theme */
+.warning-notification .ant-notification-notice-message {
+  color: #ffffff !important;
+}
+
+.warning-notification .ant-notification-notice-description {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.warning-notification .ant-notification-notice-icon {
+  color: white !important;
+}
+
+/* Info notification - Blue theme */
+.info-notification .ant-notification-notice-message {
+  color: white !important;
+}
+
+.info-notification .ant-notification-notice-description {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.info-notification .ant-notification-notice-icon {
+  color: white !important;
+}
+
+/* Animation improvements - Smoother & Faster */
+.custom-notification {
+  animation: slideInRight 0.25s ease-out !important;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Close button styling - Smaller & Cleaner */
+.custom-notification .ant-notification-notice-close {
+  color: rgba(255, 255, 255, 0.7) !important;
+  font-size: 14px !important;
+  top: 12px !important;
+  right: 12px !important;
+  width: 20px !important;
+  height: 20px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.custom-notification .ant-notification-notice-close:hover {
+  color: white !important;
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-radius: 50% !important;
+}
+
+/* Custom message styles */
+.ant-message .ant-message-notice-content {
+  border-radius: 8px !important;
+  padding: 12px 16px !important;
+  backdrop-filter: blur(10px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+.ant-message-success .ant-message-custom-content {
+  background: linear-gradient(135deg, #52c41a 0%, #73d13d 100%) !important;
+  color: white !important;
+}
+
+.ant-message-error .ant-message-custom-content {
+  background: linear-gradient(135deg, #ff4d4f 0%, #ff7875 100%) !important;
+  color: white !important;
+}
+
+.ant-message-warning .ant-message-custom-content {
+  background: linear-gradient(135deg, #faad14 0%, #ffc53d 100%) !important;
+  color: white !important;
+}
+
+.ant-message-info .ant-message-custom-content {
+  background: linear-gradient(135deg, #1890ff 0%, #40a9ff 100%) !important;
+  color: white !important;
+}

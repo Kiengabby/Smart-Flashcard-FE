@@ -73,6 +73,8 @@ export class UserLayoutComponent implements OnInit {
         const dailyReviewItem = this.menuItems.find(item => item.routerLink === '/app/daily-review');
         if (dailyReviewItem && stats.dueCards > 0) {
           dailyReviewItem.badge = stats.dueCards.toString();
+        } else if (dailyReviewItem) {
+          dailyReviewItem.badge = null; // Ẩn badge nếu không có thẻ cần ôn
         }
       },
       error: (error) => {
@@ -112,12 +114,20 @@ export class UserLayoutComponent implements OnInit {
   // Menu items được thiết kế theo kế hoạch đồ án Smart Flashcard
   menuItems = [
     {
-      title: 'Bảng điều khiển',
+      title: 'Tổng quan',
       icon: 'dashboard',
       routerLink: '/app/dashboard',
       description: 'Xem tổng quan tiến độ học tập và thống kê cá nhân',
       isActive: true,
       badge: null as string | null
+    },
+    {
+      title: 'Thư viện thẻ',
+      icon: 'book',
+      routerLink: '/app/deck-library',
+      description: 'Quản lý và tạo mới các bộ thẻ học tập',
+      isActive: false,
+      badge: null as string | null // UC-02: Quản lý Bộ thẻ
     },
     {
       title: 'Ôn tập hàng ngày',
@@ -127,14 +137,6 @@ export class UserLayoutComponent implements OnInit {
       isActive: false,
       badge: null as string | null, // UC-04: Core feature - SRS
       isHighPriority: true
-    },
-    {
-      title: 'Thư viện thẻ',
-      icon: 'book',
-      routerLink: '/app/deck-library',
-      description: 'Quản lý và tạo mới các bộ thẻ học tập',
-      isActive: false,
-      badge: null as string | null // UC-02: Quản lý Bộ thẻ
     },
     {
       title: 'Cộng đồng',

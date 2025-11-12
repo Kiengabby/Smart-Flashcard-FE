@@ -337,7 +337,12 @@ export class DeckLibraryComponent implements OnInit {
   /**
    * Bắt đầu học deck
    */
-  startStudying(deck: DeckDTO): void {
+  startStudying(deck: DeckDTO, event?: Event): void {
+    // Ngăn chặn event bubbling để không trigger viewDeckDetail
+    if (event) {
+      event.stopPropagation();
+    }
+    
     if (!deck.cardCount || deck.cardCount < 5) {
       this.message.warning('Bộ thẻ cần có ít nhất 5 thẻ để bắt đầu học!');
       this.viewDeckDetail(deck);
@@ -358,8 +363,23 @@ export class DeckLibraryComponent implements OnInit {
   /**
    * Xem chi tiết deck
    */
+  /**
+   * Xem chi tiết bộ thẻ
+   */
   viewDeckDetail(deck: DeckDTO): void {
-    this.router.navigate(['/app/deck', deck.id]);
+    console.log('viewDeckDetail called with deck:', deck);
+    console.log('Navigating to:', `/app/deck/${deck.id}`);
+    
+    this.router.navigate(['/app/deck', deck.id], {
+      state: { 
+        fromDeckLibrary: true,
+        previousUrl: '/app/deck-library' 
+      }
+    }).then(success => {
+      console.log('Navigation success:', success);
+    }).catch(error => {
+      console.error('Navigation error:', error);
+    });
   }
 
   /**

@@ -8,7 +8,7 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
-import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { AuthService } from '../../services/auth.service';
 
 // Custom Validator cho password matching
@@ -49,7 +49,7 @@ export class RegisterComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private authService: AuthService,
-    private message: NzMessageService,
+    private notification: NzNotificationService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -85,37 +85,40 @@ export class RegisterComponent implements OnInit {
     // Gọi API đăng ký
     this.authService.register(this.registerForm.value).subscribe({
       next: (response) => {
-        this.isLoading = false;
-        
-        // Kiểm tra nếu đang dùng mock mode
-        if (response.message.includes('Mock Mode')) {
-          this.message.warning('Đăng ký thành công (Demo Mode - Backend chưa chạy)');
-        } else {
-          this.message.success('Đăng ký thành công!');
-        }
-        
-        // Điều hướng đến dashboard sau khi đăng ký thành công
-        this.router.navigate(['/app/dashboard']);
+        setTimeout(() => {
+          this.isLoading = false;
+          this.cdr.detectChanges();
+          
+          // Kiểm tra nếu đang dùng mock mode
+          if (response.message && response.message.includes('Mock Mode')) {
+            this.notification.warning(
+              'Demo Mode',
+              'Đăng ký thành công (Demo Mode - Backend chưa chạy)',
+              {
+                nzDuration: 4000
+              }
+            );
+          } else {
+            this.showRegisterSuccess();
+          }
+          
+          // Điều hướng đến dashboard sau khi đăng ký thành công
+          this.router.navigate(['/app/dashboard']);
+        });
       },
       error: (error) => {
-        this.isLoading = false;
-        
-        // Hiển thị lỗi chi tiết dựa trên status code
-        let errorMessage = 'Đăng ký thất bại. Vui lòng thử lại!';
-        
-        if (error.status === 0) {
-          errorMessage = 'Không thể kết nối đến server. Vui lòng kiểm tra kết nối mạng!';
-        } else if (error.status === 409) {
-          errorMessage = 'Email này đã được sử dụng. Vui lòng chọn email khác!';
-        } else if (error.error?.message) {
-          errorMessage = error.error.message;
-        }
-        
-        this.message.error(errorMessage);
-        console.error('Register error:', error);
-        
-        // Reset form validation để có thể submit lại
-        this.registerForm.markAsUntouched();
+        setTimeout(() => {
+          this.isLoading = false;
+          this.cdr.detectChanges();
+          
+          // Xử lý lỗi với notification service
+          this.handleApiError(error);
+          
+          console.error('Register error:', error);
+          
+          // Reset form validation để có thể submit lại
+          this.registerForm.markAsUntouched();
+        });
       }
     });
   }
@@ -179,6 +182,7 @@ export class RegisterComponent implements OnInit {
    */
   hasFieldError(fieldName: string, errorType?: string): boolean {
     const field = this.registerForm.get(fieldName);
+    
     if (!field) return false;
 
     if (errorType) {
@@ -193,6 +197,7 @@ export class RegisterComponent implements OnInit {
    */
   getFieldErrorMessage(fieldName: string): string {
     const field = this.registerForm.get(fieldName);
+    
     if (!field || !field.errors || !field.touched) return '';
 
     if (field.errors['required']) {
@@ -222,5 +227,69 @@ export class RegisterComponent implements OnInit {
   get hasPasswordMismatchError(): boolean {
     return this.registerForm.errors?.['passwordMismatch'] && 
            this.registerForm.get('confirmPassword')?.touched || false;
+  }
+
+  /**
+   * Hiển thị thông báo đăng ký thành công
+   */
+  private showRegisterSuccess(): void {
+    this.notification.success(
+      'Tạo tài khoản thành công! 🚀',
+      'Chào mừng bạn đến với Word Quest!',
+      {
+        nzDuration: 3000,
+        nzStyle: {
+          background: 'linear-gradient(135deg, #52c41a 0%, #73d13d 100%)',
+          border: 'none',
+          borderRadius: '8px',
+          boxShadow: '0 4px 12px rgba(82, 196, 26, 0.3)'
+        },
+        nzClass: 'custom-notification success-notification'
+      }
+    );
+  }
+
+  /**
+   * Xử lý và hiển thị lỗi từ API
+   */
+  private handleApiError(error: any): void {
+    let title = 'Có lỗi xảy ra';
+    let content = '';
+
+    if (error?.error?.message) {
+      const errorMessage = error.error.message.toLowerCase();
+      
+      if (errorMessage.includes('email') && (errorMessage.includes('exist') || errorMessage.includes('already'))) {
+        title = 'Email đã được sử dụng';
+        content = 'Email này đã được đăng ký. Vui lòng dùng email khác.';
+      } else if (errorMessage.includes('validation')) {
+        title = 'Thông tin không hợp lệ';
+        content = 'Vui lòng kiểm tra lại thông tin.';
+      } else {
+        title = 'Lỗi';
+        content = error.error.message;
+      }
+    } else if (error?.status === 0) {
+      title = 'Lỗi kết nối';
+      content = 'Không thể kết nối đến máy chủ.';
+    } else if (error?.status >= 500) {
+      title = 'Lỗi máy chủ';
+      content = 'Máy chủ gặp sự cố. Thử lại sau.';
+    } else {
+      title = 'Có lỗi xảy ra';
+      content = 'Email đã tồn tại vui lòng sử dụng email khác.';
+    }
+
+    this.notification.error(title, content, {
+      nzDuration: 4000,
+      nzStyle: {
+        background: 'linear-gradient(135deg, #ff4d4f 0%, #ff7875 100%)',
+        border: 'none',
+        borderRadius: '8px',
+        boxShadow: '0 4px 12px rgba(255, 77, 79, 0.3)',
+        color: 'white'
+      },
+      nzClass: 'custom-notification error-notification'
+    });
   }
 }

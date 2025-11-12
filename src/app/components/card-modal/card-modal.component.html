@@ -1,70 +1,161 @@
-<form nz-form [formGroup]="cardForm" nzLayout="vertical">
-  <nz-form-item>
-    <nz-form-label nzRequired>Mặt trước (Câu hỏi)</nz-form-label>
-    <nz-form-control 
-      [nzErrorTip]="frontTextErrorTpl">
-      <textarea 
-        nz-input 
-        formControlName="frontText" 
-        placeholder="Ví dụ: What is the capital of France?"
-        [rows]="3"
-        style="resize: vertical;">
-      </textarea>
-      <ng-template #frontTextErrorTpl let-control>
-        <ng-container *ngIf="control.hasError('required')">
-          Vui lòng nhập nội dung mặt trước!
-        </ng-container>
-        <ng-container *ngIf="control.hasError('minlength')">
-          Nội dung phải có ít nhất 1 ký tự!
-        </ng-container>
-        <ng-container *ngIf="control.hasError('maxlength')">
-          Nội dung không được vượt quá 500 ký tự!
-        </ng-container>
-      </ng-template>
-    </nz-form-control>
-  </nz-form-item>
-
-  <nz-form-item>
-    <nz-form-label nzRequired>Mặt sau (Câu trả lời)</nz-form-label>
-    <nz-form-control 
-      [nzErrorTip]="backTextErrorTpl">
-      <textarea 
-        nz-input 
-        formControlName="backText" 
-        placeholder="Ví dụ: Paris"
-        [rows]="4"
-        style="resize: vertical;">
-      </textarea>
-      <ng-template #backTextErrorTpl let-control>
-        <ng-container *ngIf="control.hasError('required')">
-          Vui lòng nhập nội dung mặt sau!
-        </ng-container>
-        <ng-container *ngIf="control.hasError('minlength')">
-          Nội dung phải có ít nhất 1 ký tự!
-        </ng-container>
-        <ng-container *ngIf="control.hasError('maxlength')">
-          Nội dung không được vượt quá 1000 ký tự!
-        </ng-container>
-      </ng-template>
-    </nz-form-control>
-  </nz-form-item>
-
-  <div class="modal-footer">
-    <button 
-      nz-button 
-      nzType="default" 
-      (click)="handleCancel()"
-      [disabled]="isConfirmLoading">
-      Hủy
-    </button>
-    <button 
-      nz-button 
-      nzType="primary" 
-      (click)="handleOk()"
-      [nzLoading]="isConfirmLoading">
-      {{ isEditMode ? 'Cập nhật' : 'Thêm thẻ' }}
-    </button>
+<div class="card-modal-container">
+  <!-- Header Section -->
+  <div class="modal-header">
+    <div class="header-content">
+      <div class="header-icon">
+        <span nz-icon [nzType]="isEditMode ? 'edit' : 'plus-circle'" nzTheme="outline"></span>
+      </div>
+      <div class="header-text">
+        <h2 class="modal-title">{{ isEditMode ? 'Chỉnh sửa thẻ' : 'Thêm thẻ mới' }}</h2>
+        <p class="modal-subtitle">{{ isEditMode ? 'Cập nhật nội dung cho thẻ học tập' : 'Tạo thẻ học tập với câu hỏi và câu trả lời' }}</p>
+      </div>
+    </div>
   </div>
-</form>
+
+  <!-- Form Section -->
+  <form nz-form [formGroup]="cardForm" nzLayout="vertical" class="modern-form">
+    
+    <!-- Front Text Section -->
+    <div class="form-section">
+      <div class="section-header">
+        <div class="section-icon front-icon">
+          <span nz-icon nzType="eye" nzTheme="outline"></span>
+        </div>
+        <div class="section-info">
+          <h3 class="section-title">Mặt trước</h3>
+          <p class="section-description">Câu hỏi hoặc từ cần học</p>
+        </div>
+      </div>
+      
+      <nz-form-item class="custom-form-item">
+        <nz-form-control [nzErrorTip]="frontTextErrorTpl">
+          <div class="input-wrapper">
+            <textarea 
+              nz-input 
+              formControlName="frontText" 
+              placeholder="Ví dụ: What is the capital of France?"
+              [rows]="3"
+              class="modern-textarea front-textarea">
+            </textarea>
+            <div class="input-footer">
+              <span class="char-count" 
+                    [class.warning]="getCharCount('frontText') > 450"
+                    [class.error]="getCharCount('frontText') > 500">
+                {{ getCharCount('frontText') }}/500 ký tự
+              </span>
+            </div>
+          </div>
+          <ng-template #frontTextErrorTpl let-control>
+            <div class="error-message">
+              <span nz-icon nzType="exclamation-circle" nzTheme="outline"></span>
+              <ng-container *ngIf="control.hasError('required')">
+                Vui lòng nhập nội dung mặt trước!
+              </ng-container>
+              <ng-container *ngIf="control.hasError('minlength')">
+                Nội dung phải có ít nhất 1 ký tự!
+              </ng-container>
+              <ng-container *ngIf="control.hasError('maxlength')">
+                Nội dung không được vượt quá 500 ký tự!
+              </ng-container>
+            </div>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+    <!-- Divider -->
+    <div class="form-divider">
+      <span nz-icon nzType="arrow-down" nzTheme="outline"></span>
+    </div>
+
+    <!-- Back Text Section -->
+    <div class="form-section">
+      <div class="section-header">
+        <div class="section-icon back-icon">
+          <span nz-icon nzType="bulb" nzTheme="outline"></span>
+        </div>
+        <div class="section-info">
+          <h3 class="section-title">Mặt sau</h3>
+          <p class="section-description">Câu trả lời hoặc nghĩa của từ</p>
+        </div>
+      </div>
+      
+      <nz-form-item class="custom-form-item">
+        <nz-form-control [nzErrorTip]="backTextErrorTpl">
+          <div class="input-wrapper">
+            <textarea 
+              nz-input 
+              formControlName="backText" 
+              placeholder="Ví dụ: Paris"
+              [rows]="4"
+              class="modern-textarea back-textarea">
+            </textarea>
+            <div class="input-footer">
+              <span class="char-count" 
+                    [class.warning]="getCharCount('backText') > 900"
+                    [class.error]="getCharCount('backText') > 1000">
+                {{ getCharCount('backText') }}/1000 ký tự
+              </span>
+            </div>
+          </div>
+          <ng-template #backTextErrorTpl let-control>
+            <div class="error-message">
+              <span nz-icon nzType="exclamation-circle" nzTheme="outline"></span>
+              <ng-container *ngIf="control.hasError('required')">
+                Vui lòng nhập nội dung mặt sau!
+              </ng-container>
+              <ng-container *ngIf="control.hasError('minlength')">
+                Nội dung phải có ít nhất 1 ký tự!
+              </ng-container>
+              <ng-container *ngIf="control.hasError('maxlength')">
+                Nội dung không được vượt quá 1000 ký tự!
+              </ng-container>
+            </div>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+    <!-- Tips Section -->
+    <div class="tips-section" *ngIf="!isEditMode">
+      <div class="tips-header">
+        <span nz-icon nzType="lightbulb" nzTheme="outline"></span>
+        <span>Mẹo tạo thẻ hiệu quả</span>
+      </div>
+      <ul class="tips-list">
+        <li>💡 Câu hỏi ngắn gọn, rõ ràng</li>
+        <li>🎯 Câu trả lời chính xác, đầy đủ</li>
+        <li>🔤 Sử dụng ví dụ cụ thể khi cần</li>
+      </ul>
+    </div>
+  </form>
+
+  <!-- Footer Section -->
+  <div class="modal-footer">
+    <div class="footer-actions">
+      <button 
+        nz-button 
+        nzType="default" 
+        nzSize="large"
+        (click)="handleCancel()"
+        [disabled]="isConfirmLoading"
+        class="cancel-btn">
+        <span nz-icon nzType="close" nzTheme="outline"></span>
+        Hủy
+      </button>
+      <button 
+        nz-button 
+        nzType="primary" 
+        nzSize="large"
+        (click)="handleOk()"
+        [nzLoading]="isConfirmLoading"
+        [disabled]="!cardForm.valid"
+        class="submit-btn">
+        <span *ngIf="!isConfirmLoading" nz-icon [nzType]="isEditMode ? 'check' : 'plus'" nzTheme="outline"></span>
+        {{ isEditMode ? 'Cập nhật thẻ' : 'Tạo thẻ mới' }}
+      </button>
+    </div>
+  </div>
+</div>
 
 

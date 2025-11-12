@@ -51,12 +51,17 @@
   <div class="cards-section">
     <div class="section-header">
       <div class="section-title">
-        <h2>Danh sách Flashcard</h2>
-        <span class="card-count">({{ cards.length }} thẻ)</span>
+        <h2>
+          <span nz-icon nzType="credit-card" nzTheme="outline" class="title-icon"></span>
+          Danh sách Flashcard
+        </h2>
+        <span class="card-count" *ngIf="cards.length">{{ cards.length }} thẻ</span>
       </div>
       <button 
         nz-button 
         nzType="primary" 
+        nzSize="large"
+        class="add-card-btn"
         (click)="openAddCardModal()">
         <span nz-icon nzType="plus" nzTheme="outline"></span>
         Thêm thẻ mới
@@ -90,48 +95,60 @@
       </div>
     </nz-empty>
 
-    <!-- Cards List -->
-    <div *ngIf="!isLoadingCards && cards.length" class="cards-list">
-      <nz-card 
+    <!-- Cards List với improved design -->
+    <div *ngIf="!isLoadingCards && cards.length" class="cards-grid">
+      <div 
         *ngFor="let card of cards; let i = index"
-        class="card-item"
-        [nzBordered]="true">
-        <div class="card-content">
-          <div class="card-number">#{{ i + 1 }}</div>
-          <div class="card-texts">
-            <div class="card-side front">
-              <label>Mặt trước:</label>
-              <p>{{ card.frontText }}</p>
-            </div>
-            <div class="card-side back">
-              <label>Mặt sau:</label>
-              <p>{{ card.backText }}</p>
-            </div>
-          </div>
+        class="card-item">
+        <div class="card-header">
+          <span class="card-number">Thẻ #{{ i + 1 }}</span>
           <div class="card-actions">
             <button 
               nz-button 
-              nzType="default" 
+              nzType="text" 
               nzSize="small"
+              class="action-btn edit-btn"
               (click)="openEditCardModal(card)"
-              nz-tooltip="Chỉnh sửa">
+              nz-tooltip="Chỉnh sửa thẻ">
               <span nz-icon nzType="edit" nzTheme="outline"></span>
             </button>
             <button 
               nz-button 
-              nzType="default" 
-              nzDanger
+              nzType="text"
               nzSize="small"
+              class="action-btn delete-btn"
               nz-popconfirm
               nzPopconfirmTitle="Bạn có chắc muốn xóa thẻ này?"
-              nzPopconfirmPlacement="left"
+              nzPopconfirmPlacement="topRight"
               (nzOnConfirm)="deleteCard(card)"
-              nz-tooltip="Xóa">
+              nz-tooltip="Xóa thẻ">
               <span nz-icon nzType="delete" nzTheme="outline"></span>
             </button>
           </div>
         </div>
-      </nz-card>
+        
+        <div class="card-content">
+          <div class="card-side front-side">
+            <div class="side-label">
+              <span nz-icon nzType="eye" nzTheme="outline"></span>
+              Mặt trước
+            </div>
+            <div class="side-content">{{ card.frontText }}</div>
+          </div>
+          
+          <div class="card-divider">
+            <span nz-icon nzType="arrow-right" nzTheme="outline"></span>
+          </div>
+          
+          <div class="card-side back-side">
+            <div class="side-label">
+              <span nz-icon nzType="bulb" nzTheme="outline"></span>
+              Mặt sau
+            </div>
+            <div class="side-content">{{ card.backText }}</div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Progress hint khi có 1-4 thẻ -->

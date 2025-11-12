@@ -57,7 +57,14 @@ export class CardService {
    * Lấy thống kê học tập
    */
   getStudyStats(): Observable<StudyStats> {
-    return this.http.get<StudyStats>(`${this.BASE_API}/cards/study-stats`);
+    return this.http.get<StudyStats>('http://localhost:8080/api/stats/study');
+  }
+  
+  /**
+   * Lấy các ngày có hoạt động học tập trong tháng
+   */
+  getActivityDates(year: number, month: number): Observable<number[]> {
+    return this.http.get<number[]>(`http://localhost:8080/api/stats/activity-dates?year=${year}&month=${month}`);
   }
 }
 
@@ -71,6 +78,12 @@ export interface StudyStats {
   currentStreak: number;
   longestStreak: number;
   averageQuality: number;
+  totalDecks: number;
+  studyingDecks: number;
+  conqueredDecks: number;
+  reviewToday: number;
+  totalWordsLearned: number;
+  activeChallenges: number;
 }
 
 

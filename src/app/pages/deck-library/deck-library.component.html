@@ -212,13 +212,17 @@
           [style.animation-delay.ms]="i * 100">
           
           <nz-card 
-            class="deck-card-premium"
-            nzHoverable>
+            class="deck-card-premium clickable-deck"
+            nzHoverable
+            (click)="viewDeckDetail(deck)"
+            [nzTooltipTitle]="'Click để xem chi tiết bộ thẻ: ' + deck.name" 
+            nz-tooltip>
             
             <!-- Card Header -->
             <div class="deck-header">
               <div class="deck-title-section">
-                <h3 class="deck-title" [nzTooltipTitle]="deck.name" nz-tooltip (click)="viewDeckDetail(deck)" style="cursor: pointer;">
+                <h3 class="deck-title">
+                  <span nz-icon nzType="folder-open" nzTheme="outline" class="deck-icon"></span>
                   {{ deck.name }}
                 </h3>
                 <nz-tag [nzColor]="getTagColor(deck)" class="deck-status">
@@ -263,14 +267,14 @@
             </div>
 
             <!-- Card Footer Actions -->
-            <div class="card-footer-actions">
+            <div class="card-footer-actions" (click)="$event.stopPropagation()">
               <div class="footer-left">
                 <button
                   nz-button
                   nzType="primary"
                   nzSize="large"
                   [disabled]="(deck.cardCount || 0) < 5"
-                  (click)="startStudying(deck)">
+                  (click)="startStudying(deck, $event)">
                   <span nz-icon nzType="rocket" nzTheme="outline"></span>
                   Bắt đầu Chinh phục
                 </button>
@@ -281,7 +285,8 @@
                   nzType="default"
                   nzSize="default"
                   nz-dropdown
-                  [nzDropdownMenu]="menu">
+                  [nzDropdownMenu]="menu"
+                  (click)="$event.stopPropagation()">
                   <span nz-icon nzType="more" nzTheme="outline"></span>
                 </button>
                 <nz-dropdown-menu #menu="nzDropdownMenu">

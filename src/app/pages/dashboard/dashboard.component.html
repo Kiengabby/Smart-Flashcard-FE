@@ -27,7 +27,8 @@
         </p>
         <div class="progress-indicator">
           <div class="progress-text">
-            Hôm nay bạn đã học được <strong>{{ currentUser.studiedToday || 0 }}</strong> từ mới
+            <span *ngIf="!isStatsLoading">Hôm nay bạn đã học được <strong>{{ currentUser.studiedToday || 0 }}</strong> từ mới</span>
+            <span *ngIf="isStatsLoading">Đang tải thông tin học tập... <nz-spin nzSize="small"></nz-spin></span>
           </div>
           <div class="mini-progress-bar">
             <div class="progress-fill" [style.width.%]="getDailyProgress()"></div>
@@ -54,7 +55,8 @@
             <span nz-icon nzType="trophy" nzTheme="fill"></span>
           </div>
           <div class="stat-info">
-            <div class="stat-value">{{ stats.conqueredDecks }}</div>
+            <div class="stat-value" *ngIf="!isStatsLoading">{{ stats.conqueredDecks }}</div>
+            <div class="stat-value" *ngIf="isStatsLoading"><nz-spin nzSize="small"></nz-spin></div>
             <div class="stat-label">Bộ thẻ đã chinh phục</div>
           </div>
         </div>
@@ -66,7 +68,8 @@
             <span nz-icon nzType="fire" nzTheme="fill"></span>
           </div>
           <div class="stat-info">
-            <div class="stat-value">{{ stats.studyStreak }}</div>
+            <div class="stat-value" *ngIf="!isStatsLoading">{{ stats.studyStreak }}</div>
+            <div class="stat-value" *ngIf="isStatsLoading"><nz-spin nzSize="small"></nz-spin></div>
             <div class="stat-label">Chuỗi ngày học liên tiếp</div>
           </div>
         </div>
@@ -78,7 +81,8 @@
             <span nz-icon nzType="book" nzTheme="fill"></span>
           </div>
           <div class="stat-info">
-            <div class="stat-value">{{ stats.totalWordsLearned }}</div>
+            <div class="stat-value" *ngIf="!isStatsLoading">{{ stats.totalWordsLearned }}</div>
+            <div class="stat-value" *ngIf="isStatsLoading"><nz-spin nzSize="small"></nz-spin></div>
             <div class="stat-label">Tổng từ đã học</div>
           </div>
         </div>
@@ -90,7 +94,8 @@
             <span nz-icon nzType="calendar" nzTheme="fill"></span>
           </div>
           <div class="stat-info">
-            <div class="stat-value highlight">{{ stats.reviewToday }}</div>
+            <div class="stat-value highlight" *ngIf="!isStatsLoading">{{ stats.reviewToday }}</div>
+            <div class="stat-value highlight" *ngIf="isStatsLoading"><nz-spin nzSize="small"></nz-spin></div>
             <div class="stat-label">Thẻ cần ôn hôm nay</div>
           </div>
         </div>

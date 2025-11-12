@@ -746,6 +746,116 @@
       }
     }
   }
+
+  &.clickable-deck {
+    position: relative;
+    
+    // Add subtle border glow on hover
+    &:hover::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, #1890ff, #52c41a);
+      border-radius: 8px;
+      z-index: -1;
+      opacity: 0.7;
+    }
+
+    // Add click to view indicator
+    &::after {
+      content: '👆 Click để xem chi tiết';
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(24, 144, 255, 0.9);
+      color: white;
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 12px;
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: all 0.3s ease;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    &:hover::after {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    // Ensure footer actions are above overlay
+    .card-footer-actions {
+      position: relative;
+      z-index: 2;
+    }
+  }
+}
+
+// Make deck titles more clickable
+.deck-title.clickable-title {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  border-radius: 6px;
+  margin: -8px; // Negative margin để tăng click area
+  
+  .deck-icon {
+    color: #1890ff;
+    transition: transform 0.2s ease;
+  }
+  
+  &:hover {
+    background-color: #f0f8ff;
+    color: #1890ff;
+    transform: translateX(2px);
+    
+    .deck-icon {
+      transform: scale(1.1);
+    }
+  }
+  
+  &:active {
+    transform: translateX(1px) scale(0.98);
+  }
+}
+
+// Clickable deck card styling
+.clickable-deck {
+  cursor: pointer !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15) !important;
+    border-color: #1890ff !important;
+
+    .deck-title {
+      color: #1890ff;
+    }
+
+    .deck-icon {
+      transform: scale(1.1);
+      color: #1890ff;
+    }
+  }
+
+  &:active {
+    transform: translateY(-2px) scale(1.01);
+  }
+
+  // Make sure the whole card is clickable area
+  ::ng-deep .ant-card-body {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 // ===========================

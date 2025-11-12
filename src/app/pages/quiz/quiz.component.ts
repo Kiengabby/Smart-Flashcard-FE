@@ -92,7 +92,7 @@ export class QuizComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Chọn đáp án
+   * Chọn đáp án và submit luôn
    */
   selectAnswer(index: number): void {
     if (this.isSubmitting || this.showResult) {
@@ -101,6 +101,11 @@ export class QuizComponent implements OnInit, OnDestroy {
     
     this.selectedAnswerIndex = index;
     console.log('Selected answer index:', index);
+    
+    // Auto submit sau khi chọn với delay ngắn để UX mượt mà hơn
+    setTimeout(() => {
+      this.submitAnswer();
+    }, 300);
   }
 
   /**
