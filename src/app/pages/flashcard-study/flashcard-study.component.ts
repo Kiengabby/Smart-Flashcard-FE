@@ -253,18 +253,17 @@ export class FlashcardStudyComponent implements OnInit {
 
     // Call backend API to save review result
     const answerRequest = {
-      cardId: cardId,
       quality: result.quality
     };
 
-    // Call the correct backend endpoint
-    this.http.post('http://localhost:8080/api/v1/reviews', answerRequest).subscribe({
+    // Call the correct backend endpoint  
+    this.http.post(`http://localhost:8080/api/cards/${cardId}/review`, answerRequest).subscribe({
       next: (response) => {
         console.log('Review submitted successfully:', response);
       },
       error: (error) => {
         console.error('Error submitting review:', error);
-        // Don't show error to user, just log it since local update already happened
+        this.message.error('Lỗi khi lưu kết quả học: ' + (error.message || 'Vui lòng thử lại'));
       }
     });
   }
