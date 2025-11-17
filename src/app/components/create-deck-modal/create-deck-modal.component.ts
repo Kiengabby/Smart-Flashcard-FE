@@ -6,6 +6,7 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { DeckService } from '../../services/deck.service';
 import { CreateDeckRequest, DeckDTO } from '../../interfaces/deck.dto';
@@ -19,7 +20,8 @@ import { CreateDeckRequest, DeckDTO } from '../../interfaces/deck.dto';
     NzFormModule,
     NzInputModule,
     NzButtonModule,
-    NzIconModule
+    NzIconModule,
+    NzSelectModule
   ],
   templateUrl: './create-deck-modal.component.html',
   styleUrls: ['./create-deck-modal.component.css']
@@ -27,6 +29,23 @@ import { CreateDeckRequest, DeckDTO } from '../../interfaces/deck.dto';
 export class CreateDeckModalComponent implements OnInit {
   deckForm!: FormGroup;
   isConfirmLoading = false;
+
+  // Danh sách ngôn ngữ hỗ trợ
+  languageOptions = [
+    { value: 'en', label: 'English (Tiếng Anh)' },
+    { value: 'vi', label: 'Tiếng Việt' },
+    { value: 'ja', label: '日本語 (Tiếng Nhật)' },
+    { value: 'zh', label: '中文 (Tiếng Trung)' },
+    { value: 'ko', label: '한국어 (Tiếng Hàn)' },
+    { value: 'fr', label: 'Français (Tiếng Pháp)' },
+    { value: 'de', label: 'Deutsch (Tiếng Đức)' },
+    { value: 'es', label: 'Español (Tiếng Tây Ban Nha)' },
+    { value: 'it', label: 'Italiano (Tiếng Ý)' },
+    { value: 'pt', label: 'Português (Tiếng Bồ Đào Nha)' },
+    { value: 'ru', label: 'Русский (Tiếng Nga)' },
+    { value: 'ar', label: 'العربية (Tiếng Ả Rập)' },
+    { value: 'th', label: 'ไทย (Tiếng Thái)' }
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -42,7 +61,8 @@ export class CreateDeckModalComponent implements OnInit {
   private initializeForm(): void {
     this.deckForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(100)]],
-      description: ['', [Validators.maxLength(500)]]
+      description: ['', [Validators.maxLength(500)]],
+      language: ['en', [Validators.required]] // Mặc định là tiếng Anh
     });
   }
 

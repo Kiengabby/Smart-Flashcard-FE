@@ -1,0 +1,164 @@
+<div class="listening-practice-container">
+  <!-- Header -->
+  <div class="practice-header">
+    <button nz-button nzType="text" (click)="goBack()" class="back-btn">
+      <span nz-icon nzType="close" nzTheme="outline"></span>
+    </button>
+    <div class="progress-info">
+      <span class="card-count">{{ currentIndex + 1 }} / {{ cards.length }}</span>
+      <div class="score-info">
+        <span class="score">{{ score }}/{{ totalAnswered }}</span>
+        <span class="accuracy" *ngIf="totalAnswered > 0">({{ accuracy }}%)</span>
+      </div>
+    </div>
+    <button nz-button nzType="text" (click)="restart()" class="restart-btn">
+      <span nz-icon nzType="reload" nzTheme="outline"></span>
+    </button>
+  </div>
+
+  <!-- Progress Bar -->
+  <div class="progress-bar-container">
+    <nz-progress
+      [nzPercent]="progress"
+      [nzShowInfo]="false"
+      nzStrokeColor="#52c41a"
+      [nzStrokeWidth]="8">
+    </nz-progress>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="loading-spinner">
+      <span nz-icon nzType="loading" nzTheme="outline"></span>
+    </div>
+    <p>Đang tải thẻ học...</p>
+  </div>
+
+  <!-- Listening Practice -->
+  <div *ngIf="!isLoading && currentCard" class="practice-wrapper">
+    
+    <!-- Audio Player Section -->
+    <div class="audio-section">
+      <div class="audio-instructions">
+        <h3>🎧 Nghe và chọn từ đúng</h3>
+        <p>Nhấn nút phát để nghe từ vựng, sau đó chọn đáp án bên dưới</p>
+      </div>
+      
+      <div class="audio-player">
+        <button 
+          class="audio-button-large"
+          (click)="playAudio()"
+          [class.loading]="isAudioLoading"
+          [class.played]="hasPlayedAudio"
+          nz-tooltip="Phát âm từ vựng"
+          nzTooltipPlacement="top">
+          <div class="audio-icon">
+            <span *ngIf="!isAudioLoading" nz-icon nzType="sound" nzTheme="outline"></span>
+            <span *ngIf="isAudioLoading" nz-icon nzType="loading" nzTheme="outline" class="spinning"></span>
+          </div>
+          <div class="audio-waves" [class.active]="isAudioLoading">
+            <div class="wave wave-1"></div>
+            <div class="wave wave-2"></div>
+            <div class="wave wave-3"></div>
+          </div>
+        </button>
+        <p class="play-instruction" *ngIf="!hasPlayedAudio">
+          Nhấn để nghe âm thanh
+        </p>
+        <p class="replay-instruction" *ngIf="hasPlayedAudio && !showResult">
+          Có thể nghe lại nếu cần
+        </p>
+      </div>
+    </div>
+
+    <!-- Options Section -->
+    <div class="options-section" [class.disabled]="!hasPlayedAudio">
+      <h4>Chọn từ vừa nghe:</h4>
+      <div class="options-grid">
+        <button
+          *ngFor="let option of options; trackBy: trackByOption"
+          class="option-button"
+          [class.selected]="selectedAnswer === option"
+          [class.correct]="showResult && option === currentCard.frontText"
+          [class.wrong]="showResult && selectedAnswer === option && option !== currentCard.frontText"
+          [class.disabled]="!hasPlayedAudio"
+          (click)="selectAnswer(option)">
+          {{ option }}
+          <span *ngIf="showResult && option === currentCard.frontText" 
+                class="result-icon correct-icon" nz-icon nzType="check-circle" nzTheme="fill"></span>
+          <span *ngIf="showResult && selectedAnswer === option && option !== currentCard.frontText" 
+                class="result-icon wrong-icon" nz-icon nzType="close-circle" nzTheme="fill"></span>
+        </button>
+      </div>
+      
+      <div *ngIf="!hasPlayedAudio" class="listen-first-message">
+        <span nz-icon nzType="info-circle" nzTheme="outline"></span>
+        Vui lòng nghe âm thanh trước khi chọn đáp án
+      </div>
+    </div>
+
+    <!-- Result Section -->
+    <div *ngIf="showResult" class="result-section">
+      <div class="result-card" [class.correct]="isCorrect" [class.wrong]="!isCorrect">
+        <div class="result-header">
+          <span class="result-icon" 
+                nz-icon 
+                [nzType]="isCorrect ? 'check-circle' : 'close-circle'" 
+                nzTheme="fill"></span>
+          <h3>{{ isCorrect ? 'Chính xác!' : 'Sai rồi!' }}</h3>
+        </div>
+        
+        <div class="word-info">
+          <div class="word-display">
+            <span class="word">{{ currentCard.frontText }}</span>
+            <span class="meaning">{{ currentCard.backText }}</span>
+          </div>
+          <button 
+            class="replay-button"
+            (click)="playAudio()"
+            nz-tooltip="Nghe lại">
+            <span nz-icon nzType="sound" nzTheme="outline"></span>
+          </button>
+        </div>
+
+        <div class="explanation" *ngIf="!isCorrect">
+          <p><strong>Đáp án đúng:</strong> {{ currentCard.frontText }}</p>
+          <p><strong>Bạn chọn:</strong> {{ selectedAnswer }}</p>
+        </div>
+      </div>
+
+      <!-- Next Button -->
+      <div class="next-section">
+        <button 
+          nz-button 
+          nzType="primary" 
+          nzSize="large"
+          (click)="nextCard()"
+          class="next-button">
+          <span *ngIf="currentIndex < cards.length - 1">
+            Tiếp theo
+            <span nz-icon nzType="right" nzTheme="outline"></span>
+          </span>
+          <span *ngIf="currentIndex >= cards.length - 1">
+            Hoàn thành
+            <span nz-icon nzType="check" nzTheme="outline"></span>
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- No Cards Message -->
+  <div *ngIf="!isLoading && cards.length === 0" class="empty-state">
+    <nz-result
+      nzStatus="info"
+      nzTitle="Không có thẻ học"
+      nzSubTitle="Bộ thẻ này chưa có nội dung để luyện nghe.">
+      <div nz-result-extra>
+        <button nz-button nzType="primary" (click)="goBack()">
+          Quay lại
+        </button>
+      </div>
+    </nz-result>
+  </div>
+</div>

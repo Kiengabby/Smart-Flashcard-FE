@@ -101,8 +101,8 @@ export class StudyModeComponent implements OnInit, OnDestroy {
     },
     {
       id: 'listening',
-      name: 'Đoán và Gõ Từ',
-      description: 'Nghe audio, đoán và gõ lại từ vựng.',
+      name: 'Luyện Nghe',
+      description: 'Nghe âm thanh và chọn từ đúng để cải thiện khả năng nghe.',
       icon: 'audio',
       color: '#722ed1',
       route: 'listening'

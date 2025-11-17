@@ -6,9 +6,11 @@ import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzProgressModule } from 'ng-zorro-antd/progress';
+import { NzTooltipModule } from 'ng-zorro-antd/tooltip';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { CardService } from '../../services/card.service';
 import { CardDTO, ReviewCardRequest } from '../../interfaces/card.dto';
+import { WebSpeechService } from '../../services/web-speech.service';
 
 @Component({
   selector: 'app-flashcard-study',
@@ -18,7 +20,8 @@ import { CardDTO, ReviewCardRequest } from '../../interfaces/card.dto';
     NzCardModule,
     NzButtonModule,
     NzIconModule,
-    NzProgressModule
+    NzProgressModule,
+    NzTooltipModule
   ],
   providers: [NzMessageService],
   templateUrl: './flashcard-study.component.html',
@@ -30,6 +33,8 @@ export class FlashcardStudyComponent implements OnInit {
   private _currentIndex = 0;
   isFlipped = false;
   private _isLoading = true;
+  isAudioLoading = false;
+  private audioElement: HTMLAudioElement | null = null;
 
   get currentIndex(): number {
     return this._currentIndex;
@@ -72,7 +77,8 @@ export class FlashcardStudyComponent implements OnInit {
     private cardService: CardService,
     private message: NzMessageService,
     private cdr: ChangeDetectorRef,
-    private http: HttpClient
+    private http: HttpClient,
+    private webSpeechService: WebSpeechService
   ) {}
 
   ngOnInit(): void {
@@ -320,6 +326,126 @@ export class FlashcardStudyComponent implements OnInit {
     this.isFlipped = false;
     this.cards = this.shuffleArray([...this.cards]);
     this.cdr.detectChanges();
+  }
+
+  /**
+   * Phát âm thanh của từ vựng
+   */
+  playAudio(): void {
+    console.log('playAudio clicked', this.currentCard);
+    if (!this.currentCard) {
+      this.message.warning('Không có thẻ học để phát âm');
+      return;
+    }
+
+    this.isAudioLoading = true;
+
+    // Dừng audio đang phát (nếu có)
+    if (this.audioElement) {
+      this.audioElement.pause();
+      this.audioElement = null;
+    }
+    this.webSpeechService.stopSpeaking();
+
+    // Thử phát audio file trước (nếu có)
+    if (this.currentCard.audioUrl) {
+      this.playAudioFile();
+    } else {
+      // Fallback: Sử dụng Web Speech API
+      this.playWebSpeech();
+    }
+  }
+
+  private playAudioFile(): void {
+    if (!this.currentCard?.audioUrl) {
+      this.playWebSpeech();
+      return;
+    }
+
+    // Tạo audio element mới
+    this.audioElement = new Audio(this.currentCard.audioUrl);
+    
+    this.audioElement.onloadeddata = () => {
+      this.isAudioLoading = false;
+    };
+
+    this.audioElement.onerror = () => {
+      console.warn('Không thể phát file âm thanh, chuyển sang Web Speech API');
+      this.playWebSpeech();
+    };
+
+    this.audioElement.onended = () => {
+      this.audioElement = null;
+    };
+
+    // Phát âm thanh
+    this.audioElement.play().catch(error => {
+      console.warn('Lỗi khi phát file âm thanh, chuyển sang Web Speech API:', error);
+      this.playWebSpeech();
+    });
+  }
+
+  private playWebSpeech(): void {
+    if (!this.currentCard) {
+      this.isAudioLoading = false;
+      return;
+    }
+
+    const language = this.webSpeechService.detectLanguage(this.currentCard.frontText);
+    const isSupported = this.webSpeechService.isLanguageSupported(language.split('-')[0]);
+    
+    console.log('Using Web Speech API for:', this.currentCard.frontText);
+    console.log('Detected language:', language);
+    console.log('Language supported:', isSupported);
+    console.log('Available languages:', this.webSpeechService.getAvailableLanguages());
+    
+    this.webSpeechService.speakText(this.currentCard.frontText, language)
+      .then(() => {
+        setTimeout(() => {
+          this.isAudioLoading = false;
+          this.cdr.detectChanges();
+        }, 0);
+      })
+      .catch((error) => {
+        console.error('Lỗi Web Speech API:', error);
+        setTimeout(() => {
+          this.isAudioLoading = false;
+          this.cdr.detectChanges();
+        }, 0);
+      });
+  }
+
+  /**
+   * Tính toán CSS class cho kích thước text dựa trên độ dài nội dung
+   * Logic: Ưu tiên consistency giữa front và back, xét cả ký tự và từ
+   */
+  getTextSizeClass(text: string): string {
+    if (!text) return 'medium-text';
+    
+    const trimmedText = text.trim();
+    const charLength = trimmedText.length;
+    const wordCount = trimmedText.split(/\s+/).length;
+    
+    // Ưu tiên short-text cho nội dung ngắn (flashcard words/phrases)
+    // Bao gồm từ đơn, cụm từ ngắn, từ nước ngoài
+    if (charLength <= 30 && wordCount <= 5) {
+      return 'short-text';
+    }
+    
+    // Medium cho câu ngắn hoặc định nghĩa vừa
+    else if (charLength <= 100 && wordCount <= 15) {
+      return 'medium-text';
+    }
+    
+    // Long cho đoạn văn ngắn
+    else if (charLength <= 200 && wordCount <= 30) {
+      return 'long-text';
+    }
+    
+    // Very long cho nội dung dài
+    else {
+      return 'very-long-text';
+    }
   }
 }
 

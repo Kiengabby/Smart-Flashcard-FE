@@ -56,6 +56,29 @@
       </nz-form-control>
     </nz-form-item>
 
+    <nz-form-item>
+      <nz-form-label nzFor="language" nzRequired>
+        <span nz-icon nzType="global" nzTheme="outline"></span>
+        Ngôn ngữ học
+      </nz-form-label>
+      <nz-form-control 
+        nzErrorTip="Vui lòng chọn ngôn ngữ"
+        [nzExtra]="'Ngôn ngữ được sử dụng để tạo âm thanh tự động cho từ vựng'">
+        <nz-select 
+          id="language"
+          formControlName="language" 
+          nzPlaceHolder="Chọn ngôn ngữ bạn muốn học"
+          nzShowSearch
+          class="language-select">
+          <nz-option 
+            *ngFor="let lang of languageOptions" 
+            [nzValue]="lang.value" 
+            [nzLabel]="lang.label">
+          </nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+
     <!-- Quick Tips -->
     <div class="tips-section">
       <h4>

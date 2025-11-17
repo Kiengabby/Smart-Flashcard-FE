@@ -37,7 +37,8 @@ export const routes: Routes = [
         path: 'study/:id', 
         children: [
           { path: 'flashcard', loadChildren: () => import('./pages/flashcard-study/flashcard-study.routes').then(m => m.FLASHCARD_STUDY_ROUTES) },
-          { path: 'quiz', loadChildren: () => import('./pages/quiz/quiz.routes').then(m => m.QUIZ_ROUTES) }
+          { path: 'quiz', loadChildren: () => import('./pages/quiz/quiz.routes').then(m => m.QUIZ_ROUTES) },
+          { path: 'listening', loadChildren: () => import('./pages/listening-practice/listening-practice.routes').then(m => m.LISTENING_PRACTICE_ROUTES) }
         ]
       }
     ]

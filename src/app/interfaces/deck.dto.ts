@@ -2,6 +2,7 @@ export interface DeckDTO {
   id: number;
   name: string;
   description: string;
+  language?: string;
   cardCount?: number;
   progress?: number; // Progress percentage (0-100)
   lastStudied?: string; // Last study date
@@ -13,9 +14,11 @@ export interface DeckDTO {
 export interface CreateDeckRequest {
   name: string;
   description: string;
+  language: string;
 }
 
 export interface UpdateDeckRequest {
   name?: string;
   description?: string;
+  language?: string;
 }

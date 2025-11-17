@@ -41,7 +41,26 @@
         <div class="flashcard-face flashcard-front">
           <div class="face-label">Mặt trước</div>
           <div class="face-content">
-            <p class="card-text">{{ currentCard.frontText }}</p>
+            <div class="word-container">
+              <p class="card-text" [ngClass]="getTextSizeClass(currentCard.frontText)">{{ currentCard.frontText }}</p>
+              <!-- Modern Audio Button -->
+              <button 
+                class="audio-button"
+                (click)="playAudio(); $event.stopPropagation()"
+                [class.loading]="isAudioLoading"
+                nz-tooltip="Nghe phát âm"
+                nzTooltipPlacement="top">
+                <div class="audio-icon">
+                  <span *ngIf="!isAudioLoading" nz-icon nzType="sound" nzTheme="outline"></span>
+                  <span *ngIf="isAudioLoading" nz-icon nzType="loading" nzTheme="outline" class="spinning"></span>
+                </div>
+                <div class="audio-waves" [class.active]="isAudioLoading">
+                  <div class="wave wave-1"></div>
+                  <div class="wave wave-2"></div>
+                  <div class="wave wave-3"></div>
+                </div>
+              </button>
+            </div>
           </div>
           <div class="face-hint">
             <span nz-icon nzType="eye" nzTheme="outline"></span>
@@ -53,7 +72,7 @@
         <div class="flashcard-face flashcard-back">
           <div class="face-label">Mặt sau</div>
           <div class="face-content">
-            <p class="card-text">{{ currentCard.backText }}</p>
+            <p class="card-text" [ngClass]="getTextSizeClass(currentCard.backText)">{{ currentCard.backText }}</p>
           </div>
           <div class="face-hint">
             <span nz-icon nzType="eye-invisible" nzTheme="outline"></span>

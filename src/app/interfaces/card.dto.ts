@@ -5,6 +5,7 @@ export interface CardDTO {
   id: number;
   frontText: string;
   backText: string;
+  audioUrl?: string;                // URL file âm thanh
   
   // Alias properties for backward compatibility
   front: string;                    // Alias for frontText
