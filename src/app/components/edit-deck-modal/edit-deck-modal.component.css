@@ -1,0 +1,185 @@
+.edit-deck-modal {
+  padding: 0;
+}
+
+.modal-header {
+  padding: 24px 24px 0;
+  border-bottom: none;
+}
+
+.modal-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #262626;
+  margin: 0 0 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modal-title [nz-icon] {
+  color: #1890ff;
+  font-size: 18px;
+}
+
+.modal-subtitle {
+  color: #8c8c8c;
+  font-size: 14px;
+  margin: 0;
+}
+
+.modal-content {
+  padding: 24px;
+}
+
+/* Form Styling */
+.form-input,
+.form-textarea {
+  border-radius: 8px;
+  border: 1px solid #d9d9d9;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  border-color: #1890ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.1);
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Form Labels */
+::ng-deep .ant-form-item-label > label {
+  font-weight: 500;
+  color: #262626;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+::ng-deep .ant-form-item-label > label [nz-icon] {
+  color: #1890ff;
+  font-size: 14px;
+}
+
+::ng-deep .ant-form-item {
+  margin-bottom: 20px;
+}
+
+/* Character Counters */
+.char-counters {
+  display: flex;
+  gap: 24px;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.char-counter {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+}
+
+.counter-label {
+  color: #8c8c8c;
+  font-weight: 500;
+}
+
+.counter-value {
+  color: #52c41a;
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.counter-value.warning {
+  color: #faad14;
+}
+
+/* Footer */
+.modal-footer {
+  padding: 0 24px 24px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  border-top: 1px solid #f0f0f0;
+  margin-top: 24px;
+  padding-top: 20px;
+}
+
+.cancel-btn,
+.submit-btn {
+  height: 40px;
+  padding: 0 20px;
+  border-radius: 8px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.3s ease;
+}
+
+.cancel-btn {
+  border: 1px solid #d9d9d9;
+  color: #595959;
+}
+
+.cancel-btn:hover {
+  border-color: #40a9ff;
+  color: #40a9ff;
+}
+
+.submit-btn {
+  background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+  border: none;
+  color: white;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #40a9ff 0%, #1890ff 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
+}
+
+.submit-btn:disabled {
+  background: #f5f5f5;
+  color: #bfbfbf;
+  cursor: not-allowed;
+}
+
+/* Loading Animation */
+::ng-deep .submit-btn .ant-spin-dot {
+  font-size: 14px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .modal-content {
+    padding: 16px;
+  }
+  
+  .modal-header {
+    padding: 16px 16px 0;
+  }
+  
+  .modal-footer {
+    padding: 0 16px 16px;
+    flex-direction: column-reverse;
+  }
+  
+  .cancel-btn,
+  .submit-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .char-counters {
+    flex-direction: column;
+    gap: 8px;
+  }
+}

@@ -19,6 +19,7 @@ import { CardService } from '../../services/card.service';
 import { DeckDTO } from '../../interfaces/deck.dto';
 import { CardDTO } from '../../interfaces/card.dto';
 import { CardModalComponent } from '../../components/card-modal/card-modal.component';
+import { BulkCreateCardsModalComponent } from '../../components/bulk-create-cards-modal/bulk-create-cards-modal.component';
 
 @Component({
   selector: 'app-deck-detail',
@@ -193,6 +194,30 @@ export class DeckDetailComponent implements OnInit {
     modalRef.afterClose.subscribe((result) => {
       if (result) {
         this.loadCards();
+      }
+    });
+  }
+
+  /**
+   * Mở modal tạo thẻ nhanh với AI
+   */
+  openBulkCreateModal(): void {
+    const modalRef = this.modalService.create({
+      nzTitle: '',
+      nzContent: BulkCreateCardsModalComponent,
+      nzData: {
+        deck: this.deck
+      },
+      nzFooter: null,
+      nzCentered: true,
+      nzWidth: 800,
+      nzClassName: 'bulk-create-modal-wrapper'
+    });
+
+    modalRef.afterClose.subscribe((result) => {
+      if (result && result.successCount > 0) {
+        this.loadCards();
+        this.loadDeckInfo(); // Reload để cập nhật cardCount
       }
     });
   }

@@ -153,7 +153,6 @@ export class RegisterComponent implements OnInit {
   registerWithGoogle(): void {
     if (this.isLoading) return;
     
-    console.log('Đăng ký bằng Google');
     // TODO: Implement Google authentication
     // this.authService.registerWithGoogle()
   }
@@ -165,7 +164,6 @@ export class RegisterComponent implements OnInit {
   registerWithFacebook(): void {
     if (this.isLoading) return;
     
-    console.log('Đăng ký bằng Facebook');
     // TODO: Implement Facebook authentication
     // this.authService.registerWithFacebook()
   }

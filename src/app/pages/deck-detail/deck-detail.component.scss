@@ -140,6 +140,37 @@
       }
     }
 
+    .section-header-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+
+      @media (max-width: 768px) {
+        flex-direction: column;
+        gap: 8px;
+        width: 100%;
+      }
+    }
+
+    .bulk-create-btn {
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(24, 144, 255, 0.1);
+      transition: all 0.3s ease;
+      border-color: #1890ff;
+      color: #1890ff;
+
+      &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(24, 144, 255, 0.2);
+        border-color: #40a9ff;
+        color: #40a9ff;
+      }
+
+      @media (max-width: 768px) {
+        width: 100%;
+      }
+    }
+
     .add-card-btn {
       border-radius: 8px;
       box-shadow: 0 2px 8px rgba(24, 144, 255, 0.2);
@@ -148,6 +179,10 @@
       &:hover {
         transform: translateY(-2px);
         box-shadow: 0 4px 16px rgba(24, 144, 255, 0.3);
+      }
+
+      @media (max-width: 768px) {
+        width: 100%;
       }
     }
   }

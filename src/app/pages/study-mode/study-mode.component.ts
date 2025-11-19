@@ -50,30 +50,16 @@ interface StudyMode {
   templateUrl: './study-mode.component.html',
   styleUrls: ['./study-mode.component.scss']
 })
-export class StudyModeComponent implements OnInit, OnDestroy {
+export class StudyModeComponent implements OnInit {
   deckId!: number;
-  deck?: DeckDTO;
+  deck: DeckDTO | null = null;
   cards: CardDTO[] = [];
-  private _isLoading = true;
-  private focusHandler = () => {
-    this.refreshData();
-  };
-
-  get isLoading(): boolean {
-    return this._isLoading;
-  }
-
-  set isLoading(value: boolean) {
-    this._isLoading = value;
-    this.cdr.detectChanges();
-  }
-
   stats: StudyStats = {
     totalWords: 0,
     mastered: 0,
     needReview: 0
   };
-
+  
   difficultyStats: DifficultyStats = {
     known: 0,
     easy: 0,
@@ -85,37 +71,40 @@ export class StudyModeComponent implements OnInit, OnDestroy {
   studyModes: StudyMode[] = [
     {
       id: 'flashcard',
-      name: 'Flashcard',
-      description: 'Ôn tập từ vựng với thẻ ghi nhớ (Flashcard) tương tác.',
-      icon: 'file-text',
-      color: '#52c41a',
+      name: 'Thẻ ghi nhớ',
+      description: 'Học từ vựng theo phương pháp lặp lại ngắt quãng',
+      icon: 'credit-card',
+      color: '#1890ff',
       route: 'flashcard'
     },
     {
       id: 'quiz',
-      name: 'Kiểm tra',
-      description: 'Kiểm tra kiến thức với câu hỏi trắc nghiệm hoặc điền từ.',
-      icon: 'check-square',
-      color: '#1890ff',
+      name: 'Trắc nghiệm',
+      description: 'Kiểm tra kiến thức với các câu hỏi trắc nghiệm',
+      icon: 'question-circle',
+      color: '#52c41a',
       route: 'quiz'
     },
     {
       id: 'listening',
-      name: 'Luyện Nghe',
-      description: 'Nghe âm thanh và chọn từ đúng để cải thiện khả năng nghe.',
-      icon: 'audio',
-      color: '#722ed1',
-      route: 'listening'
-    },
-    {
-      id: 'sentence',
-      name: 'Luyện câu',
-      description: 'Viết câu và nhận phản hồi từ AI.',
-      icon: 'edit',
+      name: 'Luyện nghe',
+      description: 'Rèn luyện khả năng nghe và phát âm',
+      icon: 'sound',
       color: '#fa8c16',
-      route: 'sentence'
+      route: 'listening'
     }
+    // TODO: Future development - AI Writing Practice Mode
+    // {
+    //   id: 'writing',
+    //   name: 'Luyện viết với AI',
+    //   description: 'Viết câu sử dụng từ vựng và nhận feedback từ AI',
+    //   icon: 'edit',
+    //   color: '#722ed1',
+    //   route: 'writing'
+    // }
   ];
+
+  isLoading = true;
 
   constructor(
     private route: ActivatedRoute,
@@ -127,129 +116,90 @@ export class StudyModeComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // Initialize data
-    this.deck = undefined;
-    this.cards = [];
-    
-    // Use setTimeout to avoid initial expression changed error
-    setTimeout(() => {
-      this.route.params.subscribe(params => {
-        this.deckId = +params['id'];
-        if (this.deckId) {
-          this.refreshData();
-        }
-      });
+    this.route.params.subscribe(params => {
+      this.deckId = +params['id'];
+      if (this.deckId) {
+        this.loadDeckInfo();
+        this.loadCards();
+      }
+    });
 
-      // Listen for query params changes (refresh signal from flashcard study)
-      this.route.queryParams.subscribe(queryParams => {
-        if (queryParams['refresh'] && this.deckId) {
-          console.log('Refreshing study-mode data after flashcard study');
-          this.refreshData();
-        }
-      });
-    }, 0);
+    // Check if returning from completed study
+    this.route.queryParams.subscribe(params => {
+      if (params['completed']) {
+        this.message.success('Chúc mừng! Bạn đã hoàn thành phiên học.');
+      }
+    });
   }
 
-  ngOnDestroy(): void {
-    // Component cleanup - no subscriptions to unsubscribe since we use async pipe
-  }
-
-  /**
-   * Refresh all data - deck info and cards
-   */
-  private refreshData(): void {
-    if (this.deckId) {
-      console.log('RefreshData: Loading deck and cards for deckId:', this.deckId);
-      this.loadDeckInfo();
-      this.loadCards();
-    }
-  }
-
-  loadDeckInfo(): void {
+  private loadDeckInfo(): void {
     this.deckService.getDeckById(this.deckId.toString()).subscribe({
       next: (data) => {
         this.deck = data;
       },
       error: (error) => {
-        console.error('Lỗi khi tải thông tin deck:', error);
-        this.message.error('Không thể tải thông tin bộ thẻ!');
+        this.message.error('Lỗi khi tải thông tin bộ thẻ: ' + error.message);
       }
     });
   }
 
-  loadCards(): void {
-    this._isLoading = true;
-    this.cdr.detectChanges();
-    
+  private loadCards(): void {
     this.cardService.getCardsByDeck(this.deckId).subscribe({
       next: (data) => {
-        this.cards = data;
+        this.cards = data || [];
         this.calculateStats();
-        this._isLoading = false;
-        this.cdr.detectChanges();
+        this.isLoading = false;
       },
       error: (error) => {
-        console.error('Lỗi khi tải danh sách thẻ:', error);
-        this.message.error('Không thể tải danh sách thẻ!');
-        this._isLoading = false;
-        this.cdr.detectChanges();
+        this.message.error('Lỗi khi tải danh sách thẻ: ' + error.message);
+        this.isLoading = false;
       }
     });
   }
 
-  calculateStats(): void {
+  private calculateStats(): void {
+    if (!this.cards || this.cards.length === 0) {
+      return;
+    }
+
     this.stats.totalWords = this.cards.length;
-    
-    // Log cards data for debugging
-    console.log('Calculating stats for cards:', this.cards.map(card => ({
-      id: card.id,
-      repetitions: card.repetitions || 0,
-      nextReviewDate: card.nextReviewDate,
-      easinessFactor: card.easinessFactor
-    })));
-    
-    // Tính số thẻ đã thành thạo (repetitions >= 3)
-    const masteredCards = this.cards.filter(card => (card.repetitions || 0) >= 3);
+
+    // Calculate mastered cards (repetitions >= 3 and easinessFactor >= 2.5)
+    const masteredCards = this.cards.filter(card => 
+      (card.repetitions || 0) >= 3 && (card.easinessFactor || 2.5) >= 2.5
+    );
+
     this.stats.mastered = masteredCards.length;
-    
-    // Tính số thẻ cần ôn tập:
-    // - Tất cả thẻ chưa master (repetitions < 3)
-    // - Có thể thêm điều kiện đã đến hạn ôn tập nếu cần
+
+    // Calculate cards that need review (based on nextReviewDate)
     const now = new Date();
     const needReviewCards = this.cards.filter(card => {
-      const repetitions = card.repetitions || 0;
-      
-      // Thẻ chưa master
-      if (repetitions < 3) {
-        return true;
+      if (!card.nextReviewDate) {
+        return true; // Never studied, needs review
       }
-      
-      // Thẻ đã master nhưng đã đến hạn ôn tập lại
-      if (card.nextReviewDate) {
-        const reviewDate = new Date(card.nextReviewDate);
-        return reviewDate <= now;
-      }
-      
-      return false;
+      const reviewDate = new Date(card.nextReviewDate);
+      return reviewDate <= now;
     });
+
     this.stats.needReview = needReviewCards.length;
-    
-    console.log('Stats calculated:', {
+
+    // Store stats for potential API call
+    const studyStats = {
       totalWords: this.stats.totalWords,
       mastered: this.stats.mastered,
       needReview: this.stats.needReview,
       masteredCards: masteredCards.map(c => c.id),
       needReviewCards: needReviewCards.map(c => c.id)
-    });
-    
-    // Calculate difficulty stats
+    };
+
+    // Calculate difficulty distribution
     this.calculateDifficultyStats();
-    
-    // Force change detection
+
+    // Trigger change detection
     this.cdr.detectChanges();
   }
 
-  calculateDifficultyStats(): void {
+  private calculateDifficultyStats(): void {
     this.difficultyStats = {
       known: 0,
       easy: 0,
@@ -267,7 +217,6 @@ export class StudyModeComponent implements OnInit, OnDestroy {
       } else if (repetitions >= 3) {
         this.difficultyStats.known++;
       } else {
-        // Phân loại theo easiness factor cho các card đang học (1-2 repetitions)
         if (easinessFactor >= 2.5) {
           this.difficultyStats.easy++;
         } else if (easinessFactor >= 1.8) {
@@ -277,8 +226,6 @@ export class StudyModeComponent implements OnInit, OnDestroy {
         }
       }
     });
-
-    console.log('Difficulty stats calculated:', this.difficultyStats);
   }
 
   selectMode(mode: StudyMode): void {
@@ -286,13 +233,12 @@ export class StudyModeComponent implements OnInit, OnDestroy {
       this.message.warning('Bộ thẻ chưa có thẻ nào. Hãy thêm thẻ trước khi học!');
       return;
     }
-
+    
     if (this.cards.length < 5) {
-      this.message.warning(`Bạn cần thêm ${5 - this.cards.length} thẻ nữa để bắt đầu học!`);
+      this.message.warning(`Bạn cần thêm ${5 - this.cards.length} thẻ nữa để có thể bắt đầu học!`);
       return;
     }
 
-    // Navigate to study mode
     this.router.navigate(['/app/study', this.deckId, mode.route]);
   }
 
@@ -300,4 +246,3 @@ export class StudyModeComponent implements OnInit, OnDestroy {
     this.router.navigate(['/app/deck', this.deckId]);
   }
 }
-

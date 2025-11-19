@@ -39,6 +39,7 @@ export class ListeningPracticeComponent implements OnInit {
   currentIndex = 0;
   isLoading = true;
   isAudioLoading = false;
+  private audioElement: HTMLAudioElement | null = null;
   
   // Listening practice specific
   options: string[] = [];
@@ -150,28 +151,115 @@ export class ListeningPracticeComponent implements OnInit {
     console.log('Generated options:', this.options, 'Correct:', correctAnswer);
   }
 
+  /**
+   * Phát âm thanh của từ vựng (giống logic flashcard study)
+   */
   playAudio(): void {
-    if (!this.currentCard) return;
+    console.log('playAudio clicked for listening practice', this.currentCard);
+    if (!this.currentCard) {
+      this.message.warning('Không có thẻ học để phát âm');
+      return;
+    }
 
-    this.isAudioLoading = true;
+    // Set loading state và mark đã phát audio
+    this.setAudioLoadingState(true);
     this.hasPlayedAudio = true;
 
-    const deckLanguage = this.deck?.language;
-    console.log('Playing audio for:', this.currentCard.frontText, 'Deck Language:', deckLanguage);
+    // Dừng audio đang phát (nếu có)
+    if (this.audioElement) {
+      this.audioElement.pause();
+      this.audioElement = null;
+    }
+    this.webSpeechService.stopSpeaking();
+
+    // Thử phát audio file trước (nếu có)
+    if (this.currentCard.audioUrl) {
+      this.playAudioFile();
+    } else {
+      // Fallback: Sử dụng Web Speech API
+      this.playWebSpeech();
+    }
+  }
+
+  private playAudioFile(): void {
+    if (!this.currentCard?.audioUrl) {
+      this.playWebSpeech();
+      return;
+    }
+
+    console.log('Playing audio file:', this.currentCard.audioUrl);
     
-    this.webSpeechService.speakTextWithDeckLanguage(this.currentCard.frontText, deckLanguage)
+    // Tạo audio element mới
+    this.audioElement = new Audio(this.currentCard.audioUrl);
+    
+    this.audioElement.onloadeddata = () => {
+      console.log('Audio loaded for listening practice');
+    };
+
+    this.audioElement.onerror = () => {
+      console.warn('Cannot play audio file, switching to Web Speech API');
+      this.resetAudioLoadingState();
+      this.playWebSpeech();
+    };
+
+    this.audioElement.onended = () => {
+      console.log('Audio playback ended');
+      this.audioElement = null;
+      this.resetAudioLoadingState();
+    };
+
+    this.audioElement.onplay = () => {
+      console.log('Audio started playing');
+      this.resetAudioLoadingState();
+    };
+
+    this.audioElement.onpause = () => {
+      console.log('Audio paused');
+      this.resetAudioLoadingState();
+    };
+
+    // Phát âm thanh
+    this.audioElement.play().catch(error => {
+      console.warn('Error playing audio file, switching to Web Speech API:', error);
+      this.resetAudioLoadingState();
+      this.playWebSpeech();
+    });
+  }
+
+  private playWebSpeech(): void {
+    if (!this.currentCard) {
+      this.resetAudioLoadingState();
+      return;
+    }
+
+    console.log('Using Web Speech API for listening practice');
+
+    // Sử dụng ngôn ngữ từ deck nếu có, nếu không thì auto-detect
+    let language: string;
+    if (this.deck?.language) {
+      // Chuyển đổi language code từ deck
+      language = this.webSpeechService.convertToSpeechLanguage(this.deck.language);
+      console.log(`Using deck language: ${this.deck.language} -> ${language}`);
+    } else {
+      // Fallback về auto-detect
+      language = this.webSpeechService.detectLanguage(this.currentCard.frontText);
+      console.log(`Auto-detected language: ${language}`);
+    }
+    
+    const isSupported = this.webSpeechService.isLanguageSupported(language.split('-')[0]);
+    
+    console.log('Using Web Speech API for listening practice:', this.currentCard.frontText);
+    console.log('Final language:', language);
+    console.log('Language supported:', isSupported);
+    
+    this.webSpeechService.speakText(this.currentCard.frontText, language)
       .then(() => {
-        setTimeout(() => {
-          this.isAudioLoading = false;
-          this.cdr.detectChanges();
-        }, 0);
+        console.log('Web Speech API completed successfully for listening practice');
+        this.resetAudioLoadingState();
       })
       .catch((error) => {
-        console.error('Error playing audio:', error);
-        setTimeout(() => {
-          this.isAudioLoading = false;
-          this.cdr.detectChanges();
-        }, 0);
+        console.error('Web Speech API error in listening practice:', error);
+        this.resetAudioLoadingState();
         this.message.error('Không thể phát âm thanh');
       });
   }
@@ -254,5 +342,25 @@ export class ListeningPracticeComponent implements OnInit {
       [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
     }
     return newArray;
+  }
+
+  /**
+   * Reset audio loading state with proper change detection
+   */
+  private resetAudioLoadingState(): void {
+    setTimeout(() => {
+      this.isAudioLoading = false;
+      this.cdr.detectChanges();
+    }, 0);
+  }
+
+  /**
+   * Set audio loading state with proper change detection
+   */
+  private setAudioLoadingState(loading: boolean): void {
+    setTimeout(() => {
+      this.isAudioLoading = loading;
+      this.cdr.detectChanges();
+    }, 0);
   }
 }

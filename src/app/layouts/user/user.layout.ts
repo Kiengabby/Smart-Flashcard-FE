@@ -107,7 +107,6 @@ export class UserLayoutComponent implements OnInit {
     // Special handling cho một số route đặc biệt
     if (item.routerLink === '/app/daily-review') {
       // Có thể thêm analytics tracking
-      console.log('User started daily review session');
     }
   }
 

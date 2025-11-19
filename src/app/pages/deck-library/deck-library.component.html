@@ -292,8 +292,12 @@
                 <nz-dropdown-menu #menu="nzDropdownMenu">
                   <ul nz-menu>
                     <li nz-menu-item (click)="viewDeckDetail(deck)">
+                      <span nz-icon nzType="folder-open" nzTheme="outline"></span>
+                      Xem chi tiết
+                    </li>
+                    <li nz-menu-item (click)="openEditDeckModal(deck)">
                       <span nz-icon nzType="edit" nzTheme="outline"></span>
-                      Chỉnh sửa
+                      Chỉnh sửa tên & mô tả
                     </li>
                     <li nz-menu-item (click)="duplicateDeck(deck)">
                       <span nz-icon nzType="copy" nzTheme="outline"></span>

@@ -134,7 +134,6 @@ export class LoginComponent implements OnInit {
   loginWithGoogle(): void {
     if (this.isLoading) return;
     
-    console.log('Đăng nhập bằng Google');
     // TODO: Implement Google authentication
     // this.authService.loginWithGoogle()
   }
@@ -146,7 +145,6 @@ export class LoginComponent implements OnInit {
   loginWithFacebook(): void {
     if (this.isLoading) return;
     
-    console.log('Đăng nhập bằng Facebook');
     // TODO: Implement Facebook authentication
     // this.authService.loginWithFacebook()
   }
@@ -156,7 +154,6 @@ export class LoginComponent implements OnInit {
    * TODO: Điều hướng đến trang reset password
    */
   forgotPassword(): void {
-    console.log('Quên mật khẩu');
     // TODO: Navigate to forgot password page
     // this.router.navigate(['/auth/forgot-password']);
   }

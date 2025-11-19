@@ -1,0 +1,124 @@
+<div class="edit-deck-modal">
+  <form nz-form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+    
+    <!-- Header -->
+    <div class="modal-header">
+      <h3 class="modal-title">
+        <span nz-icon nzType="edit" nzTheme="outline"></span>
+        Chỉnh sửa thông tin bộ thẻ
+      </h3>
+      <p class="modal-subtitle">Cập nhật tên và mô tả cho bộ thẻ của bạn</p>
+    </div>
+
+    <!-- Form Content -->
+    <div class="modal-content">
+      
+      <!-- Tên bộ thẻ -->
+      <nz-form-item>
+        <nz-form-label [nzFor]="'name'" [nzRequired]="true">
+          <span nz-icon nzType="folder" nzTheme="outline"></span>
+          Tên bộ thẻ
+        </nz-form-label>
+        <nz-form-control 
+          [nzErrorTip]="nameErrorTip"
+          [nzValidateStatus]="isFieldInvalid('name') ? 'error' : ''">
+          <input 
+            id="name"
+            nz-input 
+            type="text" 
+            formControlName="name"
+            placeholder="Nhập tên bộ thẻ..."
+            [disabled]="isLoading"
+            class="form-input">
+        </nz-form-control>
+      </nz-form-item>
+
+      <!-- Mô tả -->
+      <nz-form-item>
+        <nz-form-label [nzFor]="'description'">
+          <span nz-icon nzType="file-text" nzTheme="outline"></span>
+          Mô tả
+        </nz-form-label>
+        <nz-form-control 
+          [nzErrorTip]="descriptionErrorTip"
+          [nzValidateStatus]="isFieldInvalid('description') ? 'error' : ''">
+          <textarea 
+            id="description"
+            nz-input 
+            formControlName="description"
+            placeholder="Nhập mô tả cho bộ thẻ..."
+            [nzAutosize]="{ minRows: 3, maxRows: 6 }"
+            [disabled]="isLoading"
+            class="form-textarea">
+          </textarea>
+        </nz-form-control>
+      </nz-form-item>
+
+      <!-- Ngôn ngữ -->
+      <nz-form-item>
+        <nz-form-label [nzFor]="'language'" [nzRequired]="true">
+          <span nz-icon nzType="global" nzTheme="outline"></span>
+          Ngôn ngữ
+        </nz-form-label>
+        <nz-form-control 
+          nzErrorTip="Vui lòng chọn ngôn ngữ">
+          <nz-select 
+            id="language"
+            formControlName="language" 
+            nzPlaceHolder="Chọn ngôn ngữ"
+            nzShowSearch
+            [disabled]="isLoading"
+            class="form-input">
+            <nz-option 
+              *ngFor="let lang of languageOptions" 
+              [nzValue]="lang.value" 
+              [nzLabel]="lang.label">
+            </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <!-- Character counters -->
+      <div class="char-counters">
+        <div class="char-counter">
+          <span class="counter-label">Tên:</span>
+          <span class="counter-value" [class.warning]="editForm.get('name')?.value?.length > 80">
+            {{ editForm.get('name')?.value?.length || 0 }}/100
+          </span>
+        </div>
+        <div class="char-counter">
+          <span class="counter-label">Mô tả:</span>
+          <span class="counter-value" [class.warning]="editForm.get('description')?.value?.length > 400">
+            {{ editForm.get('description')?.value?.length || 0 }}/500
+          </span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="modal-footer">
+      <button 
+        nz-button 
+        nzType="default" 
+        (click)="onCancel()"
+        [disabled]="isLoading"
+        class="cancel-btn">
+        <span nz-icon nzType="close" nzTheme="outline"></span>
+        Hủy
+      </button>
+      
+      <button 
+        nz-button 
+        nzType="primary" 
+        type="submit"
+        [disabled]="!editForm.valid || isLoading"
+        class="submit-btn">
+        <span nz-icon nzType="loading" nzSpin *ngIf="isLoading"></span>
+        <span nz-icon nzType="check" nzTheme="outline" *ngIf="!isLoading"></span>
+        {{ isLoading ? 'Đang cập nhật...' : 'Cập nhật' }}
+      </button>
+    </div>
+
+  </form>
+</div>

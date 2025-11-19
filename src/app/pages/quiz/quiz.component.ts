@@ -55,7 +55,6 @@ export class QuizComponent implements OnInit, OnDestroy {
     // Lấy deckId từ route params
     this.route.parent?.params.subscribe(params => {
       this.deckId = +params['id'];
-      console.log('Got deckId from parent params:', this.deckId);
       this.startQuiz();
     });
   }
@@ -68,13 +67,11 @@ export class QuizComponent implements OnInit, OnDestroy {
    * Bắt đầu quiz mới
    */
   startQuiz(): void {
-    console.log('Starting quiz for deckId:', this.deckId);
     this.isLoading = true;
     this.startTime = Date.now();
 
     this.quizService.startQuiz(this.deckId).subscribe({
       next: (question) => {
-        console.log('Quiz started with first question:', question);
         this.currentQuestion = question;
         this.totalQuestions = question.totalQuestions;
         this.currentQuestionNumber = question.questionNumber;
@@ -100,7 +97,6 @@ export class QuizComponent implements OnInit, OnDestroy {
     }
     
     this.selectedAnswerIndex = index;
-    console.log('Selected answer index:', index);
     
     // Auto submit sau khi chọn với delay ngắn để UX mượt mà hơn
     setTimeout(() => {
@@ -116,7 +112,6 @@ export class QuizComponent implements OnInit, OnDestroy {
       return;
     }
 
-    console.log('Submitting answer:', this.selectedAnswerIndex);
     this.isSubmitting = true;
 
     const responseTime = Date.now() - this.startTime;
@@ -128,7 +123,6 @@ export class QuizComponent implements OnInit, OnDestroy {
 
     this.quizService.submitAnswer(this.deckId, answer).subscribe({
       next: (result) => {
-        console.log('Answer result:', result);
         this.answerResult = result;
         this.showResult = true;
         this.isSubmitting = false;
@@ -161,14 +155,12 @@ export class QuizComponent implements OnInit, OnDestroy {
 
     if (this.answerResult.nextQuestion) {
       // Còn câu hỏi tiếp theo
-      console.log('Moving to next question:', this.answerResult.nextQuestion);
       this.currentQuestion = this.answerResult.nextQuestion;
       this.currentQuestionNumber = this.answerResult.nextQuestion.questionNumber;
       this.resetQuestionState();
       this.startTime = Date.now(); // Reset timer cho câu hỏi mới
     } else {
       // Hết câu hỏi -> chuyển đến trang kết quả
-      console.log('Quiz completed, navigating to result');
       this.router.navigate(['/app/study', this.deckId, 'quiz', 'result']);
     }
   }

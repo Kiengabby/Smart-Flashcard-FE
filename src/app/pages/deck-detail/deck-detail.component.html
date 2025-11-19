@@ -57,15 +57,26 @@
         </h2>
         <span class="card-count" *ngIf="cards.length">{{ cards.length }} thẻ</span>
       </div>
-      <button 
-        nz-button 
-        nzType="primary" 
-        nzSize="large"
-        class="add-card-btn"
-        (click)="openAddCardModal()">
-        <span nz-icon nzType="plus" nzTheme="outline"></span>
-        Thêm thẻ mới
-      </button>
+      <div class="section-header-actions">
+        <button 
+          nz-button 
+          nzType="default" 
+          nzSize="large"
+          class="bulk-create-btn"
+          (click)="openBulkCreateModal()">
+          <span nz-icon nzType="thunderbolt" nzTheme="outline"></span>
+          Tạo nhanh với AI
+        </button>
+        <button 
+          nz-button 
+          nzType="primary" 
+          nzSize="large"
+          class="add-card-btn"
+          (click)="openAddCardModal()">
+          <span nz-icon nzType="plus" nzTheme="outline"></span>
+          Thêm thẻ mới
+        </button>
+      </div>
     </div>
 
     <!-- Loading state -->

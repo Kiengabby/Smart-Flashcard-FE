@@ -158,14 +158,15 @@ export class WebSpeechService {
     // Kiểm tra ký tự tiếng Việt
     const vietnameseRegex = /[àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđĐ]/;
     
-    // Kiểm tra ký tự tiếng Nhật (Hiragana, Katakana, Kanji)
-    const japaneseRegex = /[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/;
+    // Kiểm tra ký tự tiếng Nhật (Hiragana, Katakana)
+    const hiraganaRegex = /[\u3040-\u309F]/;
+    const katakanaRegex = /[\u30A0-\u30FF]/;
     
     // Kiểm tra ký tự tiếng Hàn
     const koreanRegex = /[\uAC00-\uD7AF\u1100-\u11FF\u3130-\u318F]/;
     
-    // Kiểm tra ký tự tiếng Trung (chỉ Hanzi, không trùng với Kanji)
-    const chineseRegex = /[\u4E00-\u9FAF]/;
+    // Kiểm tra ký tự Kanji/Hanzi
+    const kanjiRegex = /[\u4E00-\u9FAF]/;
     
     // Kiểm tra ký tự tiếng Thái
     const thaiRegex = /[\u0E00-\u0E7F]/;
@@ -187,17 +188,22 @@ export class WebSpeechService {
 
     if (vietnameseRegex.test(text)) {
       return 'vi-VN';
-    } else if (japaneseRegex.test(text)) {
-      // Phân biệt Nhật và Trung bằng cách kiểm tra Hiragana/Katakana
-      if (/[\u3040-\u309F\u30A0-\u30FF]/.test(text)) {
+    } else if (hiraganaRegex.test(text) || katakanaRegex.test(text)) {
+      // Nếu có Hiragana hoặc Katakana thì chắc chắn là tiếng Nhật
+      return 'ja-JP';
+    } else if (kanjiRegex.test(text)) {
+      // Chỉ có Kanji: kiểm tra thêm context để phân biệt Nhật/Trung
+      // Trong trường hợp không rõ, ưu tiên tiếng Nhật nếu text ngắn (có thể là từ vựng)
+      // hoặc tiếng Trung nếu text dài (có thể là câu)
+      if (text.length <= 3) {
+        // Từ ngắn có thể là tiếng Nhật
         return 'ja-JP';
       } else {
-        return 'zh-CN'; // Có thể là tiếng Trung với chữ Hán
+        // Câu dài hơn có thể là tiếng Trung
+        return 'zh-CN';
       }
     } else if (koreanRegex.test(text)) {
       return 'ko-KR';
-    } else if (chineseRegex.test(text)) {
-      return 'zh-CN';
     } else if (thaiRegex.test(text)) {
       return 'th-TH';
     } else if (arabicRegex.test(text)) {

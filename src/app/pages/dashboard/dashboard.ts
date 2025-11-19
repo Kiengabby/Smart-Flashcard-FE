@@ -196,7 +196,6 @@ export class DashboardComponent implements OnInit {
 
   // Navigation
   navigateToAction(action: string): void {
-    console.log('Navigate to:', action);
     this.messageService.info(`Chức năng ${action} đang được phát triển!`);
   }
 

@@ -43,15 +43,11 @@ export class QuizResultComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log('QuizResultComponent ngOnInit called');
-    console.log('Current route:', this.router.url);
     
     // Thử nhiều cách lấy deckId từ route
     this.route.parent?.parent?.params.subscribe(params => {
-      console.log('parent.parent.params:', params);
       this.deckId = +params['id'];
       if (this.deckId) {
-        console.log('Got deckId from parent.parent params:', this.deckId);
         this.loadQuizResult();
       }
     });
@@ -59,10 +55,8 @@ export class QuizResultComponent implements OnInit {
     // Backup: thử lấy từ route khác
     if (!this.deckId) {
       this.route.parent?.params.subscribe(params => {
-        console.log('parent.params:', params);
         this.deckId = +params['id'];
         if (this.deckId) {
-          console.log('Got deckId from parent params:', this.deckId);
           this.loadQuizResult();
         }
       });
@@ -74,7 +68,6 @@ export class QuizResultComponent implements OnInit {
       const studyIndex = urlSegments.findIndex(segment => segment === 'study');
       if (studyIndex >= 0 && urlSegments[studyIndex + 1]) {
         this.deckId = +urlSegments[studyIndex + 1];
-        console.log('Got deckId from URL parsing:', this.deckId);
         if (this.deckId) {
           this.loadQuizResult();
         }
@@ -95,10 +88,8 @@ export class QuizResultComponent implements OnInit {
 
     this.quizService.getQuizResult(this.deckId).subscribe({
       next: (result) => {
-        console.log('Quiz result loaded:', result);
         this.result = result;
         this.isLoading = false;
-        console.log('isLoading set to false, triggering change detection');
         this.cdr.detectChanges();
       },
       error: (error) => {

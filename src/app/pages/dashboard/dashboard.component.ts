@@ -361,7 +361,6 @@ export class DashboardComponent implements OnInit {
   // NAVIGATION METHODS
   // ===========================
   navigateToAction(action: string): void {
-    console.log('Navigate to:', action);
     this.messageService.info(`Chức năng ${action} đang được phát triển!`);
   }
 

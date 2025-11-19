@@ -318,38 +318,93 @@
     color: #52c41a;
   }
 
-  // Special styling for back text - better for longer content
+  // Enhanced styling for back text - optimized for translations and definitions
   .face-content {
-    padding: 0 8px; // Add horizontal padding for long text
+    padding: 0 12px; // More padding for better spacing
     
     .card-text {
-      // Better line height for longer content on back
-      &.long-text, &.very-long-text {
+      color: #262626;
+      font-weight: 400; // Normal weight for back side
+      line-height: 1.5;
+      
+      // Enhanced font sizes for better readability on back side
+      &.short-text {
+        font-size: clamp(28px, 7vw, 48px); // Larger for short translations
+        font-weight: 400; // Normal weight, not bold
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 1.2em;
+      }
+      
+      &.medium-text {
+        font-size: clamp(22px, 5.5vw, 38px); // Good size for medium translations
+        font-weight: 400; // Normal weight
+        text-align: center;
+        line-height: 1.4;
+      }
+      
+      &.long-text {
+        font-size: clamp(18px, 4.5vw, 30px); // Increased from 28px
+        font-weight: 400; // Normal weight
         line-height: 1.6;
-        text-align: left; // Left align for better readability
-        max-height: 280px; // Prevent overflow
-        overflow-y: auto; // Allow scrolling if needed
+        text-align: left;
+        max-height: 300px; // More space
+        overflow-y: auto;
+        padding-right: 8px; // Space for scrollbar
         
-        // Custom scrollbar styling
+        // Enhanced scrollbar styling
         &::-webkit-scrollbar {
-          width: 4px;
+          width: 6px;
         }
         
         &::-webkit-scrollbar-track {
-          background: rgba(0,0,0,0.1);
-          border-radius: 2px;
+          background: rgba(82, 196, 26, 0.1);
+          border-radius: 3px;
         }
         
         &::-webkit-scrollbar-thumb {
           background: #52c41a;
-          border-radius: 2px;
+          border-radius: 3px;
+          
+          &:hover {
+            background: #389e0d;
+          }
         }
       }
       
-      // Keep center alignment for short/medium content
-      &.short-text, &.medium-text {
-        text-align: center;
+      &.very-long-text {
+        font-size: clamp(16px, 4vw, 26px); // Increased from 22px
+        font-weight: 400; // Normal weight
+        line-height: 1.6;
+        text-align: left;
+        max-height: 320px; // More space for very long content
+        overflow-y: auto;
+        padding-right: 8px;
+        
+        // Enhanced scrollbar styling
+        &::-webkit-scrollbar {
+          width: 6px;
+        }
+        
+        &::-webkit-scrollbar-track {
+          background: rgba(82, 196, 26, 0.1);
+          border-radius: 3px;
+        }
+        
+        &::-webkit-scrollbar-thumb {
+          background: #52c41a;
+          border-radius: 3px;
+          
+          &:hover {
+            background: #389e0d;
+          }
+        }
       }
+      
+      // Default font size if no class is applied
+      font-size: clamp(22px, 5.5vw, 38px);
     }
   }
 }
@@ -533,7 +588,7 @@
     padding: 20px;
 
     .face-content .card-text {
-      // Override responsive text sizes for mobile - maintain proportions
+      // Enhanced mobile font sizes for both front and back
       &.short-text {
         font-size: clamp(24px, 7vw, 40px);
         font-weight: 700;
@@ -553,6 +608,37 @@
         font-size: clamp(14px, 3vw, 20px);
         line-height: 1.4;
         font-weight: 400;
+      }
+    }
+  }
+
+  // Enhanced mobile styling specifically for back side
+  .flashcard-back {
+    .face-content {
+      padding: 0 16px; // More padding on mobile
+      
+      .card-text {
+        &.short-text {
+          font-size: clamp(22px, 6.5vw, 36px); // Slightly smaller on mobile but still prominent
+          font-weight: 400; // Normal weight on mobile too
+        }
+        
+        &.medium-text {
+          font-size: clamp(18px, 5vw, 30px); // Good mobile size for translations
+          font-weight: 400; // Normal weight
+        }
+        
+        &.long-text {
+          font-size: clamp(16px, 4vw, 26px); // Readable on mobile
+          font-weight: 400; // Normal weight
+          max-height: 240px; // Adjusted for mobile
+        }
+        
+        &.very-long-text {
+          font-size: clamp(14px, 3.5vw, 22px); // Improved mobile readability
+          font-weight: 400; // Normal weight
+          max-height: 260px;
+        }
       }
     }
   }

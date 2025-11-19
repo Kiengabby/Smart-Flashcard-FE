@@ -25,6 +25,7 @@ import { NzProgressModule } from 'ng-zorro-antd/progress';
 // Components
 import { DeckCardComponent } from '../../components/deck-card/deck-card.component';
 import { CreateDeckModalComponent } from '../../components/create-deck-modal/create-deck-modal.component';
+import { EditDeckModalComponent } from '../../components/edit-deck-modal/edit-deck-modal.component';
 
 // Services
 import { DeckService } from '../../services/deck.service';
@@ -330,6 +331,35 @@ export class DeckLibraryComponent implements OnInit {
       // Backwards compatibility: some modals may return 'success'
       if (result === 'success') {
         this.loadDecks(); // Reload danh sách
+      }
+    });
+  }
+
+  /**
+   * Mở modal chỉnh sửa deck
+   */
+  openEditDeckModal(deck: DeckDTO): void {
+    const modalRef = this.modalService.create({
+      nzTitle: 'Chỉnh sửa thông tin bộ thẻ',
+      nzContent: EditDeckModalComponent,
+      nzData: {
+        deck: deck
+      },
+      nzFooter: null,
+      nzCentered: true,
+      nzWidth: 600
+    });
+
+    modalRef.afterClose.subscribe((result) => {
+      if (result) {
+        // Tìm và cập nhật deck trong danh sách
+        const index = this.decks.findIndex(d => d.id === deck.id);
+        if (index !== -1) {
+          this.decks[index] = { ...this.decks[index], ...result };
+          this.applyFilters(); // Refresh filtered list
+          this.cdr.detectChanges();
+        }
+        this.message.success('Đã cập nhật thông tin bộ thẻ!');
       }
     });
   }

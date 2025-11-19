@@ -9,7 +9,9 @@ import { NzProgressModule } from 'ng-zorro-antd/progress';
 import { NzTooltipModule } from 'ng-zorro-antd/tooltip';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { CardService } from '../../services/card.service';
+import { DeckService } from '../../services/deck.service';
 import { CardDTO, ReviewCardRequest } from '../../interfaces/card.dto';
+import { DeckDTO } from '../../interfaces/deck.dto';
 import { WebSpeechService } from '../../services/web-speech.service';
 
 @Component({
@@ -29,6 +31,7 @@ import { WebSpeechService } from '../../services/web-speech.service';
 })
 export class FlashcardStudyComponent implements OnInit {
   deckId!: number;
+  deck: DeckDTO | null = null;
   cards: CardDTO[] = [];
   private _currentIndex = 0;
   isFlipped = false;
@@ -75,6 +78,7 @@ export class FlashcardStudyComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private cardService: CardService,
+    private deckService: DeckService,
     private message: NzMessageService,
     private cdr: ChangeDetectorRef,
     private http: HttpClient,
@@ -94,6 +98,7 @@ export class FlashcardStudyComponent implements OnInit {
         this.deckId = +parentParams['id'];
         console.log('Got deckId from parent params:', this.deckId);
         if (this.deckId && this.deckId > 0) {
+          this.loadDeckInfo();
           this.loadCards();
         } else {
           console.error('Invalid deckId:', this.deckId);
@@ -338,7 +343,8 @@ export class FlashcardStudyComponent implements OnInit {
       return;
     }
 
-    this.isAudioLoading = true;
+    // Set loading state
+    this.setAudioLoadingState(true);
 
     // Dừng audio đang phát (nếu có)
     if (this.audioElement) {
@@ -366,52 +372,74 @@ export class FlashcardStudyComponent implements OnInit {
     this.audioElement = new Audio(this.currentCard.audioUrl);
     
     this.audioElement.onloadeddata = () => {
-      this.isAudioLoading = false;
+      // Audio ready, but not playing yet
+      console.log('Audio loaded, ready to play');
     };
 
     this.audioElement.onerror = () => {
       console.warn('Không thể phát file âm thanh, chuyển sang Web Speech API');
+      this.resetAudioLoadingState();
       this.playWebSpeech();
     };
 
     this.audioElement.onended = () => {
+      console.log('Audio playback ended');
       this.audioElement = null;
+      this.resetAudioLoadingState();
+    };
+
+    this.audioElement.onplay = () => {
+      // Audio started playing - reset loading immediately
+      console.log('Audio started playing');
+      this.resetAudioLoadingState();
+    };
+
+    this.audioElement.onpause = () => {
+      console.log('Audio paused');
+      this.resetAudioLoadingState();
     };
 
     // Phát âm thanh
     this.audioElement.play().catch(error => {
       console.warn('Lỗi khi phát file âm thanh, chuyển sang Web Speech API:', error);
+      this.resetAudioLoadingState();
       this.playWebSpeech();
     });
   }
 
   private playWebSpeech(): void {
     if (!this.currentCard) {
-      this.isAudioLoading = false;
+      this.resetAudioLoadingState();
       return;
     }
 
-    const language = this.webSpeechService.detectLanguage(this.currentCard.frontText);
+    // Sử dụng ngôn ngữ từ deck nếu có, nếu không thì auto-detect
+    let language: string;
+    if (this.deck?.language) {
+      // Chuyển đổi language code từ deck
+      language = this.webSpeechService.convertToSpeechLanguage(this.deck.language);
+      console.log(`Using deck language: ${this.deck.language} -> ${language}`);
+    } else {
+      // Fallback về auto-detect
+      language = this.webSpeechService.detectLanguage(this.currentCard.frontText);
+      console.log(`Auto-detected language: ${language}`);
+    }
+    
     const isSupported = this.webSpeechService.isLanguageSupported(language.split('-')[0]);
     
     console.log('Using Web Speech API for:', this.currentCard.frontText);
-    console.log('Detected language:', language);
+    console.log('Final language:', language);
     console.log('Language supported:', isSupported);
     console.log('Available languages:', this.webSpeechService.getAvailableLanguages());
     
     this.webSpeechService.speakText(this.currentCard.frontText, language)
       .then(() => {
-        setTimeout(() => {
-          this.isAudioLoading = false;
-          this.cdr.detectChanges();
-        }, 0);
+        console.log('Web Speech API completed successfully');
+        this.resetAudioLoadingState();
       })
       .catch((error) => {
         console.error('Lỗi Web Speech API:', error);
-        setTimeout(() => {
-          this.isAudioLoading = false;
-          this.cdr.detectChanges();
-        }, 0);
+        this.resetAudioLoadingState();
       });
   }
 
@@ -446,6 +474,43 @@ export class FlashcardStudyComponent implements OnInit {
     else {
       return 'very-long-text';
     }
+  }
+
+  /**
+   * Load thông tin deck bao gồm ngôn ngữ
+   */
+  loadDeckInfo(): void {
+    this.deckService.getDeckById(this.deckId.toString()).subscribe({
+      next: (data) => {
+        this.deck = data;
+        console.log('Loaded deck info:', data);
+        console.log('Deck language:', data.language);
+      },
+      error: (error) => {
+        console.error('Lỗi khi tải thông tin deck:', error);
+        // Continue without deck info if loading fails
+      }
+    });
+  }
+
+  /**
+   * Reset audio loading state with proper change detection
+   */
+  private resetAudioLoadingState(): void {
+    setTimeout(() => {
+      this.isAudioLoading = false;
+      this.cdr.detectChanges();
+    }, 0);
+  }
+
+  /**
+   * Set audio loading state with proper change detection
+   */
+  private setAudioLoadingState(loading: boolean): void {
+    setTimeout(() => {
+      this.isAudioLoading = loading;
+      this.cdr.detectChanges();
+    }, 0);
   }
 }
 

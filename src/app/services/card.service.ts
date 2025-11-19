@@ -66,6 +66,13 @@ export class CardService {
   getActivityDates(year: number, month: number): Observable<number[]> {
     return this.http.get<number[]>(`http://localhost:8080/api/stats/activity-dates?year=${year}&month=${month}`);
   }
+
+  /**
+   * Bulk create cards with AI translation
+   */
+  bulkCreateCards(deckId: number, request: BulkCreateCardsRequest): Observable<BulkCreateCardsResponse> {
+    return this.http.post<BulkCreateCardsResponse>(`${this.BASE_API}/${deckId}/cards/bulk-create`, request);
+  }
 }
 
 /**
@@ -84,6 +91,29 @@ export interface StudyStats {
   reviewToday: number;
   totalWordsLearned: number;
   activeChallenges: number;
+}
+
+/**
+ * Interface for bulk card creation
+ */
+export interface BulkCreateCardsRequest {
+  words: string[];
+  sourceLanguage: string;
+  targetLanguage: string;
+  context?: string;
+  autoDetectLanguage: boolean;
+}
+
+export interface BulkCreateCardsResponse {
+  createdCards: CardDTO[];
+  failedCards: {
+    word: string;
+    error: string;
+    translation?: string;
+  }[];
+  totalRequested: number;
+  successCount: number;
+  failureCount: number;
 }
 
 
