@@ -73,6 +73,20 @@ export class CardService {
   bulkCreateCards(deckId: number, request: BulkCreateCardsRequest): Observable<BulkCreateCardsResponse> {
     return this.http.post<BulkCreateCardsResponse>(`${this.BASE_API}/${deckId}/cards/bulk-create`, request);
   }
+
+  /**
+   * Get translations only (without creating cards)
+   */
+  getTranslations(request: BulkCreateCardsRequest): Observable<TranslationResult[]> {
+    return this.http.post<TranslationResult[]>('http://localhost:8080/api/translation/batch-translate', request);
+  }
+
+  /**
+   * Create cards from pre-translated data
+   */
+  createCardsFromTranslations(deckId: number, cardsData: CardTranslationData[]): Observable<BulkCreateCardsResponse> {
+    return this.http.post<BulkCreateCardsResponse>(`${this.BASE_API}/${deckId}/cards/create-from-translations`, cardsData);
+  }
 }
 
 /**
@@ -114,6 +128,23 @@ export interface BulkCreateCardsResponse {
   totalRequested: number;
   successCount: number;
   failureCount: number;
+}
+
+/**
+ * Interface for translation results
+ */
+export interface TranslationResult {
+  word: string;
+  translation: string;
+  confidence?: number;
+}
+
+/**
+ * Interface for card translation data
+ */
+export interface CardTranslationData {
+  frontText: string;
+  backText: string;
 }
 
 

@@ -30,23 +30,6 @@ export class CreateDeckModalComponent implements OnInit {
   deckForm!: FormGroup;
   isConfirmLoading = false;
 
-  // Danh sách ngôn ngữ hỗ trợ
-  languageOptions = [
-    { value: 'en', label: 'English (Tiếng Anh)' },
-    { value: 'vi', label: 'Tiếng Việt' },
-    { value: 'ja', label: '日本語 (Tiếng Nhật)' },
-    { value: 'zh', label: '中文 (Tiếng Trung)' },
-    { value: 'ko', label: '한국어 (Tiếng Hàn)' },
-    { value: 'fr', label: 'Français (Tiếng Pháp)' },
-    { value: 'de', label: 'Deutsch (Tiếng Đức)' },
-    { value: 'es', label: 'Español (Tiếng Tây Ban Nha)' },
-    { value: 'it', label: 'Italiano (Tiếng Ý)' },
-    { value: 'pt', label: 'Português (Tiếng Bồ Đào Nha)' },
-    { value: 'ru', label: 'Русский (Tiếng Nga)' },
-    { value: 'ar', label: 'العربية (Tiếng Ả Rập)' },
-    { value: 'th', label: 'ไทย (Tiếng Thái)' }
-  ];
-
   constructor(
     private fb: FormBuilder,
     private deckService: DeckService,
@@ -59,10 +42,10 @@ export class CreateDeckModalComponent implements OnInit {
   }
 
   private initializeForm(): void {
+    // Bỏ language field vì có AI API key - tự động detect
     this.deckForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(100)]],
-      description: ['', [Validators.maxLength(500)]],
-      language: ['en', [Validators.required]] // Mặc định là tiếng Anh
+      description: ['', [Validators.maxLength(500)]]
     });
   }
 
@@ -76,7 +59,12 @@ export class CreateDeckModalComponent implements OnInit {
     }
 
     this.isConfirmLoading = true;
-    const formData: CreateDeckRequest = this.deckForm.value;
+    
+    // Tạo request với default language vì AI có thể auto-detect
+    const formData: CreateDeckRequest = {
+      ...this.deckForm.value,
+      language: 'auto' // AI sẽ auto-detect ngôn ngữ
+    };
     
     this.deckService.createDeck(formData).subscribe({
       next: (response: DeckDTO) => {

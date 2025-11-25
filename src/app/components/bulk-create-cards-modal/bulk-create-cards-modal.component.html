@@ -1,285 +1,354 @@
-<div class="bulk-create-modal">
-  
-  <!-- Header -->
-  <div class="modal-header">
-    <h2>
-      <span nz-icon nzType="thunderbolt" nzTheme="outline"></span>
-      Tạo thẻ nhanh với AI
-    </h2>
-    <p class="modal-subtitle">Nhập danh sách từ và để AI tự động dịch tạo thẻ cho bạn</p>
-  </div>
-
-  <!-- Steps -->
-  <nz-steps [nzCurrent]="currentStep" class="steps-container">
-    <nz-step nzTitle="Nhập từ" nzDescription="Danh sách từ cần học"></nz-step>
-    <nz-step nzTitle="Xác nhận" nzDescription="Kiểm tra thông tin"></nz-step>
-    <nz-step nzTitle="Kết quả" nzDescription="Xem kết quả tạo thẻ"></nz-step>
-  </nz-steps>
-
-  <!-- Step 1: Input words -->
-  <div *ngIf="currentStep === 0" class="step-content">
-    <form nz-form [formGroup]="bulkForm">
-      
-      <!-- Words input -->
-      <nz-form-item>
-        <nz-form-label [nzRequired]="true">
-          <span nz-icon nzType="file-text" nzTheme="outline"></span>
-          Danh sách từ
-        </nz-form-label>
-        <nz-form-control 
-          [nzErrorTip]="wordsListErrorTip"
-          [nzValidateStatus]="isFieldInvalid('wordsList') ? 'error' : ''">
-          <textarea 
-            nz-input
-            formControlName="wordsList"
-            placeholder="Nhập mỗi từ trên một dòng:
-最後
-時代
-場所
-関係
-..."
-            rows="8"
-            class="words-input">
-          </textarea>
-          <div class="input-help">
-            <span class="help-text">Mỗi từ trên một dòng, tối đa 50 từ</span>
-            <span class="char-count">{{ getWordCount() }} từ</span>
-          </div>
-        </nz-form-control>
-      </nz-form-item>
-
-      <!-- Source Language -->
-      <nz-form-item>
-        <nz-form-label [nzRequired]="true">
-          <span nz-icon nzType="global" nzTheme="outline"></span>
-          Ngôn ngữ nguồn
-        </nz-form-label>
-        <nz-form-control>
-          <nz-select 
-            formControlName="sourceLanguage" 
-            nzPlaceHolder="Chọn ngôn ngữ của từ cần dịch"
-            nzShowSearch>
-            <nz-option 
-              *ngFor="let lang of languageOptions" 
-              [nzValue]="lang.value" 
-              [nzLabel]="lang.label">
-            </nz-option>
-          </nz-select>
-        </nz-form-control>
-      </nz-form-item>
-
-      <!-- Target Language -->
-      <nz-form-item>
-        <nz-form-label [nzRequired]="true">
-          <span nz-icon nzType="translation" nzTheme="outline"></span>
-          Ngôn ngữ đích
-        </nz-form-label>
-        <nz-form-control>
-          <nz-select 
-            formControlName="targetLanguage" 
-            nzPlaceHolder="Chọn ngôn ngữ dịch sang"
-            nzShowSearch>
-            <nz-option 
-              *ngFor="let lang of languageOptions.slice(1)" 
-              [nzValue]="lang.value" 
-              [nzLabel]="lang.label">
-            </nz-option>
-          </nz-select>
-        </nz-form-control>
-      </nz-form-item>
-
-      <!-- Context (Optional) -->
-      <nz-form-item>
-        <nz-form-label>
-          <span nz-icon nzType="info-circle" nzTheme="outline"></span>
-          Ngữ cảnh (tùy chọn)
-        </nz-form-label>
-        <nz-form-control>
-          <textarea 
-            nz-input
-            formControlName="context"
-            placeholder="Thêm ngữ cảnh để AI dịch chính xác hơn (ví dụ: từ vựng kinh doanh, từ vựng y học...)"
-            rows="2">
-          </textarea>
-        </nz-form-control>
-      </nz-form-item>
-
-      <!-- Info Alert -->
-      <nz-alert
-        nzType="info"
-        nzShowIcon
-        [nzMessage]="'Hướng dẫn sử dụng'"
-        [nzDescription]="'• Nhập mỗi từ/cụm từ trên một dòng\n• AI sẽ tự động dịch và tạo thẻ\n• Kiểm tra kết quả trước khi hoàn tất'"
-        class="info-alert">
-      </nz-alert>
-
-    </form>
-  </div>
-
-  <!-- Step 2: Preview -->
-  <div *ngIf="currentStep === 1" class="step-content">
-    <div class="preview-section">
-      <h3>Xác nhận thông tin</h3>
-      
-      <div class="preview-info">
-        <div class="info-row">
-          <span class="label">Số từ:</span>
-          <nz-tag [nzColor]="'blue'">{{ parsedWords.length }} từ</nz-tag>
-        </div>
-        <div class="info-row">
-          <span class="label">Dịch từ:</span>
-          <span class="value">{{ getSourceLanguageLabel() }}</span>
-        </div>
-        <div class="info-row">
-          <span class="label">Dịch sang:</span>
-          <span class="value">{{ getTargetLanguageLabel() }}</span>
-        </div>
-        <div *ngIf="bulkForm.get('context')?.value" class="info-row">
-          <span class="label">Ngữ cảnh:</span>
-          <span class="value">{{ bulkForm.get('context')?.value }}</span>
-        </div>
-      </div>
-
-      <nz-divider></nz-divider>
-
-      <div class="words-preview">
-        <h4>Danh sách từ sẽ được tạo:</h4>
-        <div class="words-grid">
-          <nz-tag 
-            *ngFor="let word of parsedWords; let i = index" 
-            [nzColor]="'default'"
-            class="word-tag">
-            {{ i + 1 }}. {{ word }}
-          </nz-tag>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Step 3: Results -->
-  <div *ngIf="currentStep === 2 && previewResults" class="step-content">
-    <div class="results-section">
-      <h3>Kết quả tạo thẻ</h3>
-      
-      <!-- Success Summary -->
-      <div class="results-summary">
-        <div class="success-stats">
-          <div class="stat-item success">
-            <span nz-icon nzType="check-circle" nzTheme="fill"></span>
-            <div class="stat-info">
-              <div class="stat-number">{{ previewResults.successCount }}</div>
-              <div class="stat-label">Thành công</div>
-            </div>
-          </div>
-          <div class="stat-item error">
-            <span nz-icon nzType="close-circle" nzTheme="fill"></span>
-            <div class="stat-info">
-              <div class="stat-number">{{ previewResults.failureCount }}</div>
-              <div class="stat-label">Thất bại</div>
-            </div>
-          </div>
-          <div class="stat-item total">
-            <span nz-icon nzType="file-text" nzTheme="fill"></span>
-            <div class="stat-info">
-              <div class="stat-number">{{ previewResults.totalRequested }}</div>
-              <div class="stat-label">Tổng cộng</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Created Cards -->
-      <div *ngIf="previewResults.createdCards.length > 0" class="created-cards">
-        <h4>
-          <span nz-icon nzType="check-circle" nzTheme="outline"></span>
-          Thẻ đã tạo thành công ({{ previewResults.createdCards.length }})
-        </h4>
-        <div class="cards-preview">
-          <div 
-            *ngFor="let card of previewResults.createdCards" 
-            class="card-preview">
-            <div class="card-front">{{ card.frontText }}</div>
-            <div class="card-divider">→</div>
-            <div class="card-back">{{ card.backText }}</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Failed Cards -->
-      <div *ngIf="previewResults.failedCards.length > 0" class="failed-cards">
-        <h4>
-          <span nz-icon nzType="warning" nzTheme="outline"></span>
-          Thẻ không thể tạo ({{ previewResults.failedCards.length }})
-        </h4>
-        <div class="failed-list">
-          <div 
-            *ngFor="let failed of previewResults.failedCards" 
-            class="failed-item">
-            <span class="failed-word">{{ failed.word }}</span>
-            <span class="failed-error">{{ failed.error }}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Footer Actions -->
-  <div class="modal-footer">
-    <div class="footer-left">
-      <button 
-        *ngIf="currentStep > 0 && currentStep < 2"
-        nz-button 
-        nzType="default"
-        (click)="goBackToInput()"
-        [disabled]="isLoading">
-        <span nz-icon nzType="arrow-left" nzTheme="outline"></span>
-        Quay lại
-      </button>
-    </div>
+<div class="ai-modal-overlay">
+  <div class="ai-modal-container">
     
-    <div class="footer-right">
-      <button 
-        nz-button 
-        nzType="default" 
-        (click)="onCancel()"
-        [disabled]="isLoading"
-        class="cancel-btn">
+    <!-- Header Tiếng Việt -->
+    <div class="modal-header">
+      <button class="close-btn" (click)="modal.destroy()">
         <span nz-icon nzType="close" nzTheme="outline"></span>
-        Hủy
       </button>
       
-      <button 
-        *ngIf="currentStep === 0"
-        nz-button 
-        nzType="primary" 
-        (click)="parseWords()"
-        [disabled]="!bulkForm.get('wordsList')?.value?.trim()"
-        class="next-btn">
-        <span nz-icon nzType="arrow-right" nzTheme="outline"></span>
-        Tiếp theo
-      </button>
-
-      <button 
-        *ngIf="currentStep === 1"
-        nz-button 
-        nzType="primary" 
-        (click)="createCards()"
-        [nzLoading]="isLoading"
-        class="create-btn">
-        <span nz-icon nzType="rocket" nzTheme="outline" *ngIf="!isLoading"></span>
-        {{ isLoading ? 'Đang tạo thẻ...' : 'Tạo thẻ với AI' }}
-      </button>
-
-      <button 
-        *ngIf="currentStep === 2"
-        nz-button 
-        nzType="primary" 
-        (click)="finish()"
-        class="finish-btn">
-        <span nz-icon nzType="check" nzTheme="outline"></span>
-        Hoàn tất
-      </button>
+      <div class="header-content">
+        <div class="ai-icon">
+          <div class="icon-bg">
+            <span nz-icon nzType="robot" nzTheme="fill" class="robot-icon"></span>
+          </div>
+          <div class="ai-pulse"></div>
+        </div>
+        
+        <h1>🚀 Tạo Thẻ Thông Minh AI</h1>
+        <p class="subtitle">✨ Biến từ vựng của bạn thành flashcard học tập thông minh</p>
+        
+        <div class="ai-info">
+          <span class="ai-tag">🧠 Google Gemini AI</span>
+          <span class="ai-tag">🎤 Giọng Nói Neural</span>
+        </div>
+      </div>
     </div>
-  </div>
 
+    <!-- Thanh Tiến Trình -->
+    <div class="progress-bar">
+      <div class="progress-fill" [style.width.%]="(currentStep + 1) * 25"></div>
+    </div>
+
+    <!-- Nội Dung Các Bước -->
+    <div class="modal-body">
+      
+      <!-- Bước 1: Nhập Liệu -->
+      <div *ngIf="currentStep === 0" class="step-container">
+        <div class="step-header">
+          <h2>🎯 Bạn muốn học từ vựng gì?</h2>
+          <p>Nhập những từ hoặc cụm từ bạn muốn thành thạo</p>
+        </div>
+
+        <form nz-form [formGroup]="bulkForm" class="input-form" (ngSubmit)="onFormSubmit($event)">
+          
+          <!-- Vùng Nhập Chính -->
+          <div class="input-section">
+            <label class="input-label">
+              <span nz-icon nzType="edit" nzTheme="outline"></span>
+              Danh sách từ vựng của bạn
+            </label>
+            
+            <div class="textarea-wrapper">
+              <textarea 
+                nz-input
+                formControlName="wordsList"
+                placeholder="Nhập mỗi từ trên một dòng:
+
+beautiful
+amazing  
+wonderful
+fantastic
+incredible
+environment
+communication
+
+💡 Mẹo hay: Thêm 5-20 từ để AI hiểu ngữ cảnh tốt nhất!"
+                rows="8"
+                class="main-textarea"
+                (input)="parseWords()"
+                (keydown)="onTextareaKeydown($event)">
+              </textarea>
+              
+              <div class="word-count" *ngIf="parsedWords.length > 0">
+                <span nz-icon nzType="check-circle" nzTheme="fill"></span>
+                {{ parsedWords.length }} từ đã sẵn sàng
+              </div>
+            </div>
+          </div>
+
+          <!-- Chọn Ngôn Ngữ -->
+          <div class="language-section">
+            <div class="language-row">
+              <div class="lang-item">
+                <label>Từ ngôn ngữ</label>
+                <nz-select 
+                  formControlName="sourceLanguage" 
+                  nzPlaceHolder="Tự động nhận diện"
+                  class="lang-select">
+                  <nz-option 
+                    *ngFor="let lang of languageOptions" 
+                    [nzValue]="lang.value" 
+                    [nzLabel]="lang.label">
+                  </nz-option>
+                </nz-select>
+              </div>
+              
+              <div class="arrow-icon">
+                <span nz-icon nzType="arrow-right" nzTheme="outline"></span>
+              </div>
+              
+              <div class="lang-item">
+                <label>Sang ngôn ngữ</label>
+                <nz-select 
+                  formControlName="targetLanguage" 
+                  nzPlaceHolder="Tiếng Việt"
+                  class="lang-select">
+                  <nz-option 
+                    *ngFor="let lang of languageOptions.slice(1)" 
+                    [nzValue]="lang.value" 
+                    [nzLabel]="lang.label">
+                  </nz-option>
+                </nz-select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Ngữ Cảnh (Tùy Chọn) -->
+          <div class="context-section" *ngIf="parsedWords.length > 0">
+            <label class="input-label">
+              <span nz-icon nzType="bulb" nzTheme="outline"></span>
+              Ngữ cảnh (tùy chọn)
+            </label>
+            <input 
+              nz-input
+              formControlName="context"
+              placeholder="VD: Thuật ngữ kinh doanh, Từ vựng y học, Tiếng lóng thông dụng..."
+              class="context-input">
+          </div>
+
+        </form>
+      </div>
+
+      <!-- Bước 2: Xem Trước -->
+      <div *ngIf="currentStep === 1" class="step-container">
+        <div class="step-header">
+          <h2>🎪 AI đang tạo phép màu</h2>
+          <p>Đang tạo flashcard cá nhân hóa cho bạn...</p>
+        </div>
+
+        <div class="loading-state" *ngIf="isLoading">
+          <div class="loading-animation">
+            <div class="loading-circles">
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
+            <p>Đang dịch {{ parsedWords.length }} từ bằng AI...</p>
+          </div>
+        </div>
+
+        <div class="translation-results" *ngIf="!isLoading && translationResults.length">
+          <div class="results-summary">
+            <div class="summary-card success">
+              <span nz-icon nzType="check-circle" nzTheme="fill"></span>
+              <div>
+                <h3>{{ getValidCount() }}</h3>
+                <p>Thành công</p>
+              </div>
+            </div>
+            
+            <div class="summary-card total">
+              <span nz-icon nzType="thunder" nzTheme="fill"></span>
+              <div>
+                <h3>{{ translationResults.length }}</h3>
+                <p>Tổng số từ</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-preview-list">
+            <div 
+              *ngFor="let result of translationResults.slice(0, 6)" 
+              class="preview-card"
+              [class.error]="result.hasError">
+              <div class="card-front">{{ result.frontText }}</div>
+              <div class="card-arrow">→</div>
+              <div class="card-back">{{ result.backText }}</div>
+            </div>
+            
+            <div *ngIf="translationResults.length > 6" class="more-cards">
+              +{{ translationResults.length - 6 }} thẻ nữa
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bước 3: Chỉnh Sửa -->
+      <div *ngIf="currentStep === 2" class="step-container">
+        <div class="step-header">
+          <h2>✏️ Tinh chỉnh thẻ của bạn</h2>
+          <p>Chỉnh sửa những bản dịch cần điều chỉnh</p>
+        </div>
+
+        <div class="edit-cards">
+          <div 
+            *ngFor="let result of translationResults; let i = index" 
+            class="edit-card"
+            [class.selected]="result.selected"
+            [class.error]="result.hasError">
+            
+            <div class="card-header">
+              <nz-checkbox 
+                [(ngModel)]="result.selected"
+                (ngModelChange)="onCardEdit(result)">
+              </nz-checkbox>
+              <span class="card-number">#{{ i + 1 }}</span>
+              <div class="card-status">
+                <nz-tag nzColor="green" *ngIf="!result.hasError">Sẵn sàng</nz-tag>
+                <nz-tag nzColor="red" *ngIf="result.hasError">Lỗi</nz-tag>
+              </div>
+            </div>
+
+            <div class="card-content">
+              <div class="card-input-group">
+                <label>Từ gốc</label>
+                <input 
+                  nz-input 
+                  [(ngModel)]="result.frontText"
+                  (ngModelChange)="onCardEdit(result)"
+                  class="card-input">
+              </div>
+              
+              <div class="card-input-group">
+                <label>Bản dịch</label>
+                <div class="translation-group">
+                  <input 
+                    nz-input 
+                    [(ngModel)]="result.backText"
+                    (ngModelChange)="onCardEdit(result)"
+                    class="card-input">
+                  <button 
+                    nz-button 
+                    nzType="text"
+                    nzSize="small"
+                    (click)="retranslateCard(result, i)"
+                    [nzLoading]="result.retranslating"
+                    class="retranslate-btn"
+                    title="Dịch lại bằng AI">
+                    <span nz-icon nzType="reload" nzTheme="outline"></span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bước 4: Thành Công -->
+      <div *ngIf="currentStep === 3" class="step-container">
+        <div class="success-state">
+          <div class="success-icon">
+            <span nz-icon nzType="check-circle" nzTheme="fill"></span>
+          </div>
+          
+          <h2>🎉 Tạo thẻ thành công!</h2>
+          <p>Các flashcard AI của bạn đã sẵn sàng để học</p>
+
+          <div class="success-stats">
+            <div class="stat-item">
+              <span class="stat-number">{{ creationResults?.successCount || 0 }}</span>
+              <span class="stat-label">Thẻ đã tạo</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">{{ creationResults?.failureCount || 0 }}</span>
+              <span class="stat-label">Lỗi</span>
+            </div>
+          </div>
+
+          <div class="success-cards" *ngIf="creationResults?.createdCards?.length">
+            <h3>🎴 Flashcard mới của bạn:</h3>
+            <div class="mini-cards">
+              <div *ngFor="let card of creationResults!.createdCards.slice(0, 8)" class="mini-card">
+                <div class="mini-front">{{ card.frontText }}</div>
+                <div class="mini-back">{{ card.backText }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Footer Tiếng Việt -->
+    <div class="modal-footer">
+      <div class="footer-content">
+        
+        <!-- Nút Quay Lại -->
+        <button 
+          *ngIf="currentStep > 0 && currentStep < 3"
+          nz-button 
+          nzType="default"
+          (click)="previousStep()"
+          class="back-btn">
+          <span nz-icon nzType="arrow-left" nzTheme="outline"></span>
+          Quay lại
+        </button>
+
+        <!-- Các nút hành động -->
+        <div class="footer-actions">
+          
+          <!-- Bước 1: Tiếp theo -->
+          <button 
+            *ngIf="currentStep === 0"
+            nz-button 
+            nzType="primary"
+            [disabled]="!bulkForm.valid"
+            (click)="validateAndProceed()"
+            class="next-btn">
+            Tạo Thẻ AI
+            <span nz-icon nzType="arrow-right" nzTheme="outline"></span>
+          </button>
+
+          <!-- Bước 2: Tiếp theo (sau khi load xong) -->
+          <button 
+            *ngIf="currentStep === 1 && !isLoading"
+            nz-button 
+            nzType="primary"
+            [disabled]="translationResults.length === 0"
+            (click)="nextStep()"
+            class="next-btn">
+            Xem & Chỉnh Sửa
+            <span nz-icon nzType="arrow-right" nzTheme="outline"></span>
+          </button>
+
+          <!-- Bước 3: Tạo thẻ -->
+          <button 
+            *ngIf="currentStep === 2"
+            nz-button 
+            nzType="primary"
+            [disabled]="getSelectedValidCount() === 0"
+            [nzLoading]="isLoading"
+            (click)="proceedToCreate()"
+            class="create-btn">
+            <span nz-icon nzType="check" nzTheme="outline"></span>
+            Tạo {{ getSelectedValidCount() }} Thẻ
+          </button>
+
+          <!-- Bước 4: Hoàn thành -->
+          <button 
+            *ngIf="currentStep === 3"
+            nz-button 
+            nzType="primary"
+            (click)="finish()"
+            class="done-btn">
+            <span nz-icon nzType="heart" nzTheme="fill"></span>
+            Bắt Đầu Học
+          </button>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>

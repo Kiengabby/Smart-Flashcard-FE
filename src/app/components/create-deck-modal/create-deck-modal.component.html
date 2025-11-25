@@ -1,118 +1,101 @@
 <div class="create-deck-modal">
-  <!-- Modal Header with Icon -->
+  <!-- Balanced Header -->
   <div class="modal-header">
     <div class="header-icon">
-      <span nz-icon nzType="plus-circle" nzTheme="outline"></span>
+      <span nz-icon nzType="plus-circle" nzTheme="fill"></span>
     </div>
     <div class="header-content">
-      <h3>Tạo bộ thẻ mới</h3>
-      <p>Bắt đầu hành trình học tập với bộ thẻ mới của bạn</p>
+      <h3>✨ Tạo bộ thẻ mới</h3>
+      <p>Bắt đầu hành trình học tập thông minh</p>
     </div>
   </div>
 
-  <!-- Form -->
+  <!-- Balanced Form -->
   <form nz-form [formGroup]="deckForm" (ngSubmit)="handleOk()" class="create-deck-form">
+    
+    <!-- Tên bộ thẻ -->
     <nz-form-item>
-      <nz-form-label nzFor="name" nzRequired>
-        <span nz-icon nzType="edit" nzTheme="outline"></span>
-        Tên bộ thẻ
+      <nz-form-label nzFor="name" nzRequired class="form-label">
+        <div class="label-content">
+          <span nz-icon nzType="edit" nzTheme="outline"></span>
+          <span>Tên bộ thẻ</span>
+        </div>
       </nz-form-label>
       <nz-form-control 
-        nzErrorTip="Tên bộ thẻ là bắt buộc và không được vượt quá 100 ký tự"
-        nzHasFeedback>
-        <input 
-          nz-input 
-          id="name"
-          formControlName="name" 
-          placeholder="Ví dụ: Từ vựng tiếng Anh cơ bản"
-          maxlength="100"
-          class="name-input" />
-        <div class="char-count">
-          {{ deckForm.get('name')?.value?.length || 0 }}/100
+        nzErrorTip="Tên bộ thẻ là bắt buộc và không được vượt quá 100 ký tự">
+        <div class="input-container">
+          <input 
+            nz-input 
+            id="name"
+            formControlName="name" 
+            placeholder="💡 VD: Từ vựng tiếng Anh cơ bản, JLPT N3..."
+            maxlength="100"
+            class="form-input" />
+          <div class="char-count">
+            {{ deckForm.get('name')?.value?.length || 0 }}/100
+          </div>
         </div>
       </nz-form-control>
     </nz-form-item>
 
+    <!-- Mô tả -->
     <nz-form-item>
-      <nz-form-label nzFor="description">
-        <span nz-icon nzType="file-text" nzTheme="outline"></span>
-        Mô tả
+      <nz-form-label nzFor="description" class="form-label">
+        <div class="label-content">
+          <span nz-icon nzType="file-text" nzTheme="outline"></span>
+          <span>Mô tả bộ thẻ</span>
+        </div>
       </nz-form-label>
       <nz-form-control 
-        nzErrorTip="Mô tả không được vượt quá 500 ký tự"
-        [nzExtra]="'Mô tả giúp bạn dễ dàng nhận diện và quản lý bộ thẻ'">
-        <textarea 
-          nz-input 
-          id="description"
-          formControlName="description" 
-          placeholder="Ví dụ: Tổng hợp 500 từ vựng tiếng Anh thông dụng nhất cho người mới bắt đầu..."
-          rows="4"
-          maxlength="500"
-          class="description-input">
-        </textarea>
-        <div class="char-count">
-          {{ deckForm.get('description')?.value?.length || 0 }}/500
+        nzErrorTip="Mô tả không được vượt quá 500 ký tự">
+        <div class="input-container">
+          <textarea 
+            nz-input 
+            id="description"
+            formControlName="description" 
+            placeholder="📚 VD: Tổng hợp từ vựng cơ bản cho người mới bắt đầu..."
+            rows="3"
+            maxlength="500"
+            class="form-input textarea">
+          </textarea>
+          <div class="char-count">
+            {{ deckForm.get('description')?.value?.length || 0 }}/500
+          </div>
         </div>
       </nz-form-control>
     </nz-form-item>
 
-    <nz-form-item>
-      <nz-form-label nzFor="language" nzRequired>
-        <span nz-icon nzType="global" nzTheme="outline"></span>
-        Ngôn ngữ học
-      </nz-form-label>
-      <nz-form-control 
-        nzErrorTip="Vui lòng chọn ngôn ngữ"
-        [nzExtra]="'Ngôn ngữ được sử dụng để tạo âm thanh tự động cho từ vựng'">
-        <nz-select 
-          id="language"
-          formControlName="language" 
-          nzPlaceHolder="Chọn ngôn ngữ bạn muốn học"
-          nzShowSearch
-          class="language-select">
-          <nz-option 
-            *ngFor="let lang of languageOptions" 
-            [nzValue]="lang.value" 
-            [nzLabel]="lang.label">
-          </nz-option>
-        </nz-select>
-      </nz-form-control>
-    </nz-form-item>
-
-    <!-- Quick Tips -->
-    <div class="tips-section">
-      <h4>
-        <span nz-icon nzType="bulb" nzTheme="outline"></span>
-        Gợi ý tạo bộ thẻ hiệu quả
-      </h4>
-      <ul class="tips-list">
-        <li>📚 Chọn tên rõ ràng, dễ nhớ</li>
-        <li>📝 Mô tả chi tiết nội dung và mục tiêu học</li>
-        <li>🎯 Tập trung vào một chủ đề cụ thể</li>
-        <li>⚡ Bắt đầu với 5-10 thẻ đầu tiên</li>
-      </ul>
+    <!-- Quick Hint -->
+    <div class="quick-hint">
+      <div class="hint-icon">
+        <span nz-icon nzType="lightbulb" nzTheme="fill"></span>
+      </div>
+      <div class="hint-content">
+        <strong>💡 Mẹo:</strong> Tạo xong có thể dùng AI tạo thẻ nhanh chỉ trong vài giây!
+      </div>
     </div>
 
-    <!-- Footer Actions -->
+    <!-- Balanced Footer -->
     <div class="modal-footer">
       <button 
         nz-button 
         type="button" 
-        nzSize="large"
         (click)="handleCancel()"
         class="cancel-btn">
-        Hủy
+        <span nz-icon nzType="close" nzTheme="outline"></span>
+        Hủy bỏ
       </button>
+      
       <button 
         nz-button 
         nzType="primary" 
-        nzSize="large"
         type="submit"
         [nzLoading]="isConfirmLoading"
         [disabled]="deckForm.invalid"
         class="submit-btn">
-        <span nz-icon nzType="rocket" nzTheme="outline"></span>
-        Tạo và bắt đầu
+        <span nz-icon nzType="rocket" nzTheme="fill" *ngIf="!isConfirmLoading"></span>
+        <span *ngIf="!isConfirmLoading">🚀 Tạo và bắt đầu</span>
+        <span *ngIf="isConfirmLoading">Đang tạo...</span>
       </button>
     </div>
   </form>

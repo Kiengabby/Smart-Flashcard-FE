@@ -1,220 +1,369 @@
-/* Create Deck Modal Styles */
+/* 🎨 Balanced Create Deck Modal - Clean but with Character */
+
 .create-deck-modal {
+  width: min(520px, 90vw);
   padding: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
 }
 
-/* Modal Header */
+/* ===== BALANCED HEADER ===== */
 .modal-header {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 24px 24px 20px 24px;
-  border-bottom: 1px solid #f0f0f0;
-  margin-bottom: 24px;
+  gap: 20px;
+  padding: 28px 28px 24px 28px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  position: relative;
 }
 
-.modal-header .header-icon {
-  width: 48px;
-  height: 48px;
-  background: linear-gradient(135deg, #1890ff, #36cfc9);
-  border-radius: 12px;
+.modal-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.header-icon {
+  position: relative;
+  z-index: 2;
+  width: 56px;
+  height: 56px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
   font-size: 24px;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  flex-shrink: 0;
 }
 
-.modal-header .header-content {
+.header-content {
+  position: relative;
+  z-index: 2;
   flex: 1;
 }
 
-.modal-header .header-content h3 {
-  font-size: 20px;
-  font-weight: 600;
-  color: #262626;
-  margin: 0 0 4px 0;
+.header-content h3 {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0 0 6px 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  letter-spacing: -0.3px;
+  line-height: 1.2;
 }
 
-.modal-header .header-content p {
-  font-size: 14px;
-  color: #8c8c8c;
+.header-content p {
+  font-size: 15px;
+  opacity: 0.9;
   margin: 0;
+  font-weight: 400;
+  line-height: 1.4;
 }
 
-/* Form Styles */
+/* ===== BALANCED FORM ===== */
 .create-deck-form {
-  padding: 0 24px;
-  margin-bottom: 0;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
 }
 
 .create-deck-form ::ng-deep .ant-form-item {
   margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
 }
 
 .create-deck-form ::ng-deep .ant-form-item-label {
-  padding: 0 0 8px 0;
+  text-align: left;
+  padding: 0 0 10px 0;
 }
 
-.create-deck-form ::ng-deep .ant-form-item-label label {
-  font-weight: 600;
-  color: #262626;
+.form-label {
+  display: flex !important;
+  align-items: center !important;
+  margin-bottom: 10px !important;
+}
+
+.label-content {
   display: flex;
   align-items: center;
   gap: 8px;
+  font-weight: 600;
+  font-size: 15px;
+  color: #1f2937;
+  width: 100%;
 }
 
-.create-deck-form ::ng-deep .ant-form-item-label label span[nz-icon] {
-  color: #1890ff;
-  font-size: 14px;
+.label-content [nz-icon] {
+  color: #667eea;
+  font-size: 16px;
+  flex-shrink: 0;
 }
 
-.name-input,
-.description-input {
-  font-size: 14px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
+.label-content span:last-child {
+  flex: 1;
 }
 
-.name-input:focus,
-.description-input:focus {
-  border-color: #1890ff;
-  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+/* Fixed Input Container */
+.input-container {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
-.description-input {
-  resize: vertical;
-  min-height: 100px;
+.form-input {
+  width: 100% !important;
+  border: 2px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  padding: 12px 16px !important;
+  font-size: 15px !important;
+  line-height: 1.5 !important;
+  transition: all 0.3s ease !important;
+  background: #fafafa !important;
+  box-sizing: border-box !important;
+}
+
+.form-input:hover {
+  border-color: #cbd5e1 !important;
+  background: white !important;
+}
+
+.form-input:focus {
+  border-color: #667eea !important;
+  background: white !important;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1) !important;
+  transform: translateY(-1px) !important;
+}
+
+.form-input::placeholder {
+  color: #9ca3af !important;
+  font-style: normal !important;
+}
+
+.textarea {
+  resize: vertical !important;
+  min-height: 90px !important;
+  font-family: inherit !important;
 }
 
 .char-count {
-  text-align: right;
+  align-self: flex-end;
   font-size: 12px;
-  color: #bfbfbf;
-  margin-top: 4px;
+  color: #9ca3af;
+  margin-top: 6px;
+  font-weight: 500;
 }
 
-/* Tips Section */
-.tips-section {
-  background: #f6ffed;
-  border: 1px solid #b7eb8f;
-  border-radius: 8px;
-  padding: 16px;
-  margin-bottom: 24px;
-}
-
-.tips-section h4 {
-  font-size: 14px;
-  font-weight: 600;
-  color: #52c41a;
-  margin: 0 0 12px 0;
+/* ===== QUICK HINT ===== */
+.quick-hint {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border: 2px solid #bae6fd;
+  border-radius: 12px;
+  margin-bottom: 28px;
 }
 
-.tips-section h4 span[nz-icon] {
-  font-size: 16px;
+.hint-icon {
+  color: #0ea5e9;
+  font-size: 18px;
+  flex-shrink: 0;
 }
 
-.tips-list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
+.hint-content {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #0c4a6e;
 }
 
-.tips-list li {
-  font-size: 13px;
-  color: #389e0d;
-  margin-bottom: 6px;
-  line-height: 1.4;
+.hint-content strong {
+  font-weight: 600;
 }
 
-.tips-list li:last-child {
-  margin-bottom: 0;
-}
-
-/* Modal Footer */
+/* ===== FIXED FOOTER ===== */
 .modal-footer {
   display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  padding: 20px 24px 24px 24px;
-  border-top: 1px solid #f0f0f0;
-  margin: 0 -24px -24px -24px;
-  margin-top: 24px;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 24px 28px;
+  background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+  border-top: 2px solid #f1f5f9;
+  margin-top: auto;
 }
 
 .cancel-btn {
-  color: #595959;
-  border-color: #d9d9d9;
+  height: 44px !important;
+  padding: 0 20px !important;
+  border: 2px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  color: #6b7280 !important;
+  font-weight: 500 !important;
+  font-size: 15px !important;
+  background: white !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  transition: all 0.3s ease !important;
 }
 
 .cancel-btn:hover {
-  color: #262626;
-  border-color: #bfbfbf;
+  border-color: #cbd5e1 !important;
+  color: #374151 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
 }
 
 .submit-btn {
-  background: linear-gradient(135deg, #1890ff, #36cfc9);
-  border: none;
-  font-weight: 600;
+  height: 44px !important;
+  padding: 0 24px !important;
+  border-radius: 10px !important;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  border: none !important;
+  color: white !important;
+  font-weight: 600 !important;
+  font-size: 15px !important;
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  justify-content: center !important;
+  min-width: 140px !important;
 }
 
-.submit-btn:hover:not(:disabled) {
-  background: linear-gradient(135deg, #40a9ff, #5cdbd3);
-  box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
+.submit-btn:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5) !important;
 }
 
 .submit-btn:disabled {
-  background: #f5f5f5;
-  color: #bfbfbf;
+  background: #e5e7eb !important;
+  box-shadow: none !important;
+  transform: none !important;
+  color: #9ca3af !important;
 }
 
-.submit-btn span[nz-icon] {
-  margin-right: 6px;
+.submit-btn [nz-icon] {
+  font-size: 16px;
 }
 
-/* Responsive Design */
+/* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 768px) {
-  .modal-header {
-    flex-direction: column;
-    text-align: center;
-    gap: 12px;
+  .create-deck-modal {
+    width: 95vw;
+    max-width: 95vw;
   }
 
-  .modal-header .header-icon {
-    align-self: center;
+  .modal-header {
+    padding: 24px 20px 20px 20px;
+    gap: 16px;
+  }
+
+  .header-icon {
+    width: 48px;
+    height: 48px;
+    font-size: 20px;
+  }
+
+  .header-content h3 {
+    font-size: 20px;
+  }
+
+  .header-content p {
+    font-size: 14px;
+  }
+
+  .create-deck-form {
+    padding: 40px 20px;
+  }
+
+  .quick-hint {
+    flex-direction: column;
+    text-align: center;
+    gap: 8px;
   }
 
   .modal-footer {
-    flex-direction: column;
-    gap: 8px;
+    flex-direction: column-reverse;
+    gap: 12px;
+    padding: 20px;
   }
 
   .cancel-btn,
   .submit-btn {
-    width: 100%;
+    width: 100% !important;
+    justify-content: center !important;
   }
 }
 
-/* Animation */
-.create-deck-modal {
-  animation: modalFadeIn 0.3s ease-out;
+@media (max-width: 480px) {
+  .create-deck-modal {
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0;
+    max-height: 100vh;
+  }
+
+  .form-input {
+    font-size: 16px !important; /* Prevent iOS zoom */
+  }
+
+  .textarea {
+    min-height: 80px !important;
+  }
 }
 
-@keyframes modalFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
+/* ===== SUBTLE ANIMATIONS ===== */
+.create-deck-form {
+  animation: slideInUp 0.4s ease-out;
+}
+
+.quick-hint {
+  animation: slideInUp 0.5s ease-out;
+}
+
+@keyframes slideInUp {
+  from { 
+    opacity: 0; 
+    transform: translateY(15px); 
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
   }
 }
 
-textarea {
-  resize: vertical;
-  min-height: 80px;
+/* ===== FOCUS & ACCESSIBILITY ===== */
+*:focus-visible {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
+}
+
+/* Fix Angular Form Control Alignment */
+.create-deck-form ::ng-deep .ant-form-item-control {
+  flex: 1;
+  width: 100%;
+}
+
+.create-deck-form ::ng-deep .ant-form-item-control-input {
+  width: 100%;
+}
+
+.create-deck-form ::ng-deep .ant-form-item-control-input-content {
+  width: 100%;
 }
