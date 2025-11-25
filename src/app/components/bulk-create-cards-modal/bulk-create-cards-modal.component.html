@@ -27,7 +27,7 @@
 
     <!-- Thanh Tiến Trình -->
     <div class="progress-bar">
-      <div class="progress-fill" [style.width.%]="(currentStep + 1) * 25"></div>
+      <div class="progress-fill" [style.width.%]="progressWidth"></div>
     </div>
 
     <!-- Nội Dung Các Bước -->
@@ -199,10 +199,12 @@ communication
             [class.error]="result.hasError">
             
             <div class="card-header">
-              <nz-checkbox 
+              <input 
+                type="checkbox" 
                 [(ngModel)]="result.selected"
-                (ngModelChange)="onCardEdit(result)">
-              </nz-checkbox>
+                [name]="'selected_' + i"
+                (ngModelChange)="onCardEdit(result)"
+                class="card-checkbox">
               <span class="card-number">#{{ i + 1 }}</span>
               <div class="card-status">
                 <nz-tag nzColor="green" *ngIf="!result.hasError">Sẵn sàng</nz-tag>
@@ -216,6 +218,7 @@ communication
                 <input 
                   nz-input 
                   [(ngModel)]="result.frontText"
+                  [name]="'frontText_' + i"
                   (ngModelChange)="onCardEdit(result)"
                   class="card-input">
               </div>
@@ -226,6 +229,7 @@ communication
                   <input 
                     nz-input 
                     [(ngModel)]="result.backText"
+                    [name]="'backText_' + i"
                     (ngModelChange)="onCardEdit(result)"
                     class="card-input">
                   <button 

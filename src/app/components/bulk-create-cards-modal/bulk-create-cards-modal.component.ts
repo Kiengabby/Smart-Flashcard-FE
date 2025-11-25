@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, Inject, OnInit, ChangeDetectorRef, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
@@ -66,6 +66,7 @@ export class BulkCreateCardsModalComponent implements OnInit {
   bulkForm!: FormGroup;
   isLoading = false;
   currentStep = 0;
+  progressWidth = 25; // Separate property for progress bar width to avoid ExpressionChangedAfterItHasBeenCheckedError
   deck: DeckDTO;
   
   // Preview data
@@ -100,6 +101,7 @@ export class BulkCreateCardsModalComponent implements OnInit {
     private cardService: CardService,
     private message: NzMessageService,
     private cdr: ChangeDetectorRef,
+    private ngZone: NgZone,
     @Inject(NZ_MODAL_DATA) public data: { deck: DeckDTO }
   ) {
     this.deck = data.deck;
