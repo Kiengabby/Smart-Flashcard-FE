@@ -1,0 +1,1091 @@
+/* Writing Practice Component - Modern Design Aligned with Project Theme */
+
+.writing-practice-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Header Section */
+.practice-header {
+  margin-bottom: 32px;
+  animation: slideDown 0.6s ease-out;
+
+  .back-btn {
+    font-size: 14px;
+    color: #8c8c8c;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    transition: all 0.3s ease;
+    padding: 8px 16px;
+    border-radius: 8px;
+
+    &:hover {
+      color: #1890ff;
+      background: rgba(24, 144, 255, 0.1);
+      transform: translateX(-4px);
+    }
+  }
+
+  .page-title {
+    font-size: 32px;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+    color: #262626;
+    background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .page-subtitle {
+    font-size: 16px;
+    color: #595959;
+    margin: 0 0 16px 0;
+    max-width: 700px;
+    line-height: 1.6;
+  }
+
+  .progress-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 12px;
+
+    .card-count {
+      font-size: 14px;
+      color: #1890ff;
+      background: white;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(24, 144, 255, 0.15);
+      border: 2px solid rgba(24, 144, 255, 0.2);
+    }
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Progress Bar
+.progress-bar-container {
+  margin-bottom: 32px;
+  padding: 12px 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+  ::ng-deep .ant-progress-outer {
+    .ant-progress-inner {
+      background: #f0f0f0;
+      border-radius: 100px;
+    }
+
+    .ant-progress-bg {
+      background: linear-gradient(90deg, #1890ff 0%, #096dd9 100%);
+      border-radius: 100px;
+      transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+    }
+  }
+}
+
+// Loading State
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 400px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  animation: scaleIn 0.4s ease-out;
+
+  .loading-content {
+    text-align: center;
+
+    ::ng-deep .ant-spin-dot-item {
+      background-color: #1890ff;
+    }
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+// No Cards State
+.no-cards-container {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  padding: 48px 24px;
+  text-align: center;
+  animation: scaleIn 0.4s ease-out;
+}
+
+// Practice Content
+.practice-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Word Card
+.word-card {
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  border: none;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  background: white;
+
+  &:hover {
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+    transform: translateY(-4px);
+  }
+
+  ::ng-deep .ant-card-head {
+    background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+    border-bottom: none;
+    color: white;
+    
+    .ant-card-head-title {
+      font-weight: 600;
+      color: white;
+      font-size: 16px;
+    }
+  }
+
+  ::ng-deep .ant-card-body {
+    padding: 32px;
+  }
+
+  .word-display {
+    .word-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #f0f0f0;
+
+      .word-text {
+        font-size: 42px;
+        font-weight: 800;
+        background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin: 0;
+        animation: slideInLeft 0.5s ease-out;
+      }
+
+      .audio-button {
+        font-size: 28px;
+        color: #1890ff;
+        transition: all 0.3s ease;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: rgba(24, 144, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:hover {
+          transform: scale(1.15);
+          background: rgba(24, 144, 255, 0.2);
+        }
+
+        &:active {
+          transform: scale(0.95);
+        }
+      }
+    }
+
+    .word-meaning {
+      .phonetic {
+        font-style: italic;
+        color: #8c8c8c;
+        font-size: 18px;
+        margin-bottom: 12px;
+      }
+
+      .meaning {
+        font-size: 20px;
+        color: #262626;
+        font-weight: 600;
+        line-height: 1.6;
+      }
+    }
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// Writing Section
+.writing-card {
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  border: none;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  background: white;
+
+  &:hover {
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+  }
+
+  ::ng-deep .ant-card-head {
+    background: linear-gradient(135deg, #52c41a 0%, #389e0d 100%);
+    border-bottom: none;
+    color: white;
+    
+    .ant-card-head-title {
+      font-weight: 600;
+      color: white;
+      font-size: 16px;
+    }
+  }
+
+  ::ng-deep .ant-card-body {
+    padding: 32px;
+  }
+
+  .input-area {
+    margin-bottom: 24px;
+
+    .input-label {
+      display: block;
+      font-weight: 600;
+      color: #262626;
+      margin-bottom: 12px;
+      font-size: 15px;
+    }
+
+    .sentence-input {
+      width: 100%;
+      font-size: 16px;
+      line-height: 1.8;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      border: 2px solid #d9d9d9;
+      padding: 12px 16px;
+      font-family: inherit;
+
+      &:focus {
+        border-color: #52c41a;
+        box-shadow: 0 0 0 3px rgba(82, 196, 26, 0.15);
+        outline: none;
+      }
+
+      &:disabled {
+        background: #f5f5f5;
+        color: #8c8c8c;
+        cursor: not-allowed;
+      }
+
+      &::placeholder {
+        color: #bfbfbf;
+        font-style: italic;
+      }
+    }
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+
+    button {
+      flex: 1;
+      min-width: 140px;
+      height: 44px;
+      font-size: 15px;
+      font-weight: 600;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+
+      &:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+      }
+
+      &:active:not(:disabled) {
+        transform: translateY(0);
+      }
+    }
+
+    .skip-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .evaluate-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #52c41a 0%, #389e0d 100%);
+      border: none;
+
+      &:hover:not(:disabled) {
+        background: linear-gradient(135deg, #73d13d 0%, #52c41a 100%);
+      }
+    }
+  }
+}
+
+// Feedback Section
+.feedback-section {
+  margin-top: 32px;
+  animation: fadeIn 0.5s ease-in;
+
+  ::ng-deep .ant-divider {
+    border-color: rgba(0, 0, 0, 0.08);
+    margin: 24px 0;
+  }
+
+  .score-display {
+    background: linear-gradient(135deg, #fff7e6 0%, #ffe7ba 100%);
+    padding: 28px;
+    border-radius: 16px;
+    text-align: center;
+    margin-bottom: 28px;
+    border: 2px solid #ffd666;
+    box-shadow: 0 4px 16px rgba(250, 173, 20, 0.15);
+
+    .score-label {
+      display: block;
+      font-size: 14px;
+      color: #8c8c8c;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+    }
+
+    .score-value {
+      font-size: 36px;
+      font-weight: 800;
+      animation: bounceIn 0.6s ease-out;
+
+      .score-text {
+        font-size: 18px;
+        font-weight: 600;
+        margin-left: 12px;
+        display: inline-block;
+      }
+    }
+  }
+
+  @keyframes bounceIn {
+    0% {
+      opacity: 0;
+      transform: scale(0.3);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+    70% {
+      transform: scale(0.9);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .ai-feedback {
+    .feedback-item {
+      margin-bottom: 24px;
+      padding: 20px;
+      background: #fafafa;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: #f5f5f5;
+        transform: translateX(4px);
+      }
+
+      .feedback-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+        color: #262626;
+        margin-bottom: 14px;
+        font-size: 17px;
+
+        &.positive {
+          color: #52c41a;
+        }
+
+        &.improvement {
+          color: #fa8c16;
+        }
+
+        span[nz-icon] {
+          font-size: 20px;
+        }
+      }
+
+      .feedback-content {
+        color: #595959;
+        line-height: 1.8;
+        font-size: 15px;
+      }
+
+      .feedback-list {
+        margin: 0;
+        padding-left: 24px;
+
+        li {
+          color: #595959;
+          line-height: 1.8;
+          margin-bottom: 10px;
+          font-size: 15px;
+          position: relative;
+
+          &::marker {
+            font-weight: 700;
+          }
+        }
+
+        &.positive li {
+          color: #52c41a;
+        }
+
+        &.improvement li {
+          color: #fa8c16;
+        }
+      }
+
+      .vocabulary-level {
+        ::ng-deep .ant-tag {
+          font-size: 13px;
+          font-weight: 600;
+          text-transform: uppercase;
+          padding: 6px 12px;
+          border-radius: 8px;
+          letter-spacing: 0.5px;
+        }
+      }
+    }
+  }
+
+  .feedback-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding-top: 24px;
+    margin-top: 24px;
+    border-top: 2px solid #f0f0f0;
+
+    button {
+      flex: 1;
+      min-width: 140px;
+      height: 44px;
+      font-size: 15px;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+    }
+
+    .try-again-btn,
+    .continue-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-weight: 600;
+    }
+
+    .continue-btn {
+      background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+      border: none;
+
+      &:hover {
+        background: linear-gradient(135deg, #40a9ff 0%, #1890ff 100%);
+      }
+    }
+  }
+}
+
+// Shortcuts Info
+.shortcuts-info {
+  margin-top: 24px;
+  text-align: center;
+
+  ::ng-deep .ant-card {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  ::ng-deep .ant-card-body {
+    padding: 16px 24px;
+  }
+
+  span {
+    color: #595959;
+    font-size: 14px;
+    
+    strong {
+      color: #262626;
+      font-weight: 600;
+    }
+  }
+}
+
+// Completion Section
+.completion-section {
+  text-align: center;
+  margin-top: 24px;
+
+  .end-practice-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    height: 44px;
+    padding: 0 24px;
+    border-radius: 10px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(255, 77, 79, 0.25);
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .writing-practice-container {
+    padding: 16px;
+  }
+
+  .practice-header {
+    .page-title {
+      font-size: 24px;
+    }
+
+    .page-subtitle {
+      font-size: 14px;
+    }
+  }
+
+  .word-card {
+    ::ng-deep .ant-card-body {
+      padding: 20px;
+    }
+
+    .word-display .word-content {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
+
+      .word-text {
+        font-size: 32px;
+      }
+
+      .audio-button {
+        align-self: flex-end;
+      }
+    }
+  }
+
+  .writing-card {
+    ::ng-deep .ant-card-body {
+      padding: 20px;
+    }
+  }
+
+  .action-buttons,
+  .feedback-actions {
+    flex-direction: column;
+
+    button {
+      width: 100%;
+      min-width: 100%;
+    }
+  }
+
+  .feedback-section {
+    .score-display {
+      padding: 20px;
+
+      .score-value {
+        font-size: 28px;
+
+        .score-text {
+          font-size: 16px;
+          display: block;
+          margin-left: 0;
+          margin-top: 8px;
+        }
+      }
+    }
+
+    .ai-feedback .feedback-item {
+      padding: 16px;
+    }
+  }
+}
+
+// Print styles
+@media print {
+  .writing-practice-container {
+    background: white;
+  }
+
+  .back-btn,
+  .shortcuts-info,
+  .completion-section,
+  .action-buttons {
+    display: none !important;
+  }
+}
+
+/* Header Section */
+.practice-header {
+  margin-bottom: 32px;
+
+  .back-btn {
+    font-size: 14px;
+    color: #8c8c8c;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: #1890ff;
+    }
+  }
+
+  .page-title {
+    font-size: 32px;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+    color: #262626;
+  }
+
+  .page-subtitle {
+    font-size: 16px;
+    color: #8c8c8c;
+    margin: 0 0 16px 0;
+    max-width: 600px;
+  }
+
+  .progress-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    .card-count {
+      font-size: 14px;
+      color: #8c8c8c;
+      background: #f5f5f5;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-weight: 500;
+    }
+  }
+}
+
+// Progress Bar
+.progress-bar-container {
+  margin-bottom: 32px;
+}
+
+// Loading State
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 400px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+
+  .loading-content {
+    text-align: center;
+  }
+}
+
+// No Cards State
+.no-cards-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  padding: 48px 24px;
+  text-align: center;
+}
+
+// Practice Content
+.practice-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+// Word Card
+.word-card {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+
+  ::ng-deep .ant-card-head {
+    border-bottom: 1px solid #f0f0f0;
+    
+    .ant-card-head-title {
+      font-weight: 600;
+      color: #262626;
+    }
+  }
+
+  .word-display {
+    .word-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+
+      .word-text {
+        font-size: 36px;
+        font-weight: 700;
+        color: #1890ff;
+        margin: 0;
+      }
+
+      .audio-button {
+        font-size: 24px;
+        color: #1890ff;
+        transition: all 0.3s ease;
+
+        &:hover {
+          transform: scale(1.1);
+        }
+      }
+    }
+
+    .word-meaning {
+      .phonetic {
+        font-style: italic;
+        color: #8c8c8c;
+        font-size: 16px;
+        margin-bottom: 8px;
+      }
+
+      .meaning {
+        font-size: 18px;
+        color: #262626;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+// Writing Section
+.writing-card {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+
+  ::ng-deep .ant-card-head {
+    border-bottom: 1px solid #f0f0f0;
+    
+    .ant-card-head-title {
+      font-weight: 600;
+      color: #262626;
+    }
+  }
+
+  .input-area {
+    margin-bottom: 24px;
+
+    .input-label {
+      display: block;
+      font-weight: 500;
+      color: #262626;
+      margin-bottom: 8px;
+    }
+
+    .sentence-input {
+      width: 100%;
+      font-size: 16px;
+      line-height: 1.6;
+      border-radius: 8px;
+      transition: border-color 0.3s ease;
+
+      &:focus {
+        border-color: #1890ff;
+        box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+      }
+
+      &:disabled {
+        background: #f5f5f5;
+        color: #8c8c8c;
+      }
+    }
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+
+    .skip-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .evaluate-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  }
+}
+
+// Feedback Section
+.feedback-section {
+  margin-top: 24px;
+
+  .score-display {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 24px;
+
+    .score-label {
+      display: block;
+      font-size: 14px;
+      color: #8c8c8c;
+      margin-bottom: 8px;
+    }
+
+    .score-value {
+      font-size: 28px;
+      font-weight: 700;
+
+      .score-text {
+        font-size: 16px;
+        font-weight: 500;
+        margin-left: 8px;
+      }
+    }
+  }
+
+  .ai-feedback {
+    .feedback-item {
+      margin-bottom: 24px;
+
+      .feedback-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 600;
+        color: #262626;
+        margin-bottom: 12px;
+        font-size: 16px;
+
+        &.positive {
+          color: #52c41a;
+        }
+
+        &.improvement {
+          color: #fa8c16;
+        }
+
+        span[nz-icon] {
+          font-size: 16px;
+        }
+      }
+
+      .feedback-content {
+        color: #595959;
+        line-height: 1.6;
+        font-size: 15px;
+      }
+
+      .feedback-list {
+        margin: 0;
+        padding-left: 20px;
+
+        li {
+          color: #595959;
+          line-height: 1.6;
+          margin-bottom: 8px;
+          font-size: 15px;
+        }
+
+        &.positive li {
+          color: #52c41a;
+        }
+
+        &.improvement li {
+          color: #fa8c16;
+        }
+      }
+
+      .vocabulary-level {
+        ::ng-deep .ant-tag {
+          font-size: 12px;
+          font-weight: 500;
+          text-transform: uppercase;
+          padding: 4px 8px;
+        }
+      }
+    }
+  }
+
+  .feedback-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding-top: 20px;
+
+    .try-again-btn,
+    .continue-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+    }
+  }
+}
+
+// Shortcuts Info
+.shortcuts-info {
+  margin-top: 24px;
+  text-align: center;
+
+  ::ng-deep .ant-card-body {
+    padding: 16px;
+  }
+
+  span {
+    color: #8c8c8c;
+    font-size: 14px;
+  }
+}
+
+// Completion Section
+.completion-section {
+  text-align: center;
+  margin-top: 24px;
+
+  .end-practice-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .writing-practice-container {
+    padding: 16px;
+  }
+
+  .practice-header {
+    .page-title {
+      font-size: 24px;
+    }
+
+    .page-subtitle {
+      font-size: 14px;
+    }
+  }
+
+  .word-card .word-display .word-content .word-text {
+    font-size: 28px;
+  }
+
+  .action-buttons,
+  .feedback-actions {
+    flex-direction: column;
+
+    button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  .feedback-section .score-display .score-value {
+    font-size: 24px;
+  }
+}

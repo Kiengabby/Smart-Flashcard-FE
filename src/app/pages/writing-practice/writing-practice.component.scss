@@ -1,0 +1,1000 @@
+// Writing Practice - Premium UI/UX Design
+.writing-practice-container {
+  min-height: 100vh;
+  background: #f8fafc;
+  padding: 24px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+}
+
+// Main Wrapper with Glassmorphism
+.practice-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: linear-gradient(135deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  border: 1px solid rgba(255,255,255,0.18);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+
+// Header - Clean & Minimalist
+.practice-header {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  padding: 24px 32px;
+  color: white;
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="0.5" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="0.5" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="50" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="30" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    pointer-events: none;
+  }
+
+  .header-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 60px;
+  }
+
+  .back-btn {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    height: 44px;
+    
+    &:hover {
+      background: rgba(255,255,255,0.25);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .anticon {
+      margin-right: 8px;
+    }
+  }
+
+  .header-center {
+    text-align: center;
+    flex: 1;
+    margin: 0 32px;
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 800;
+      margin: 0 0 8px 0;
+      letter-spacing: -0.02em;
+      text-shadow: 0 2px 4px rgb(254, 251, 251);
+    }
+
+    .page-subtitle {
+      font-size: 16px;
+      opacity: 0.9;
+      font-weight: 500;
+      margin: 0;
+    }
+  }
+
+  .progress-info {
+    text-align: right;
+    display: flex;
+    align-items: center;
+    height: 44px;
+    
+    .card-count {
+      background: rgba(255,255,255,0.2);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+    }
+  }
+}
+
+// Progress Bar - Elegant
+.progress-bar-container {
+  padding: 0 32px 24px;
+  
+  ::ng-deep .ant-progress {
+    .ant-progress-outer {
+      .ant-progress-inner {
+        background: rgba(255,255,255,0.3);
+        border-radius: 8px;
+        height: 8px;
+        
+        .ant-progress-bg {
+          background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
+          border-radius: 8px;
+          transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+      }
+    }
+  }
+}
+
+// Loading States - Sophisticated
+.loading-container,
+.no-cards-container {
+  padding: 80px 40px;
+  text-align: center;
+  background: white;
+  margin: 32px;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+
+  ::ng-deep .ant-spin {
+    .ant-spin-dot {
+      i {
+        background-color: #6366f1;
+      }
+    }
+  }
+}
+
+// Main Content - Card-based Layout
+.practice-content {
+  padding: 32px;
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  gap: 40px;
+  min-height: 600px;
+}
+
+// Word Card - Premium Design
+.word-card {
+  background: white;
+  border-radius: 20px;
+  border: none;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  height: fit-content;
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+  }
+
+  ::ng-deep .ant-card-head {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    border: none;
+    padding: 20px 24px;
+    border-radius: 20px 20px 0 0;
+
+    .ant-card-head-title {
+      color: white;
+      font-weight: 700;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      
+      &::before {
+        content: '📖';
+        font-size: 20px;
+        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+      }
+    }
+  }
+
+  ::ng-deep .ant-card-body {
+    padding: 32px;
+    background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+  }
+
+  .word-display {
+    .word-content {
+      text-align: center;
+      margin-bottom: 28px;
+      padding: 24px;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+
+      .word-text {
+        font-size: 52px;
+        font-weight: 900;
+        background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin: 0 0 20px 0;
+        letter-spacing: -0.02em;
+        line-height: 1.1;
+      }
+
+      .audio-button {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        color: white;
+        font-size: 28px;
+        border: none;
+        box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        
+        &::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+          transition: left 0.6s;
+        }
+
+        &:hover {
+          transform: scale(1.1);
+          box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+          
+          &::before {
+            left: 100%;
+          }
+        }
+
+        &:active {
+          transform: scale(0.95);
+        }
+      }
+    }
+
+    .word-meaning {
+      background: #f8fafc;
+      padding: 24px;
+      border-radius: 16px;
+      border-left: 4px solid #3b82f6;
+
+      .phonetic {
+        color: #6366f1;
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 12px;
+        font-family: 'SF Mono', monospace;
+      }
+
+      .meaning {
+        color: #1f2937;
+        font-size: 18px;
+        font-weight: 600;
+        line-height: 1.6;
+      }
+    }
+  }
+}
+
+// Writing Card - Modern Input Design
+.writing-card {
+  background: white;
+  border-radius: 20px;
+  border: none;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  height: fit-content;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+  }
+
+  ::ng-deep .ant-card-head {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    border: none;
+    padding: 20px 24px;
+
+    .ant-card-head-title {
+      color: white;
+      font-weight: 700;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      
+      &::before {
+        content: '✍️';
+        font-size: 20px;
+        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+      }
+    }
+  }
+
+  ::ng-deep .ant-card-body {
+    padding: 32px;
+    background: linear-gradient(145deg, #ffffff 0%, #f0fdf4 100%);
+    display: flex;
+    flex-direction: column;
+    min-height: 400px;
+  }
+
+  .input-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 24px;
+
+    .input-label {
+      color: #374151;
+      font-weight: 700;
+      font-size: 16px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      
+      &::before {
+        content: '💭';
+        font-size: 18px;
+      }
+    }
+
+    .sentence-input {
+      flex: 1;
+      min-height: 180px;
+      padding: 20px;
+      border: 2px solid #e5e7eb;
+      border-radius: 16px;
+      font-size: 16px;
+      line-height: 1.7;
+      background: white;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      resize: none;
+      font-family: inherit;
+      
+      &::placeholder {
+        color: #9ca3af;
+        font-style: italic;
+      }
+
+      &:focus {
+        outline: none;
+        border-color: #10b981;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        background: #fefefe;
+      }
+
+      &:disabled {
+        background: #f9fafb;
+        cursor: not-allowed;
+        opacity: 0.6;
+      }
+    }
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 16px;
+
+    button {
+      flex: 1;
+      height: 48px;
+      font-weight: 700;
+      font-size: 15px;
+      border-radius: 12px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        transition: left 0.6s;
+      }
+
+      &:hover:not(:disabled) {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        
+        &::before {
+          left: 100%;
+        }
+      }
+
+      &:active:not(:disabled) {
+        transform: translateY(-1px);
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+    }
+
+    .skip-btn {
+      background: white;
+      color: #6b7280;
+      border: 2px solid #e5e7eb;
+      
+      &:hover:not(:disabled) {
+        background: #f9fafb;
+        border-color: #d1d5db;
+        color: #374151;
+      }
+    }
+
+    .evaluate-btn {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      border: none;
+      color: white;
+      
+      &:hover:not(:disabled) {
+        background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+      }
+    }
+  }
+}
+
+// Example Section - Educational Display
+.example-section {
+  margin-top: 28px;
+  animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+
+  ::ng-deep .ant-divider {
+    margin: 24px 0;
+    border-color: #ddd6fe;
+    border-width: 2px;
+  }
+
+  .example-content {
+    background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+    padding: 28px;
+    border-radius: 20px;
+    border: 3px solid #8b5cf6;
+    box-shadow: 0 8px 25px rgba(139, 92, 246, 0.15);
+    position: relative;
+
+    .example-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      font-size: 18px;
+      font-weight: 600;
+      color: #5b21b6;
+
+      span[nz-icon] {
+        color: #7c3aed;
+        font-size: 20px;
+      }
+    }
+
+    .example-sentence {
+      background: white;
+      padding: 20px 24px;
+      border-radius: 16px;
+      border-left: 5px solid #8b5cf6;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.1);
+
+      .sentence-text {
+        font-size: 16px;
+        line-height: 1.6;
+        margin: 0 0 12px 0;
+        color: #374151;
+        font-weight: 500;
+        font-style: italic;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #e5e7eb;
+      }
+
+      .sentence-translation {
+        margin-top: 12px;
+
+        .translation-label {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-weight: 600;
+          color: #059669;
+          font-size: 14px;
+          margin-bottom: 6px;
+
+          span[nz-icon] {
+            color: #10b981;
+            font-size: 16px;
+          }
+        }
+
+        .translation-text {
+          margin: 0;
+          color: #059669;
+          font-size: 14px;
+          line-height: 1.5;
+          font-weight: 500;
+        }
+      }
+    }
+
+    .hide-example-btn {
+      color: #6b7280;
+      font-size: 14px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: rgba(139, 92, 246, 0.1);
+        color: #8b5cf6;
+      }
+    }
+  }
+}
+
+// Feedback Section - Premium Experience
+.feedback-section {
+  margin-top: 28px;
+  animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+
+  ::ng-deep .ant-divider {
+    margin: 24px 0;
+    border-color: #d1fae5;
+    border-width: 2px;
+  }
+
+  .score-display {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    padding: 28px;
+    border-radius: 20px;
+    text-align: center;
+    margin-bottom: 28px;
+    border: 3px solid #f59e0b;
+    box-shadow: 0 8px 25px rgba(245, 158, 11, 0.2);
+    position: relative;
+    overflow: hidden;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      animation: shimmer 3s infinite;
+    }
+
+    .score-label {
+      font-size: 14px;
+      color: #92400e;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .score-value {
+      font-size: 42px;
+      font-weight: 900;
+      position: relative;
+      z-index: 1;
+
+      .score-text {
+        display: block;
+        font-size: 18px;
+        font-weight: 700;
+        margin-top: 8px;
+        color: #92400e;
+      }
+    }
+  }
+
+  .ai-feedback {
+    max-height: 350px;
+    overflow-y: auto;
+    padding-right: 16px;
+
+    &::-webkit-scrollbar {
+      width: 12px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 6px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      border-radius: 6px;
+      border: 2px solid #f1f5f9;
+
+      &:hover {
+        background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+      }
+    }
+
+    .feedback-item {
+      margin-bottom: 20px;
+      padding: 20px;
+      background: white;
+      border-radius: 16px;
+      border-left: 4px solid #10b981;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+      
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+      }
+
+      .feedback-title {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 800;
+        color: #1f2937;
+        margin-bottom: 12px;
+        font-size: 15px;
+
+        &.positive {
+          color: #059669;
+          
+          .anticon {
+            color: #10b981;
+          }
+        }
+
+        &.improvement {
+          color: #d97706;
+          
+          .anticon {
+            color: #f59e0b;
+          }
+        }
+
+        .anticon {
+          font-size: 20px;
+        }
+      }
+
+      .feedback-content {
+        color: #4b5563;
+        line-height: 1.8;
+        font-size: 15px;
+        font-weight: 500;
+      }
+
+      .feedback-list {
+        margin: 0;
+        padding-left: 28px;
+
+        li {
+          color: #4b5563;
+          line-height: 1.8;
+          margin-bottom: 10px;
+          font-size: 15px;
+          font-weight: 500;
+          position: relative;
+
+          &::marker {
+            font-weight: bold;
+          }
+        }
+
+        &.positive li {
+          color: #047857;
+          
+          &::marker {
+            color: #10b981;
+          }
+        }
+
+        &.improvement li {
+          color: #b45309;
+          
+          &::marker {
+            color: #f59e0b;
+          }
+        }
+      }
+
+      .vocabulary-level {
+        margin-top: 12px;
+        
+        ::ng-deep .ant-tag {
+          font-size: 13px;
+          font-weight: 700;
+          padding: 8px 16px;
+          border-radius: 20px;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+      }
+    }
+  }
+
+  .feedback-actions {
+    display: flex;
+    gap: 16px;
+    padding-top: 28px;
+    margin-top: 28px;
+    border-top: 3px solid #d1fae5;
+
+    button {
+      flex: 1;
+      height: 52px;
+      font-size: 16px;
+      font-weight: 700;
+      border-radius: 14px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        transition: left 0.6s;
+      }
+
+      &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        
+        &::before {
+          left: 100%;
+        }
+      }
+    }
+
+    .try-again-btn {
+      background: white;
+      color: #6b7280;
+      border: 2px solid #e5e7eb;
+      
+      &:hover {
+        background: #fef2f2;
+        border-color: #fca5a5;
+        color: #dc2626;
+      }
+    }
+
+    .continue-btn {
+      background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+      border: none;
+      color: white;
+      
+      &:hover {
+        background: linear-gradient(135deg, #818cf8 0%, #6366f1 100%);
+      }
+    }
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// Bottom Actions - Clean
+.shortcuts-info {
+  padding: 0 32px 24px;
+
+  ::ng-deep .ant-card {
+    background: rgba(255,255,255,0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+
+  ::ng-deep .ant-card-body {
+    padding: 16px 24px;
+    text-align: center;
+  }
+
+  span {
+    font-size: 14px;
+    color: #6b7280;
+    font-weight: 600;
+
+    strong {
+      color: #374151;
+      font-weight: 800;
+    }
+  }
+}
+
+.completion-section {
+  padding: 0 32px 32px;
+  text-align: center;
+
+  .end-practice-btn {
+    height: 48px;
+    font-size: 15px;
+    font-weight: 700;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    border: none;
+    color: white;
+    padding: 0 28px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &:hover {
+      background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 1200px) {
+  .practice-content {
+    grid-template-columns: 380px 1fr;
+    gap: 32px;
+  }
+
+  .word-card .word-display .word-content .word-text {
+    font-size: 44px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .writing-practice-container {
+    padding: 16px;
+  }
+
+  .practice-wrapper {
+    border-radius: 20px;
+  }
+
+  .practice-header {
+    padding: 20px 24px;
+    
+    .header-center {
+      margin: 0 24px;
+      
+      .page-title {
+        font-size: 24px;
+      }
+      
+      .page-subtitle {
+        font-size: 14px;
+      }
+    }
+  }
+
+  .practice-content {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 24px;
+    min-height: auto;
+  }
+
+  .word-card,
+  .writing-card {
+    ::ng-deep .ant-card-body {
+      padding: 24px;
+    }
+  }
+
+  .feedback-section .ai-feedback {
+    max-height: 280px;
+  }
+}
+
+@media (max-width: 768px) {
+  .writing-practice-container {
+    padding: 12px;
+  }
+
+  .practice-wrapper {
+    border-radius: 16px;
+  }
+
+  .practice-header {
+    padding: 16px 20px;
+    
+    .header-content {
+      flex-direction: column;
+      gap: 16px;
+      text-align: center;
+    }
+
+    .back-btn {
+      align-self: flex-start;
+    }
+
+    .header-center {
+      margin: 0;
+      
+      .page-title {
+        font-size: 20px;
+      }
+      
+      .page-subtitle {
+        font-size: 13px;
+      }
+    }
+  }
+
+  .progress-bar-container,
+  .shortcuts-info,
+  .completion-section {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .practice-content {
+    padding: 20px;
+  }
+
+  .word-card {
+    .word-display .word-content .word-text {
+      font-size: 36px;
+    }
+  }
+
+  .writing-card {
+    .input-area .sentence-input {
+      min-height: 140px;
+    }
+  }
+
+  .action-buttons,
+  .feedback-actions {
+    flex-direction: column;
+    gap: 12px;
+
+    button {
+      width: 100%;
+    }
+  }
+
+  .feedback-section {
+    .score-display {
+      padding: 20px;
+      
+      .score-value {
+        font-size: 32px;
+        
+        .score-text {
+          font-size: 16px;
+        }
+      }
+    }
+  }
+}

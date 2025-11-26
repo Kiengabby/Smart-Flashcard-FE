@@ -1,0 +1,189 @@
+<div class="writing-practice-container">
+  <div class="practice-wrapper">
+    <!-- Header -->
+    <div class="practice-header">
+      <div class="header-content">
+        <button nz-button nzType="text" (click)="goBack()" class="back-btn">
+          <span nz-icon nzType="arrow-left" nzTheme="outline"></span>
+          Quay lại
+        </button>
+        
+        <div class="header-center">
+          <h1 class="page-title">Luyện tập Viết Câu</h1>
+          <p class="page-subtitle">Tạo câu hoàn chỉnh sử dụng từ vựng đã học</p>
+        </div>
+        
+        <div class="progress-info" *ngIf="cards.length > 0">
+          <span class="card-count">{{ currentIndex + 1 }}/{{ cards.length }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar-container" *ngIf="cards.length > 0">
+      <nz-progress
+        [nzPercent]="progress"
+        [nzShowInfo]="false"
+        nzStrokeColor="#10b981"
+        [nzStrokeWidth]="8">
+      </nz-progress>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-container">
+      <nz-spin nzSize="large" nzTip="Đang tải từ vựng..."></nz-spin>
+    </div>
+
+    <!-- No Cards State -->
+    <div *ngIf="!isLoading && cards.length === 0" class="no-cards-container">
+      <nz-result
+        nzStatus="404"
+        nzTitle="Không có thẻ nào"
+        nzSubTitle="Bộ thẻ này chưa có từ vựng nào. Hãy thêm thẻ trước khi luyện tập.">
+        <div nz-result-extra>
+          <button nz-button nzType="primary" (click)="goBack()">Quay lại</button>
+        </div>
+      </nz-result>
+    </div>
+
+    <!-- Writing Practice Content -->
+    <div *ngIf="!isLoading && currentCard" class="practice-content">
+      <!-- Word Card -->
+      <nz-card class="word-card" nzTitle="Từ vựng cần sử dụng">
+        <div class="word-display">
+          <div class="word-content">
+            <h2 class="word-text">{{ currentCard.frontText }}</h2>
+            <button 
+              nz-button 
+              nzType="text" 
+              nzShape="circle"
+              class="audio-button"
+              (click)="playAudio()"
+              [nzLoading]="isAudioLoading"
+              nz-tooltip="Nghe phát âm">
+              <span nz-icon nzType="sound" nzTheme="outline"></span>
+            </button>
+          </div>
+          <div class="word-meaning">
+            <div class="phonetic">/{{ currentCard.frontText.toLowerCase() }}/</div>
+            <div class="meaning">{{ currentCard.backText }}</div>
+          </div>
+        </div>
+      </nz-card>
+
+      <!-- Writing Section -->
+      <nz-card class="writing-card" nzTitle="Viết câu của bạn">
+        <div class="input-area">
+          <label class="input-label">Nhập một câu hoàn chỉnh sử dụng từ vựng trên:</label>
+          <textarea
+            nz-input
+            [(ngModel)]="userSentence"
+            [disabled]="isEvaluating"
+            placeholder="Ví dụ: I need to buy a new mattress for my bedroom..."
+            class="sentence-input">
+          </textarea>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons" *ngIf="!hasEvaluated">
+          <button 
+            nz-button 
+            nzType="default" 
+            (click)="showExampleSentence()"
+            [nzLoading]="isLoadingExample"
+            class="skip-btn">
+            <span nz-icon nzType="eye" nzTheme="outline"></span>
+            Xem ví dụ
+          </button>
+          <button 
+            nz-button 
+            nzType="primary" 
+            (click)="evaluateSentence()"
+            [nzLoading]="isEvaluating"
+            [disabled]="!userSentence.trim() || isEvaluating"
+            class="evaluate-btn">
+            <span nz-icon nzType="check-circle" nzTheme="outline"></span>
+            Kiểm tra
+          </button>
+        </div>
+
+        <!-- Continue Button after evaluation -->
+        <div class="action-buttons" *ngIf="hasEvaluated">
+          <button 
+            nz-button 
+            nzType="default" 
+            (click)="tryAgain()"
+            class="try-again-btn">
+            <span nz-icon nzType="reload" nzTheme="outline"></span>
+            Thử lại
+          </button>
+          <button 
+            nz-button 
+            nzType="primary" 
+            (click)="nextCard()"
+            class="continue-btn">
+            <span nz-icon nzType="arrow-right" nzTheme="outline"></span>
+            Tiếp tục
+          </button>
+        </div>
+
+        <!-- Example Sentence Section -->
+        <div *ngIf="showExample && exampleSentence" class="example-section">
+          <nz-divider></nz-divider>
+          
+          <div class="example-content">
+            <h4 class="example-title">
+              <span nz-icon nzType="bulb" nzTheme="outline"></span>
+              Câu ví dụ
+            </h4>
+            
+            <div class="example-sentence">
+              <p class="sentence-text">{{ exampleSentence.exampleSentence }}</p>
+              <div class="sentence-translation">
+                <span class="translation-label">
+                  <span nz-icon nzType="translation" nzTheme="outline"></span>
+                  Dịch:
+                </span>
+                <p class="translation-text">{{ exampleSentence.explanation }}</p>
+              </div>
+            </div>
+            
+            <button 
+              nz-button 
+              nzType="text" 
+              (click)="showExample = false"
+              class="hide-example-btn">
+              <span nz-icon nzType="eye-invisible" nzTheme="outline"></span>
+              Ẩn ví dụ
+            </button>
+          </div>
+        </div>
+
+        <!-- Feedback Section - Hidden since we use modal now -->
+        <!-- 
+        <div *ngIf="showFeedback && feedback" class="feedback-section">
+          ... feedback content removed for modal display ...
+        </div>
+        -->
+      </nz-card>
+    </div>
+
+    <!-- Shortcuts Info -->
+    <div class="shortcuts-info" *ngIf="!isLoading">
+      <nz-card nzSize="small">
+        <span>
+          <strong>Phím tắt:</strong> 
+          S - Phát âm | Ctrl+Enter - Kiểm tra | ← - Trước | → - Tiếp theo
+        </span>
+      </nz-card>
+    </div>
+
+    <!-- End Practice -->
+    <div class="completion-section" *ngIf="!isLoading">
+      <button nz-button nzType="default" nzDanger (click)="goBack()" class="end-practice-btn">
+        <span nz-icon nzType="stop" nzTheme="outline"></span>
+        Kết thúc luyện tập
+      </button>
+    </div>
+  </div>
+</div>

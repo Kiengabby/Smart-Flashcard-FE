@@ -92,16 +92,15 @@ export class StudyModeComponent implements OnInit {
       icon: 'sound',
       color: '#fa8c16',
       route: 'listening'
+    },
+    {
+      id: 'writing',
+      name: 'Luyện viết với AI',
+      description: 'Viết câu sử dụng từ vựng và nhận feedback từ AI',
+      icon: 'edit',
+      color: '#722ed1',
+      route: 'writing'
     }
-    // TODO: Future development - AI Writing Practice Mode
-    // {
-    //   id: 'writing',
-    //   name: 'Luyện viết với AI',
-    //   description: 'Viết câu sử dụng từ vựng và nhận feedback từ AI',
-    //   icon: 'edit',
-    //   color: '#722ed1',
-    //   route: 'writing'
-    // }
   ];
 
   isLoading = true;
