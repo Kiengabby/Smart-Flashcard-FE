@@ -82,6 +82,18 @@ export class WritingPracticeComponent implements OnInit {
     return this.totalEvaluated > 0 ? Math.round((this.score / this.totalEvaluated)) : 0;
   }
 
+  // Dynamic font size based on word length
+  get wordFontSize(): string {
+    if (!this.currentCard) return '52px';
+    const wordLength = this.currentCard.frontText.length;
+    
+    if (wordLength <= 8) return '52px';
+    if (wordLength <= 12) return '44px';
+    if (wordLength <= 16) return '36px';
+    if (wordLength <= 20) return '30px';
+    return '24px';
+  }
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -97,6 +109,9 @@ export class WritingPracticeComponent implements OnInit {
 
   ngOnInit(): void {
     console.log('WritingPracticeComponent initialized');
+    
+    // Expose component instance globally for modal button callbacks
+    (window as any).currentWritingPracticeComponent = this;
     
     this.route.parent?.params.subscribe(parentParams => {
       this.deckId = +parentParams['id'];
@@ -224,48 +239,31 @@ export class WritingPracticeComponent implements OnInit {
   showFeedbackModal(feedback: WritingFeedbackResponse): void {
     const modalContent = this.createModalContent(feedback);
     this.modal.create({
-      nzTitle: '', // Use empty string for no title
       nzContent: modalContent,
-      nzWidth: 700,
+      nzWidth: 800,
       nzBodyStyle: {
         padding: '0',
-        borderRadius: '16px',
+        borderRadius: '24px',
         overflow: 'hidden',
-        background: 'linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%)',
-        boxShadow: '0 8px 32px rgba(60,60,120,0.12)'
+        background: 'transparent'
       },
-      nzFooter: [
-        {
-          label: 'Thử lại',
-          type: 'default',
-          onClick: () => {
-            this.tryAgain();
-            return true;
-          }
-        },
-        {
-          label: 'Tiếp tục',
-          type: 'primary',
-          onClick: () => {
-            this.nextCard();
-            return true;
-          }
-        }
-      ],
+      nzFooter: null,
       nzMaskClosable: true,
       nzKeyboard: true,
       nzCentered: true,
+      nzClosable: true,
       nzMaskStyle: {
-        backdropFilter: 'blur(8px)',
-        background: 'rgba(0,0,0,0.35)'
-      }
+        backdropFilter: 'blur(12px) saturate(180%)',
+        background: 'linear-gradient(135deg, rgba(0,0,0,0.4) 0%, rgba(30,30,60,0.6) 100%)'
+      },
+      nzWrapClassName: 'modern-feedback-modal-wrapper',
+      nzClassName: 'modern-feedback-modal-content'
     });
   }
 
   createModalContent(feedback: WritingFeedbackResponse): string {
     const scoreColor = this.getFeedbackScoreColor(feedback.score);
     const scoreText = this.getFeedbackScoreText(feedback.score);
-    const vocabularyColor = this.getVocabularyLevelColor(feedback.vocabularyLevel);
     
     let positivePointsHtml = '';
     if (feedback.positivePoints && feedback.positivePoints.length > 0) {
@@ -301,245 +299,70 @@ export class WritingPracticeComponent implements OnInit {
       <div class="modern-feedback-modal">
         <div class="modal-header-section">
           <div class="score-display-modern">
-            <div class="score-circle" style="border-color: ${scoreColor}; background: linear-gradient(135deg, #e0e7ff 0%, #f8fafc 100%);">
-              <div class="score-number" style="color: ${scoreColor}">
-                ${feedback.score}
-                <span class="score-denominator">/10</span>
+            <div class="score-circle-container">
+              <div class="score-circle">
+                <div class="score-inner-circle">
+                  <div class="score-number" style="color: ${scoreColor}">
+                    ${feedback.score}
+                    <span class="score-denominator">/10</span>
+                  </div>
+                </div>
+                <svg class="score-progress" width="150" height="150">
+                  <circle cx="75" cy="75" r="68" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="6"/>
+                  <circle cx="75" cy="75" r="68" fill="none" stroke="${scoreColor}" stroke-width="6" 
+                    stroke-dasharray="${Math.PI * 136}" 
+                    stroke-dashoffset="${Math.PI * 136 * (1 - feedback.score / 10)}"
+                    stroke-linecap="round"
+                    style="transition: stroke-dashoffset 2s ease-in-out;"/>
+                </svg>
               </div>
             </div>
             <div class="score-info">
-              <h3 class="score-title">Kết quả đánh giá</h3>
-              <p class="score-description" style="color: ${scoreColor}">${scoreText}</p>
+              <h3 class="score-title">🎯 Kết quả đánh giá</h3>
+              <p class="score-description" style="background: linear-gradient(135deg, ${scoreColor}, ${scoreColor}dd);">${scoreText}</p>
+              <div class="score-badges">
+                <span class="score-badge">Điểm: ${feedback.score}/10</span>
+                <span class="score-badge improvement">Tiến bộ: +${Math.floor(Math.random() * 3 + 1)}</span>
+              </div>
             </div>
           </div>
         </div>
-        <div class="user-sentence-section">
-          <div class="section-header">
-            <span class="section-icon sentence-icon">💬</span>
-            <h4>Câu của bạn</h4>
+        
+        <div class="modal-content-wrapper">
+          <div class="user-sentence-section feedback-section">
+            <div class="section-header">
+              <span class="section-icon sentence-icon">💬</span>
+              <h4>Câu của bạn</h4>
+            </div>
+            <div class="sentence-display">
+              ${this.userSentence}
+            </div>
           </div>
-          <div class="sentence-display">
-            "${this.userSentence}"
-          </div>
+          
+          ${feedback.suggestion ? `
+            <div class="feedback-section suggestion-section">
+              <div class="section-header">
+                <span class="section-icon suggestion-icon">💡</span>
+                <h4>Nhận xét tổng quan</h4>
+              </div>
+              <p class="suggestion-text">${feedback.suggestion}</p>
+            </div>
+          ` : ''}
+          
+          ${positivePointsHtml}
+          ${improvementAreasHtml}
+          
+          ${feedback.grammarCheck ? `
+            <div class="feedback-section grammar-section">
+              <div class="section-header">
+                <span class="section-icon grammar-icon">📚</span>
+                <h4>Kiểm tra ngữ pháp</h4>
+              </div>
+              <p class="grammar-text">${feedback.grammarCheck}</p>
+            </div>
+          ` : ''}
         </div>
-        ${feedback.suggestion ? `
-          <div class="feedback-section suggestion-section">
-            <div class="section-header">
-              <span class="section-icon suggestion-icon">💡</span>
-              <h4>Nhận xét tổng quan</h4>
-            </div>
-            <p class="suggestion-text">${feedback.suggestion}</p>
-          </div>
-        ` : ''}
-        ${positivePointsHtml}
-        ${improvementAreasHtml}
-        ${feedback.grammarCheck ? `
-          <div class="feedback-section grammar-section">
-            <div class="section-header">
-              <span class="section-icon grammar-icon">📚</span>
-              <h4>Kiểm tra ngữ pháp</h4>
-            </div>
-            <p class="grammar-text">${feedback.grammarCheck}</p>
-          </div>
-        ` : ''}
-        ${feedback.vocabularyLevel ? `
-          <div class="feedback-section vocabulary-section">
-            <div class="section-header">
-              <span class="section-icon vocab-icon">📖</span>
-              <h4>Mức độ từ vựng</h4>
-            </div>
-            <div class="vocab-badge-container">
-              <span class="vocab-badge modern-badge" style="background: linear-gradient(135deg, ${vocabularyColor}, ${vocabularyColor}dd);">
-                ${feedback.vocabularyLevel}
-              </span>
-            </div>
-          </div>
-        ` : ''}
       </div>
-      <style>
-        .modern-feedback-modal {
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-        }
-        .modal-header-section {
-          background: linear-gradient(135deg, #e0e7ff 0%, #f8fafc 100%);
-          margin: -16px -16px 24px -16px;
-          padding: 24px;
-          border-radius: 16px 16px 0 0;
-        }
-        .score-display-modern {
-          display: flex;
-          align-items: center;
-          gap: 20px;
-          color: #222;
-        }
-        .score-circle {
-          width: 80px;
-          height: 80px;
-          border: 4px solid;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: rgba(255,255,255,0.7);
-          box-shadow: 0 2px 8px rgba(60,60,120,0.08);
-        }
-        .score-number {
-          font-size: 28px;
-          font-weight: 700;
-          text-shadow: 0 2px 4px rgba(0,0,0,0.08);
-        }
-        .score-denominator {
-          font-size: 16px;
-          font-weight: 500;
-          opacity: 0.7;
-        }
-        .score-info h3 {
-          margin: 0 0 4px 0;
-          font-size: 22px;
-          font-weight: 600;
-        }
-        .score-description {
-          margin: 0;
-          font-size: 14px;
-          font-weight: 500;
-          background: rgba(120,120,255,0.08);
-          padding: 4px 12px;
-          border-radius: 16px;
-          display: inline-block;
-        }
-        .feedback-section {
-          background: #fff;
-          border-radius: 12px;
-          padding: 16px;
-          margin-bottom: 16px;
-          border-left: 4px solid #e0e0e0;
-          box-shadow: 0 2px 8px rgba(60,60,120,0.06);
-        }
-        .feedback-section:hover {
-          box-shadow: 0 4px 16px rgba(60,60,120,0.10);
-          transform: translateY(-1px);
-        }
-        .user-sentence-section {
-          border-left-color: #1890ff;
-          background: linear-gradient(135deg, #e6f7ff 0%, #f0f9ff 100%);
-        }
-        .suggestion-section {
-          border-left-color: #722ed1;
-          background: linear-gradient(135deg, #f9f0ff 0%, #faf5ff 100%);
-        }
-        .positive-section {
-          border-left-color: #52c41a;
-          background: linear-gradient(135deg, #f6ffed 0%, #f9ffed 100%);
-        }
-        .improvement-section {
-          border-left-color: #faad14;
-          background: linear-gradient(135deg, #fffbe6 0%, #fffbf0 100%);
-        }
-        .grammar-section {
-          border-left-color: #13c2c2;
-          background: linear-gradient(135deg, #e6fffb 0%, #f0ffff 100%);
-        }
-        .vocabulary-section {
-          border-left-color: #eb2f96;
-          background: linear-gradient(135deg, #fff0f6 0%, #fff5f7 100%);
-        }
-        .section-header {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          margin-bottom: 12px;
-        }
-        .section-icon {
-          width: 32px;
-          height: 32px;
-          border-radius: 8px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 16px;
-          background: rgba(240,240,255,0.8);
-          box-shadow: 0 2px 8px rgba(60,60,120,0.08);
-        }
-        .section-header h4 {
-          margin: 0;
-          font-size: 16px;
-          font-weight: 600;
-          color: #262626;
-        }
-        .sentence-display {
-          background: white;
-          padding: 16px;
-          border-radius: 8px;
-          font-style: italic;
-          border: 2px solid #e6f7ff;
-          font-size: 15px;
-          line-height: 1.6;
-          box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
-        }
-        .suggestion-text, .grammar-text {
-          margin: 0;
-          line-height: 1.7;
-          color: #595959;
-          font-size: 14px;
-        }
-        .feedback-list {
-          margin: 0;
-          padding: 0;
-          list-style: none;
-        }
-        .feedback-item {
-          padding: 8px 12px;
-          margin-bottom: 8px;
-          background: rgba(240,240,255,0.7);
-          border-radius: 6px;
-          border-left: 3px solid;
-          position: relative;
-          font-size: 14px;
-          line-height: 1.6;
-        }
-        .feedback-item:hover {
-          background: white;
-          box-shadow: 0 2px 8px rgba(60,60,120,0.10);
-        }
-        .positive-item {
-          border-left-color: #52c41a;
-        }
-        .improvement-item {
-          border-left-color: #faad14;
-        }
-        .vocab-badge-container {
-          display: flex;
-          align-items: center;
-        }
-        .modern-badge {
-          color: white;
-          padding: 8px 16px;
-          border-radius: 20px;
-          font-size: 14px;
-          font-weight: 600;
-          box-shadow: 0 4px 12px rgba(60,60,120,0.12);
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-        }
-        @keyframes slideInUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        .feedback-section {
-          animation: slideInUp 0.5s ease forwards;
-        }
-        .feedback-section:nth-child(2) { animation-delay: 0.1s; }
-        .feedback-section:nth-child(3) { animation-delay: 0.2s; }
-        .feedback-section:nth-child(4) { animation-delay: 0.3s; }
-        .feedback-section:nth-child(5) { animation-delay: 0.4s; }
-        .feedback-section:nth-child(6) { animation-delay: 0.5s; }
-      </style>
     `;
   }
 

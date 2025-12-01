@@ -52,7 +52,7 @@
       <nz-card class="word-card" nzTitle="Từ vựng cần sử dụng">
         <div class="word-display">
           <div class="word-content">
-            <h2 class="word-text">{{ currentCard.frontText }}</h2>
+            <h2 class="word-text" [style.font-size]="wordFontSize">{{ currentCard.frontText }}</h2>
             <button 
               nz-button 
               nzType="text" 
@@ -165,16 +165,6 @@
           ... feedback content removed for modal display ...
         </div>
         -->
-      </nz-card>
-    </div>
-
-    <!-- Shortcuts Info -->
-    <div class="shortcuts-info" *ngIf="!isLoading">
-      <nz-card nzSize="small">
-        <span>
-          <strong>Phím tắt:</strong> 
-          S - Phát âm | Ctrl+Enter - Kiểm tra | ← - Trước | → - Tiếp theo
-        </span>
       </nz-card>
     </div>
 
