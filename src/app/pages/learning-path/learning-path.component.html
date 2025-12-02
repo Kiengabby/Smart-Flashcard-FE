@@ -1,0 +1,198 @@
+<div class="learning-path-container">
+  <!-- Header -->
+  <div class="path-header">
+    <button nz-button nzType="text" (click)="goBack()" class="back-btn">
+      <span nz-icon nzType="arrow-left" nzTheme="outline"></span>
+      Quay lại
+    </button>
+    
+    <div class="header-content">
+      <div class="header-icon">🎯</div>
+      <div class="header-text">
+        <h1 class="page-title">Hành Trình Chinh Phục</h1>
+        <p class="page-subtitle" *ngIf="deck">{{ deck.name }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <nz-spin nzSize="large" nzTip="Đang tải hành trình học tập..."></nz-spin>
+  </div>
+
+  <!-- Main Content -->
+  <div *ngIf="!isLoading" class="path-content">
+    
+    <!-- Overall Progress Card -->
+    <nz-card class="progress-overview-card" [nzBordered]="false">
+      <div class="progress-overview">
+        <div class="progress-stats">
+          <div class="stat-item main-stat">
+            <div class="stat-icon">
+              <div class="progress-circle" 
+                   [style.background]="'conic-gradient(' + getProgressColor() + ' ' + overallProgress * 3.6 + 'deg, #e5e7eb 0deg)'">
+                <div class="progress-inner">
+                  <span class="progress-value">{{ overallProgress }}%</span>
+                </div>
+              </div>
+            </div>
+            <div class="stat-info">
+              <h3 class="stat-title">Tiến Độ Tổng Thể</h3>
+              <p class="stat-description">
+                Đã hoàn thành <strong>{{ getCompletedCount() }}/4</strong> chế độ học
+              </p>
+            </div>
+          </div>
+          
+          <div class="progress-bar-container">
+            <nz-progress 
+              [nzPercent]="overallProgress" 
+              [nzStrokeColor]="getProgressColor()"
+              [nzStrokeWidth]="12"
+              [nzShowInfo]="false">
+            </nz-progress>
+          </div>
+        </div>
+        
+        <div class="progress-message">
+          <div *ngIf="overallProgress === 0" class="message-content start">
+            <span class="message-icon">🚀</span>
+            <div class="message-text">
+              <h4>Sẵn sàng chinh phục!</h4>
+              <p>Hãy bắt đầu với Flashcard để ghi nhớ từ vựng</p>
+            </div>
+          </div>
+          
+          <div *ngIf="overallProgress > 0 && overallProgress < 100" class="message-content progress">
+            <span class="message-icon">💪</span>
+            <div class="message-text">
+              <h4>Đang tiến bộ tốt!</h4>
+              <p>Tiếp tục nỗ lực để chinh phục bộ thẻ này</p>
+            </div>
+          </div>
+          
+          <div *ngIf="overallProgress === 100" class="message-content completed">
+            <span class="message-icon">🎉</span>
+            <div class="message-text">
+              <h4>Hoàn thành xuất sắc!</h4>
+              <p>Bạn đã chinh phục toàn bộ 4 chế độ học</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nz-card>
+
+    <!-- Learning Modes Path -->
+    <div class="learning-modes-section">
+      <h2 class="section-title">
+        <span class="title-icon">🗺️</span>
+        Lộ Trình Học Tập
+      </h2>
+      <p class="section-subtitle">
+        Hoàn thành 4 chế độ học theo thứ tự để chinh phục bộ thẻ
+      </p>
+
+      <div class="modes-path">
+        <div 
+          *ngFor="let mode of learningModes; let i = index; trackBy: trackByMode"
+          class="mode-card-wrapper"
+          [class.locked]="mode.isLocked"
+          [class.completed]="mode.isCompleted"
+          [class.current]="!mode.isCompleted && !mode.isLocked">
+          
+          <!-- Connecting Line -->
+          <div class="mode-connector" *ngIf="i < learningModes.length - 1"></div>
+          
+          <!-- Mode Card -->
+          <div class="mode-card" 
+               [style.border-color]="mode.color"
+               (click)="startMode(mode)">
+            
+            <!-- Lock Overlay -->
+            <div class="lock-overlay" *ngIf="mode.isLocked">
+              <div class="lock-icon">
+                <span nz-icon nzType="lock" nzTheme="outline"></span>
+              </div>
+              <p class="lock-message">Hoàn thành chế độ trước</p>
+            </div>
+            
+            <!-- Mode Header -->
+            <div class="mode-header" [style.background]="mode.gradient">
+              <div class="mode-icon-wrapper">
+                <span class="mode-icon" nz-icon [nzType]="mode.icon" nzTheme="outline"></span>
+              </div>
+              <div class="mode-number">{{ mode.order }}</div>
+              
+              <!-- Status Badge -->
+              <div class="status-badge" *ngIf="mode.isCompleted">
+                <span nz-icon nzType="check-circle" nzTheme="fill"></span>
+                Hoàn thành
+              </div>
+              
+              <div class="status-badge current" *ngIf="!mode.isCompleted && !mode.isLocked">
+                <span nz-icon nzType="play-circle" nzTheme="fill"></span>
+                Hiện tại
+              </div>
+            </div>
+            
+            <!-- Mode Content -->
+            <div class="mode-content">
+              <h3 class="mode-name">{{ mode.nameVi }}</h3>
+              <p class="mode-description">{{ mode.description }}</p>
+              
+              <!-- Score Display -->
+              <div class="mode-stats" *ngIf="mode.isCompleted && mode.score !== undefined">
+                <div class="stat-badge score">
+                  <span nz-icon nzType="trophy" nzTheme="outline"></span>
+                  <span>{{ mode.score }} điểm</span>
+                </div>
+                <div class="stat-badge date" *ngIf="mode.completedAt">
+                  <span nz-icon nzType="clock-circle" nzTheme="outline"></span>
+                  <span>{{ mode.completedAt | date:'dd/MM/yyyy' }}</span>
+                </div>
+              </div>
+              
+              <!-- Action Button -->
+              <button 
+                nz-button 
+                [nzType]="mode.isCompleted ? 'default' : 'primary'"
+                nzBlock
+                class="mode-action-btn"
+                [disabled]="mode.isLocked"
+                (click)="startMode(mode)">
+                <span *ngIf="!mode.isCompleted && !mode.isLocked">
+                  <span nz-icon nzType="rocket" nzTheme="outline"></span>
+                  Bắt đầu
+                </span>
+                <span *ngIf="mode.isCompleted">
+                  <span nz-icon nzType="redo" nzTheme="outline"></span>
+                  Học lại
+                </span>
+                <span *ngIf="mode.isLocked">
+                  <span nz-icon nzType="lock" nzTheme="outline"></span>
+                  Đã khóa
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tips Section -->
+    <nz-card class="tips-card" [nzBordered]="false">
+      <div class="tips-content">
+        <div class="tips-icon">💡</div>
+        <div class="tips-text">
+          <h4>Mẹo Học Hiệu Quả</h4>
+          <ul class="tips-list">
+            <li>🎯 <strong>Flashcard:</strong> Ghi nhớ từ vựng qua lặp lại cách nhớ</li>
+            <li>✅ <strong>Quiz:</strong> Kiểm tra độ chính xác và tốc độ phản xạ</li>
+            <li>🎧 <strong>Listening:</strong> Rèn luyện khả năng nghe và phát âm</li>
+            <li>✍️ <strong>Writing:</strong> Thực hành viết câu hoàn chỉnh với AI</li>
+          </ul>
+        </div>
+      </div>
+    </nz-card>
+  </div>
+</div>

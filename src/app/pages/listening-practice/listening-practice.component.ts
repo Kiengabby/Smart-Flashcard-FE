@@ -11,6 +11,7 @@ import { NzTooltipModule } from 'ng-zorro-antd/tooltip';
 import { NzResultModule } from 'ng-zorro-antd/result';
 import { CardService } from '../../services/card.service';
 import { DeckService } from '../../services/deck.service';
+import { LearningProgressService } from '../../services/learning-progress.service';
 import { CardDTO } from '../../interfaces/card.dto';
 import { DeckDTO } from '../../interfaces/deck.dto';
 import { WebSpeechService } from '../../services/web-speech.service';
@@ -63,6 +64,7 @@ export class ListeningPracticeComponent implements OnInit {
     private router: Router,
     private cardService: CardService,
     private deckService: DeckService,
+    private learningProgressService: LearningProgressService,
     private message: NzMessageService,
     private cdr: ChangeDetectorRef,
     private http: HttpClient,
@@ -299,23 +301,38 @@ export class ListeningPracticeComponent implements OnInit {
 
   private showFinalResult(): void {
     const accuracy = this.accuracy;
-    let message = `Hoàn thành! Điểm: ${this.score}/${this.totalAnswered} (${accuracy}%)`;
+    const finalScore = Math.round(accuracy);
     
-    if (accuracy >= 80) {
-      message += ' 🌟 Xuất sắc!';
-      this.message.success(message);
-    } else if (accuracy >= 60) {
-      message += ' 👍 Khá tốt!';
-      this.message.info(message);
-    } else {
-      message += ' 💪 Cần luyện tập thêm!';
-      this.message.warning(message);
-    }
+    // Update learning progress
+    this.learningProgressService.updateProgress(this.deckId, {
+      mode: 'listening',
+      completed: true,
+      score: finalScore
+    }).subscribe({
+      next: () => {
+        let message = `🎉 Hoàn thành Listening Practice! Điểm: ${this.score}/${this.totalAnswered} (${accuracy}%)`;
+        
+        if (accuracy >= 80) {
+          message += ' 🌟 Xuất sắc! Writing Practice đã được mở khóa!';
+          this.message.success(message, { nzDuration: 3000 });
+        } else if (accuracy >= 60) {
+          message += ' 👍 Khá tốt! Writing Practice đã được mở khóa!';
+          this.message.info(message, { nzDuration: 3000 });
+        } else {
+          message += ' 💪 Writing Practice đã được mở khóa!';
+          this.message.warning(message, { nzDuration: 3000 });
+        }
 
-    // Navigate back after 3 seconds
-    setTimeout(() => {
-      this.goBack();
-    }, 3000);
+        // Navigate back to learning path after 3 seconds
+        setTimeout(() => {
+          this.router.navigate(['/app/deck', this.deckId, 'learning-path']);
+        }, 3000);
+      },
+      error: (error) => {
+        console.error('Error updating progress:', error);
+        this.router.navigate(['/app/deck', this.deckId, 'learning-path']);
+      }
+    });
   }
 
   restart(): void {
@@ -328,7 +345,7 @@ export class ListeningPracticeComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/app/study-mode', this.deckId]);
+    this.router.navigate(['/app/deck', this.deckId, 'learning-path']);
   }
 
   trackByOption(index: number, option: string): string {

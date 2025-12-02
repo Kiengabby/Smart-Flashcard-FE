@@ -29,9 +29,11 @@ import { EditDeckModalComponent } from '../../components/edit-deck-modal/edit-de
 
 // Services
 import { DeckService } from '../../services/deck.service';
+import { LearningProgressService } from '../../services/learning-progress.service';
 
 // Interfaces
 import { DeckDTO } from '../../interfaces/deck.dto';
+import { LearningProgressDTO } from '../../interfaces/learning-progress.dto';
 
 @Component({
   selector: 'app-deck-library',
@@ -65,6 +67,9 @@ export class DeckLibraryComponent implements OnInit {
   decks: DeckDTO[] = [];
   filteredDecks: DeckDTO[] = [];
   private _isLoading = false; // Start with false to avoid initial expression change error
+  
+  // Learning Progress mapping
+  deckProgressMap: Map<number, LearningProgressDTO> = new Map();
 
   // Search & Filter properties
   searchText = '';
@@ -109,6 +114,7 @@ export class DeckLibraryComponent implements OnInit {
 
   constructor(
     private deckService: DeckService,
+    private learningProgressService: LearningProgressService,
     private router: Router,
     private modalService: NzModalService,
     private message: NzMessageService,
@@ -138,6 +144,10 @@ export class DeckLibraryComponent implements OnInit {
     this.deckService.getDecks().subscribe({
       next: (data: DeckDTO[]) => {
         this.decks = data;
+        
+        // Load learning progress for all decks
+        this.loadLearningProgress();
+        
         this.updateStats();
         this.applyFilters();
         this.isLoading = false;
@@ -169,6 +179,30 @@ export class DeckLibraryComponent implements OnInit {
         this.cdr.detectChanges(); // Force change detection after error handling
       }
     });
+  }
+
+  /**
+   * Load learning progress for all decks
+   */
+  private loadLearningProgress(): void {
+    this.decks.forEach(deck => {
+      this.learningProgressService.getDeckProgress(deck.id!).subscribe({
+        next: (progress) => {
+          this.deckProgressMap.set(deck.id!, progress);
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error(`Error loading progress for deck ${deck.id}:`, err);
+        }
+      });
+    });
+  }
+
+  /**
+   * Get learning progress for a deck
+   */
+  getDeckProgress(deckId: number): LearningProgressDTO | undefined {
+    return this.deckProgressMap.get(deckId);
   }
 
   /**
@@ -219,8 +253,20 @@ export class DeckLibraryComponent implements OnInit {
   getDeckStatus(deck: DeckDTO): string {
     if (!deck.cardCount || deck.cardCount === 0) return 'not-started';
     if (deck.cardCount < 5) return 'not-started';
-    // Logic để xác định completed/studying có thể add sau
-    return 'studying';
+    
+    const progress = this.getDeckProgress(deck.id!);
+    if (!progress) return 'not-started';
+    
+    // Deck đã hoàn thành tất cả 4 modes
+    if (progress.isFullyCompleted) return 'completed';
+    
+    // Deck đang học (có ít nhất 1 mode đã completed)
+    if (progress.flashcardCompleted || progress.quizCompleted || 
+        progress.listeningCompleted || progress.writingCompleted) {
+      return 'studying';
+    }
+    
+    return 'not-started';
   }
 
   /**
@@ -290,16 +336,17 @@ export class DeckLibraryComponent implements OnInit {
   }
 
   /**
-   * Tính progress cho deck
+   * Tính progress cho deck dựa trên learning progress thực tế
    */
   calculateProgress(deck: DeckDTO): number {
-    // Logic tính progress thực tế có thể phức tạp hơn
     if (!deck.cardCount || deck.cardCount === 0) return 0;
     if (deck.cardCount < 5) return Math.round((deck.cardCount / 5) * 100);
     
-    // Use a stable calculation instead of random to avoid change detection issues
-    const baseProgress = Math.min(((deck.id || 1) * 7) % 80 + 20, 100);
-    return baseProgress;
+    const progress = this.getDeckProgress(deck.id!);
+    if (!progress) return 0;
+    
+    // Sử dụng overallProgress từ backend
+    return progress.overallProgress || 0;
   }
 
   /**
@@ -384,13 +431,6 @@ export class DeckLibraryComponent implements OnInit {
   }
 
   /**
-   * Mở settings/detail deck
-   */
-  openDeckSettings(deck: DeckDTO): void {
-    this.viewDeckDetail(deck);
-  }
-
-  /**
    * Xem chi tiết deck
    */
   /**
@@ -426,22 +466,6 @@ export class DeckLibraryComponent implements OnInit {
         this.message.error('Không thể xóa bộ thẻ!');
       }
     });
-  }
-
-  /**
-   * Duplicate deck
-   */
-  duplicateDeck(deck: DeckDTO): void {
-    // Logic duplicate deck - có thể implement sau
-    this.message.info('Tính năng sao chép bộ thẻ sẽ được thêm trong tương lai!');
-  }
-
-  /**
-   * Export deck
-   */
-  exportDeck(deck: DeckDTO): void {
-    // Logic export deck - có thể implement sau
-    this.message.info('Tính năng xuất bộ thẻ sẽ được thêm trong tương lai!');
   }
 
   /**
@@ -488,5 +512,26 @@ export class DeckLibraryComponent implements OnInit {
       return 'Cần ít nhất 5 thẻ để bắt đầu học';
     }
     return 'Bắt đầu học bộ thẻ này';
+  }
+
+  /**
+   * Get button text based on deck status
+   */
+  getStartButtonText(deck: DeckDTO): string {
+    const status = this.getDeckStatus(deck);
+    switch (status) {
+      case 'completed': return '🏆 Đã chinh phục';
+      case 'studying': return '📚 Tiếp tục học';
+      case 'not-started': return '🚀 Bắt đầu Chinh phục';
+      default: return 'Bắt đầu';
+    }
+  }
+
+  /**
+   * Get button type based on deck status
+   */
+  getStartButtonType(deck: DeckDTO): 'primary' | 'default' {
+    const status = this.getDeckStatus(deck);
+    return status === 'completed' ? 'default' : 'primary';
   }
 }

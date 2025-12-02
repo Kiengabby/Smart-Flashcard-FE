@@ -243,10 +243,6 @@
                   <span nz-icon nzType="credit-card" nzTheme="outline"></span>
                   <span class="stat-text">{{ deck.cardCount || 0 }} thẻ</span>
                 </div>
-                <div class="stat-item">
-                  <span nz-icon nzType="clock-circle" nzTheme="outline"></span>
-                  <span class="stat-text">{{ Math.ceil((deck.cardCount || 0) * 2) }}p</span>
-                </div>
               </div>
 
               <!-- Progress Section -->
@@ -263,6 +259,71 @@
                   [nzStrokeWidth]="8"
                   nzSize="small">
                 </nz-progress>
+                
+                <!-- Learning Modes Status -->
+                <div class="learning-modes-status" *ngIf="getDeckProgress(deck.id!)">
+                  <div class="mode-badges">
+                    <!-- Flashcard Mode -->
+                    <div 
+                      class="mode-badge"
+                      [ngClass]="{
+                        'completed': getDeckProgress(deck.id!)?.flashcardCompleted,
+                        'not-started': !getDeckProgress(deck.id!)?.flashcardCompleted
+                      }"
+                      nz-tooltip="Flashcard">
+                      <span nz-icon 
+                        nzType="star" 
+                        [nzTheme]="getDeckProgress(deck.id!)?.flashcardCompleted ? 'fill' : 'outline'">
+                      </span>
+                      <span class="mode-label">Flashcard</span>
+                    </div>
+                    
+                    <!-- Quiz Mode -->
+                    <div 
+                      class="mode-badge"
+                      [ngClass]="{
+                        'completed': getDeckProgress(deck.id!)?.quizCompleted,
+                        'not-started': !getDeckProgress(deck.id!)?.quizCompleted
+                      }"
+                      nz-tooltip="Quiz">
+                      <span nz-icon 
+                        nzType="star" 
+                        [nzTheme]="getDeckProgress(deck.id!)?.quizCompleted ? 'fill' : 'outline'">
+                      </span>
+                      <span class="mode-label">Quiz</span>
+                    </div>
+                    
+                    <!-- Listening Mode -->
+                    <div 
+                      class="mode-badge"
+                      [ngClass]="{
+                        'completed': getDeckProgress(deck.id!)?.listeningCompleted,
+                        'not-started': !getDeckProgress(deck.id!)?.listeningCompleted
+                      }"
+                      nz-tooltip="Listening">
+                      <span nz-icon 
+                        nzType="star" 
+                        [nzTheme]="getDeckProgress(deck.id!)?.listeningCompleted ? 'fill' : 'outline'">
+                      </span>
+                      <span class="mode-label">Listen</span>
+                    </div>
+                    
+                    <!-- Writing Mode -->
+                    <div 
+                      class="mode-badge"
+                      [ngClass]="{
+                        'completed': getDeckProgress(deck.id!)?.writingCompleted,
+                        'not-started': !getDeckProgress(deck.id!)?.writingCompleted
+                      }"
+                      nz-tooltip="Writing">
+                      <span nz-icon 
+                        nzType="star" 
+                        [nzTheme]="getDeckProgress(deck.id!)?.writingCompleted ? 'fill' : 'outline'">
+                      </span>
+                      <span class="mode-label">Write</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -271,12 +332,12 @@
               <div class="footer-left">
                 <button
                   nz-button
-                  nzType="primary"
+                  [nzType]="getStartButtonType(deck)"
                   nzSize="large"
                   [disabled]="(deck.cardCount || 0) < 5"
+                  [nz-tooltip]="getStudyTooltip(deck)"
                   (click)="startStudying(deck, $event)">
-                  <span nz-icon nzType="rocket" nzTheme="outline"></span>
-                  Bắt đầu Chinh phục
+                  {{ getStartButtonText(deck) }}
                 </button>
               </div>
               <div class="footer-right">
@@ -291,21 +352,9 @@
                 </button>
                 <nz-dropdown-menu #menu="nzDropdownMenu">
                   <ul nz-menu>
-                    <li nz-menu-item (click)="viewDeckDetail(deck)">
-                      <span nz-icon nzType="folder-open" nzTheme="outline"></span>
-                      Xem chi tiết
-                    </li>
                     <li nz-menu-item (click)="openEditDeckModal(deck)">
                       <span nz-icon nzType="edit" nzTheme="outline"></span>
                       Chỉnh sửa tên & mô tả
-                    </li>
-                    <li nz-menu-item (click)="duplicateDeck(deck)">
-                      <span nz-icon nzType="copy" nzTheme="outline"></span>
-                      Sao chép
-                    </li>
-                    <li nz-menu-item (click)="exportDeck(deck)">
-                      <span nz-icon nzType="export" nzTheme="outline"></span>
-                      Xuất file
                     </li>
                     <li nz-menu-divider></li>
                     <li nz-menu-item class="danger-item" nz-popconfirm nzPopconfirmTitle="Bạn có chắc muốn xóa bộ thẻ này?" nzPopconfirmPlacement="left" (nzOnConfirm)="deleteDeck(deck)">

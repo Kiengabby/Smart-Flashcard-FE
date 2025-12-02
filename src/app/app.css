@@ -11,12 +11,13 @@
   height: 100vh;
 }
 
-.menu-sidebar {
+/* Menu sidebar styles moved to user-layout-enhanced.css to avoid conflicts */
+/* .menu-sidebar {
   position: relative;
   z-index: 10;
   min-height: 100vh;
   box-shadow: 2px 0 6px rgba(0,21,41,.35);
-}
+} */
 
 .header-trigger {
   height: 64px;

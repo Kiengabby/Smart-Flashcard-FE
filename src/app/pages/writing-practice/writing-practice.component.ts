@@ -19,6 +19,7 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { CardService } from '../../services/card.service';
 import { DeckService } from '../../services/deck.service';
+import { LearningProgressService } from '../../services/learning-progress.service';
 import { WritingPracticeService, WritingFeedbackResponse, ExampleSentenceRequest, ExampleSentenceResponse } from '../../services/writing-practice.service';
 import { CardDTO } from '../../interfaces/card.dto';
 import { DeckDTO } from '../../interfaces/deck.dto';
@@ -99,6 +100,7 @@ export class WritingPracticeComponent implements OnInit {
     private router: Router,
     private cardService: CardService,
     private deckService: DeckService,
+    private learningProgressService: LearningProgressService,
     private writingPracticeService: WritingPracticeService,
     private message: NzMessageService,
     private cdr: ChangeDetectorRef,
@@ -459,12 +461,37 @@ export class WritingPracticeComponent implements OnInit {
   }
 
   private showCompletionMessage(): void {
-    this.message.success('Bạn đã hoàn thành tất cả các thẻ!', {
-      nzDuration: 3000
+    const finalScore = this.averageScore;
+    
+    // Update learning progress - Writing is the final mode!
+    this.learningProgressService.updateProgress(this.deckId, {
+      mode: 'writing',
+      completed: true,
+      score: finalScore
+    }).subscribe({
+      next: () => {
+        let message = `🎉 Chúc mừng! Bạn đã CHINH PHỤC toàn bộ bộ thẻ này!`;
+        message += `\n📊 Điểm trung bình: ${finalScore}/10`;
+        
+        if (finalScore >= 8) {
+          message += '\n🌟 Xuất sắc! Bạn đã làm rất tốt!';
+        } else if (finalScore >= 6) {
+          message += '\n👍 Tốt lắm! Tiếp tục phát huy!';
+        } else {
+          message += '\n💪 Bạn đã cố gắng! Hãy thử lại để cải thiện!';
+        }
+        
+        this.message.success(message, { nzDuration: 4000 });
+        
+        setTimeout(() => {
+          this.router.navigate(['/app/deck', this.deckId, 'learning-path']);
+        }, 4000);
+      },
+      error: (error) => {
+        console.error('Error updating progress:', error);
+        this.router.navigate(['/app/deck', this.deckId, 'learning-path']);
+      }
     });
-    setTimeout(() => {
-      this.goBack();
-    }, 1500);
   }
 
   restart(): void {
@@ -478,7 +505,7 @@ export class WritingPracticeComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/app/deck', this.deckId]);
+    this.router.navigate(['/app/deck', this.deckId, 'learning-path']);
   }
 
   private shuffleArray<T>(array: T[]): T[] {

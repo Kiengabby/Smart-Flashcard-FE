@@ -240,7 +240,7 @@ export class DeckDetailComponent implements OnInit {
   }
 
   /**
-   * Bắt đầu học (chinh phục bộ thẻ)
+   * Bắt đầu học (chinh phục bộ thẻ) - Navigate to Learning Path
    */
   startLearning(): void {
     if (!this.cards.length) {
@@ -253,8 +253,8 @@ export class DeckDetailComponent implements OnInit {
       return;
     }
 
-    // Navigate to study mode selection
-    this.router.navigate(['/app/study-mode', this.deckId]);
+    // Navigate to progressive learning path
+    this.router.navigate(['/app/deck', this.deckId, 'learning-path']);
   }
 
   /**

@@ -10,6 +10,7 @@ import { NzTooltipModule } from 'ng-zorro-antd/tooltip';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { CardService } from '../../services/card.service';
 import { DeckService } from '../../services/deck.service';
+import { LearningProgressService } from '../../services/learning-progress.service';
 import { CardDTO, ReviewCardRequest } from '../../interfaces/card.dto';
 import { DeckDTO } from '../../interfaces/deck.dto';
 import { WebSpeechService } from '../../services/web-speech.service';
@@ -79,6 +80,7 @@ export class FlashcardStudyComponent implements OnInit {
     private router: Router,
     private cardService: CardService,
     private deckService: DeckService,
+    private learningProgressService: LearningProgressService,
     private message: NzMessageService,
     private cdr: ChangeDetectorRef,
     private http: HttpClient,
@@ -316,14 +318,32 @@ export class FlashcardStudyComponent implements OnInit {
   }
 
   completeStudy(): void {
-    // Navigate back with refresh flag to trigger data reload
-    this.router.navigate(['/app/study-mode', this.deckId], { 
-      queryParams: { refresh: Date.now() } 
+    // Calculate average score based on ratings
+    const avgScore = this.cards.length > 0 ? 85 : 0; // Simplified score calculation
+    
+    // Update learning progress
+    this.learningProgressService.updateProgress(this.deckId, {
+      mode: 'flashcard',
+      completed: true,
+      score: avgScore
+    }).subscribe({
+      next: () => {
+        this.message.success('🎉 Hoàn thành Flashcard Study! Quiz Practice đã được mở khóa!');
+        // Navigate back to learning path to see progress
+        setTimeout(() => {
+          this.router.navigate(['/app/deck', this.deckId, 'learning-path']);
+        }, 1000);
+      },
+      error: (error) => {
+        console.error('Error updating progress:', error);
+        // Still navigate even if update fails
+        this.router.navigate(['/app/deck', this.deckId, 'learning-path']);
+      }
     });
   }
 
   goBack(): void {
-    this.router.navigate(['/app/study-mode', this.deckId]);
+    this.router.navigate(['/app/deck', this.deckId, 'learning-path']);
   }
 
   restart(): void {

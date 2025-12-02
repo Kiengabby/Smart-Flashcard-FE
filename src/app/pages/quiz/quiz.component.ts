@@ -9,6 +9,7 @@ import { NzAlertModule } from 'ng-zorro-antd/alert';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { QuizService } from '../../services/quiz.service';
+import { LearningProgressService } from '../../services/learning-progress.service';
 import { QuizQuestion, QuizAnswer, QuizAnswerResult } from '../../interfaces/quiz.interface';
 
 @Component({
@@ -47,6 +48,7 @@ export class QuizComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private quizService: QuizService,
+    private learningProgressService: LearningProgressService,
     private message: NzMessageService,
     private cdr: ChangeDetectorRef
   ) {}
@@ -160,9 +162,35 @@ export class QuizComponent implements OnInit, OnDestroy {
       this.resetQuestionState();
       this.startTime = Date.now(); // Reset timer cho câu hỏi mới
     } else {
-      // Hết câu hỏi -> chuyển đến trang kết quả
-      this.router.navigate(['/app/study', this.deckId, 'quiz', 'result']);
+      // Hết câu hỏi -> hoàn thành quiz
+      this.completeQuiz();
     }
+  }
+
+  /**
+   * Hoàn thành quiz và cập nhật progress
+   */
+  completeQuiz(): void {
+    const score = this.totalQuestions > 0 ? 
+      Math.round((this.correctAnswers / this.totalQuestions) * 100) : 0;
+    
+    // Update learning progress
+    this.learningProgressService.updateProgress(this.deckId, {
+      mode: 'quiz',
+      completed: true,
+      score: score
+    }).subscribe({
+      next: () => {
+        this.message.success(`🎉 Hoàn thành Quiz! Điểm: ${score}/100. Listening Practice đã được mở khóa!`);
+        setTimeout(() => {
+          this.router.navigate(['/app/deck', this.deckId, 'learning-path']);
+        }, 1500);
+      },
+      error: (error) => {
+        console.error('Error updating progress:', error);
+        this.router.navigate(['/app/deck', this.deckId, 'learning-path']);
+      }
+    });
   }
 
   /**
@@ -221,9 +249,9 @@ export class QuizComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Quay lại study mode
+   * Quay lại learning path
    */
   goBack(): void {
-    this.router.navigate(['/app/study-mode', this.deckId]);
+    this.router.navigate(['/app/deck', this.deckId, 'learning-path']);
   }
 }

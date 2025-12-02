@@ -255,19 +255,24 @@
   margin-left: 280px;
   min-height: 100vh;
   transition: margin-left 0.3s ease;
+  position: relative;
+  width: calc(100% - 280px);
 }
 
 .ant-layout-sider-collapsed ~ .main-layout {
   margin-left: 80px;
+  width: calc(100% - 80px);
 }
 
 .main-content {
   background: #f0f2f5;
   min-height: 100vh;
+  position: relative;
 }
 
 .content-wrapper {
   min-height: 100vh;
+  position: relative;
 }
 
 /* Responsive Design */
