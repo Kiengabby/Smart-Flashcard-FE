@@ -30,6 +30,7 @@ import { EditDeckModalComponent } from '../../components/edit-deck-modal/edit-de
 // Services
 import { DeckService } from '../../services/deck.service';
 import { LearningProgressService } from '../../services/learning-progress.service';
+import { DailyReviewService } from '../../services/daily-review.service';
 
 // Interfaces
 import { DeckDTO } from '../../interfaces/deck.dto';
@@ -79,7 +80,7 @@ export class DeckLibraryComponent implements OnInit {
   // Stats properties
   totalDecks = 0;
   totalCards = 0;
-  studyingDecks = 0;
+  dueCardsToday = 0; // Thay "studyingDecks" bằng "dueCardsToday" - dữ liệu thật
 
   // Getter for isLoading to ensure stable expression evaluation
   get isLoading(): boolean {
@@ -115,6 +116,7 @@ export class DeckLibraryComponent implements OnInit {
   constructor(
     private deckService: DeckService,
     private learningProgressService: LearningProgressService,
+    private dailyReviewService: DailyReviewService,
     private router: Router,
     private modalService: NzModalService,
     private message: NzMessageService,
@@ -125,7 +127,7 @@ export class DeckLibraryComponent implements OnInit {
     // Initialize with empty data to avoid undefined errors
     this.totalDecks = 0;
     this.totalCards = 0;
-    this.studyingDecks = 0;
+    this.dueCardsToday = 0;
     this.filteredDecks = [];
     
     // Use setTimeout to avoid initial expression changed error
@@ -233,7 +235,18 @@ export class DeckLibraryComponent implements OnInit {
   updateStats(): void {
     const newTotalDecks = this.decks.length;
     const newTotalCards = this.decks.reduce((sum, deck) => sum + (deck.cardCount || 0), 0);
-    const newStudyingDecks = this.decks.filter(deck => this.getDeckStatus(deck) === 'studying').length;
+    
+    // Lấy dữ liệu THẬT từ DailyReviewService
+    this.dailyReviewService.getDailyOverview().subscribe({
+      next: (overview) => {
+        this.dueCardsToday = overview.totalDue || 0;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error loading due cards:', err);
+        this.dueCardsToday = 0;
+      }
+    });
     
     // Only update if values have changed
     if (this.totalDecks !== newTotalDecks) {
@@ -241,9 +254,6 @@ export class DeckLibraryComponent implements OnInit {
     }
     if (this.totalCards !== newTotalCards) {
       this.totalCards = newTotalCards;
-    }
-    if (this.studyingDecks !== newStudyingDecks) {
-      this.studyingDecks = newStudyingDecks;
     }
   }
 

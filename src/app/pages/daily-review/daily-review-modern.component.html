@@ -1,0 +1,319 @@
+<!-- Modern Premium Daily Review UI -->
+<div class="modern-review-app" [@pageEntry]>
+  
+  <!-- Floating Navigation Header -->
+  <header class="floating-header" [@slideDown]>
+    <div class="header-container">
+      <button 
+        class="nav-back-btn" 
+        (click)="goBack()" 
+        nz-tooltip="Quay lại dashboard"
+        [@hoverScale]>
+        <span nz-icon nzType="arrow-left"></span>
+      </button>
+      
+      <div class="header-title-section">
+        <h1 class="page-title">Daily Review</h1>
+        <div class="session-indicator" *ngIf="reviewSession">
+          <div class="progress-ring">
+            <svg class="progress-circle" width="32" height="32">
+              <circle 
+                cx="16" 
+                cy="16" 
+                r="14" 
+                fill="none" 
+                stroke="#e2e8f0" 
+                stroke-width="2">
+              </circle>
+              <circle 
+                cx="16" 
+                cy="16" 
+                r="14" 
+                fill="none" 
+                stroke="url(#gradient)" 
+                stroke-width="2"
+                stroke-linecap="round"
+                [style.stroke-dasharray]="87.96"
+                [style.stroke-dashoffset]="87.96 - (87.96 * getProgressPercentage() / 100)"
+                transform="rotate(-90 16 16)">
+              </circle>
+              <defs>
+                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" style="stop-color:#667eea"/>
+                  <stop offset="100%" style="stop-color:#764ba2"/>
+                </linearGradient>
+              </defs>
+            </svg>
+            <span class="progress-text">{{ reviewSession.currentIndex + 1 }}/{{ reviewSession.cards.length }}</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="header-stats" *ngIf="reviewSession">
+        <div class="stat-chip">
+          <span class="stat-icon">🔥</span>
+          <span class="stat-value">{{ reviewSession.stats.streak }}</span>
+        </div>
+        <div class="stat-chip" *ngIf="reviewSession.stats.accuracy > 0">
+          <span class="stat-icon">🎯</span>
+          <span class="stat-value">{{ Math.round(reviewSession.stats.accuracy) }}%</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="main-content">
+    
+    <!-- Loading State - Elegant -->
+    <div class="loading-state" *ngIf="loading" [@fadeIn]>
+      <div class="loading-content">
+        <div class="loading-spinner">
+          <div class="spinner-ring"></div>
+          <div class="spinner-ring"></div>
+          <div class="spinner-ring"></div>
+        </div>
+        <h3 class="loading-title">Preparing your study session</h3>
+        <p class="loading-subtitle">AI is calculating the optimal cards for you</p>
+      </div>
+    </div>
+
+    <!-- Empty State - Premium Design -->
+    <div class="empty-state" *ngIf="!loading && !reviewSession && !showCompleteScreen" [@fadeIn]>
+      <div class="empty-content">
+        <div class="empty-illustration">
+          <div class="trophy-container">
+            <div class="trophy-icon">🏆</div>
+            <div class="shine-effect"></div>
+          </div>
+        </div>
+        <h2 class="empty-title">All caught up!</h2>
+        <p class="empty-description">You've reviewed all your cards for today. Great job maintaining your learning streak!</p>
+        
+        <div class="stats-preview" *ngIf="overview" [@slideUp]>
+          <div class="stat-card">
+            <div class="stat-number">{{ overview.currentStreak || 0 }}</div>
+            <div class="stat-label">Day Streak</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">{{ Math.round(overview.accuracy) }}%</div>
+            <div class="stat-label">Accuracy</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">{{ overview.totalDue || 0 }}</div>
+            <div class="stat-label">Cards Mastered</div>
+          </div>
+        </div>
+
+        <button class="primary-action-btn" (click)="goBack()" [@hoverScale]>
+          <span>Return to Dashboard</span>
+          <span nz-icon nzType="arrow-right"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Study Session - Card Interface -->
+    <div class="study-session" *ngIf="!loading && reviewSession && getCurrentCard() && !showCompleteScreen" [@fadeIn]>
+      
+      <!-- Flashcard Container -->
+      <div class="card-stage" [@cardEntry]>
+        <div class="flashcard-container">
+          
+          <!-- Card Meta Info -->
+          <div class="card-metadata">
+            <div class="card-difficulty-badge" [class]="'difficulty-' + getDifficultyClass()">
+              {{ getDifficultyText() }}
+            </div>
+            <div class="card-deck-info">
+              {{ getCurrentCard()?.deckName || 'Study Set' }}
+            </div>
+          </div>
+
+          <!-- Main Flashcard -->
+          <div class="flashcard-wrapper" [class.revealed]="reviewSession.showAnswer">
+            
+            <!-- Card Front -->
+            <div class="card-face card-front">
+              <div class="card-content-area">
+                <div class="card-question-section">
+                  <div class="question-text" [innerHTML]="getCurrentCard()?.front"></div>
+                </div>
+                
+                <div class="card-actions-area" *ngIf="!reviewSession.showAnswer">
+                  <button 
+                    class="reveal-answer-btn" 
+                    (click)="showAnswer()"
+                    [@pulseOnHover]>
+                    <span class="btn-icon">👁️</span>
+                    <span class="btn-text">Reveal Answer</span>
+                    <div class="btn-shortcut">Space</div>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card Back -->
+            <div class="card-face card-back" *ngIf="reviewSession.showAnswer" [@slideUp]>
+              <div class="card-content-area">
+                <div class="answer-section">
+                  <div class="answer-label">Answer</div>
+                  <div class="answer-text" [innerHTML]="getCurrentCard()?.back"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quality Rating Interface -->
+          <div class="rating-interface" *ngIf="reviewSession.showAnswer && !isTransitioning" [@slideUp]>
+            <div class="rating-prompt">
+              <h4>How well did you know this?</h4>
+            </div>
+            
+            <div class="rating-options">
+              <button 
+                *ngFor="let option of qualityOptions; index as i"
+                class="rating-btn"
+                [class]="'rating-' + i"
+                (click)="onQualityRated(option.value)"
+                [attr.data-shortcut]="i + 1"
+                [@hoverScale]>
+                <div class="rating-icon">{{ option.emoji }}</div>
+                <div class="rating-label">{{ option.label }}</div>
+                <div class="rating-shortcut">{{ i + 1 }}</div>
+              </button>
+            </div>
+            
+            <div class="rating-help">
+              <p>Use keys <kbd>1</kbd> through <kbd>5</kbd> for quick rating</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Session Progress Sidebar -->
+      <aside class="progress-sidebar" [@slideLeft]>
+        <div class="progress-card">
+          <h4 class="sidebar-title">Session Progress</h4>
+          
+          <div class="progress-visual">
+            <div class="progress-bar">
+              <div 
+                class="progress-fill" 
+                [style.width.%]="getProgressPercentage()">
+              </div>
+            </div>
+            <div class="progress-numbers">
+              <span>{{ reviewSession.currentIndex + 1 }} of {{ reviewSession.cards.length }}</span>
+            </div>
+          </div>
+          
+          <div class="session-stats-grid">
+            <div class="mini-stat">
+              <div class="mini-stat-value">{{ reviewSession.stats.completed }}</div>
+              <div class="mini-stat-label">Completed</div>
+            </div>
+            <div class="mini-stat">
+              <div class="mini-stat-value">{{ reviewSession.stats.remaining }}</div>
+              <div class="mini-stat-label">Remaining</div>
+            </div>
+            <div class="mini-stat" *ngIf="reviewSession.stats.accuracy > 0">
+              <div class="mini-stat-value">{{ Math.round(reviewSession.stats.accuracy) }}%</div>
+              <div class="mini-stat-label">Accuracy</div>
+            </div>
+            <div class="mini-stat">
+              <div class="mini-stat-value">{{ getTimeSpent() }}</div>
+              <div class="mini-stat-label">Time</div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- Completion Celebration -->
+    <div class="completion-state" *ngIf="showCompleteScreen" [@celebrationEntry]>
+      <div class="celebration-content">
+        
+        <!-- Success Animation -->
+        <div class="success-animation">
+          <div class="trophy-burst">
+            <div class="trophy-main">🏆</div>
+            <div class="burst-particles">
+              <span class="particle">✨</span>
+              <span class="particle">🎉</span>
+              <span class="particle">⭐</span>
+              <span class="particle">💫</span>
+              <span class="particle">🎊</span>
+              <span class="particle">🌟</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="completion-text">
+          <h2 class="completion-title">Session Complete!</h2>
+          <p class="completion-message">
+            <span *ngIf="averageQuality >= 4">Outstanding performance! You've mastered this material.</span>
+            <span *ngIf="averageQuality >= 3 && averageQuality < 4">Great job! You're making excellent progress.</span>
+            <span *ngIf="averageQuality >= 2 && averageQuality < 3">Well done! Keep practicing to improve retention.</span>
+            <span *ngIf="averageQuality < 2">Good effort! Regular practice will strengthen your knowledge.</span>
+          </p>
+        </div>
+
+        <!-- Results Summary -->
+        <div class="results-grid">
+          <div class="result-metric">
+            <div class="metric-icon">📚</div>
+            <div class="metric-value">{{ completedReviews }}</div>
+            <div class="metric-label">Cards Studied</div>
+          </div>
+          <div class="result-metric">
+            <div class="metric-icon">🎯</div>
+            <div class="metric-value">{{ Math.round(averageQuality * 20) }}%</div>
+            <div class="metric-label">Average Score</div>
+          </div>
+          <div class="result-metric">
+            <div class="metric-icon">⏱️</div>
+            <div class="metric-value">{{ getTimeSpent() }}</div>
+            <div class="metric-label">Time Spent</div>
+          </div>
+          <div class="result-metric" *ngIf="reviewSession && reviewSession.stats.cardsPerMinute > 0">
+            <div class="metric-icon">⚡</div>
+            <div class="metric-value">{{ reviewSession.stats.cardsPerMinute | number:'1.1-1' }}</div>
+            <div class="metric-label">Cards/Min</div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="completion-actions">
+          <button class="secondary-action-btn" (click)="goBack()">
+            <span nz-icon nzType="home"></span>
+            <span>Dashboard</span>
+          </button>
+          <button class="primary-action-btn" (click)="startNewReview()">
+            <span>Study More</span>
+            <span nz-icon nzType="reload"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Keyboard Shortcuts Overlay -->
+  <div class="shortcuts-overlay" *ngIf="reviewSession && !showCompleteScreen" [@fadeIn]>
+    <div class="shortcuts-content">
+      <div class="shortcut-item">
+        <kbd>Space</kbd>
+        <span>Reveal answer</span>
+      </div>
+      <div class="shortcut-item">
+        <kbd>1-5</kbd>
+        <span>Rate quality</span>
+      </div>
+      <div class="shortcut-item">
+        <kbd>Esc</kbd>
+        <span>Exit session</span>
+      </div>
+    </div>
+  </div>
+
+</div>

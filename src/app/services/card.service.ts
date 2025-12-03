@@ -68,6 +68,13 @@ export class CardService {
   }
 
   /**
+   * Lấy calendar activity data với review counts và activity levels
+   */
+  getCalendarActivity(year: number, month: number): Observable<CalendarActivityData[]> {
+    return this.http.get<CalendarActivityData[]>(`http://localhost:8080/api/stats/calendar-activity?year=${year}&month=${month}`);
+  }
+
+  /**
    * Bulk create cards with AI translation
    */
   bulkCreateCards(deckId: number, request: BulkCreateCardsRequest): Observable<BulkCreateCardsResponse> {
@@ -99,12 +106,15 @@ export interface StudyStats {
   currentStreak: number;
   longestStreak: number;
   averageQuality: number;
-  totalDecks: number;
-  studyingDecks: number;
-  conqueredDecks: number;
-  reviewToday: number;
-  totalWordsLearned: number;
-  activeChallenges: number;
+}
+
+/**
+ * Interface cho calendar activity data
+ */
+export interface CalendarActivityData {
+  day: number;
+  reviewCount: number;
+  activityLevel: number; // 0-3
 }
 
 /**

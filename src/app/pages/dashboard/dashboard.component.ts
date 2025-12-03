@@ -17,6 +17,7 @@ import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { DeckService } from '../../services/deck.service';
 import { TokenService } from '../../services/token.service';
 import { CardService, StudyStats } from '../../services/card.service';
+import { DailyReviewService } from '../../services/daily-review.service';
 // import { OnboardingService } from '../../services/onboarding.service'; // Đã tắt
 import { DeckDTO } from '../../interfaces/deck.dto';
 import { CreateDeckModalComponent } from '../../components/create-deck-modal/create-deck-modal.component';
@@ -149,6 +150,7 @@ export class DashboardComponent implements OnInit {
     private deckService: DeckService,
     private tokenService: TokenService,
     private cardService: CardService,
+    private dailyReviewService: DailyReviewService,
     private cdr: ChangeDetectorRef,
     // private onboardingService: OnboardingService, // Đã tắt
     private modalService: NzModalService,
@@ -161,7 +163,7 @@ export class DashboardComponent implements OnInit {
     this.motivationalQuote = this.generateMotivationalQuote(); // Set quote một lần
     
     // Initialize calendar với empty data trước
-    this.generateCalendar([]);
+    this.generateCalendar(new Map());
     
     // Sử dụng Promise.resolve để đảm bảo thực thi trong nextTick
     Promise.resolve().then(() => {
@@ -246,22 +248,31 @@ export class DashboardComponent implements OnInit {
   loadCalendarData(): void {
     this.isCalendarLoading = true;
 
-    // Load activity dates cho tháng hiện tại
-    this.cardService.getActivityDates(this.currentYear, this.currentMonth).subscribe({
-      next: (activityDates: number[]) => {
-        this.generateCalendar(activityDates);
+    // Load calendar activity data với review counts
+    this.cardService.getCalendarActivity(this.currentYear, this.currentMonth).subscribe({
+      next: (activityData) => {
+        // Convert CalendarActivityData[] to Map for easy lookup
+        const activityMap = new Map<number, { reviewCount: number; activityLevel: number }>();
+        activityData.forEach(data => {
+          activityMap.set(data.day, { 
+            reviewCount: data.reviewCount, 
+            activityLevel: data.activityLevel 
+          });
+        });
+        
+        this.generateCalendar(activityMap);
         this.isCalendarLoading = false;
       },
       error: (error) => {
         console.error('Lỗi khi tải dữ liệu calendar:', error);
         // Fallback với dữ liệu mặc định
-        this.generateCalendar([]);
+        this.generateCalendar(new Map());
         this.isCalendarLoading = false;
       }
     });
   }
 
-  generateCalendar(activityDates: number[] = []): void {
+  generateCalendar(activityMap: Map<number, { reviewCount: number; activityLevel: number }> = new Map()): void {
     this.calendarDays = [];
     const year = this.currentYear;
     const month = this.currentMonth - 1;
@@ -275,9 +286,6 @@ export class DashboardComponent implements OnInit {
     const isCurrentMonth = today.getMonth() === month && today.getFullYear() === year;
     const todayDate = today.getDate();
     
-    // Random activity for demo
-    // const activityDates = [1, 3, 5, 7, 10, 13, 14, 15, 16, 17, 18, 22, 25, 28];
-    
     // Previous month days
     for (let day = daysInPrevMonth - startingDayOfWeek + 1; day <= daysInPrevMonth; day++) {
       this.calendarDays.push({
@@ -289,15 +297,17 @@ export class DashboardComponent implements OnInit {
       });
     }
     
-    // Current month days
+    // Current month days - use REAL data from activityMap
     for (let day = 1; day <= daysInMonth; day++) {
-      const hasActivity = activityDates.includes(day);
+      const activityData = activityMap.get(day);
+      const hasActivity = activityData !== undefined;
+      
       this.calendarDays.push({
         date: day,
         currentMonth: true,
         isToday: isCurrentMonth && day === todayDate,
         hasActivity: hasActivity,
-        activityLevel: hasActivity ? Math.floor(Math.random() * 3) + 1 : 0
+        activityLevel: hasActivity ? activityData.activityLevel : 0
       });
     }
     
@@ -374,30 +384,50 @@ export class DashboardComponent implements OnInit {
   
   loadStudyStats(): void {
     this.isStatsLoading = true;
-    this.cdr.detectChanges(); // Trigger change detection
+    this.cdr.detectChanges();
 
-    this.cardService.getStudyStats().subscribe({
-      next: (studyStats: StudyStats) => {
-        // Cập nhật stats với dữ liệu thật từ API
+    // Sử dụng DailyReviewService để lấy dữ liệu THẬT
+    this.dailyReviewService.getDailyOverview().subscribe({
+      next: (overview) => {
+        // Cập nhật stats với dữ liệu THẬT từ backend
         this.stats = {
-          conqueredDecks: studyStats.conqueredDecks || 0,
-          studyStreak: studyStats.currentStreak || 0,
-          totalWordsLearned: studyStats.totalWordsLearned || 0,
-          reviewToday: studyStats.reviewToday || 0,
-          totalDecks: studyStats.totalDecks || 0,
-          activeChallenges: studyStats.activeChallenges || 0
+          // Streak THẬT từ review history
+          studyStreak: overview.currentStreak || 0,
+          
+          // Thẻ cần ôn tập THẬT
+          reviewToday: overview.totalDue || 0,
+          
+          // Bộ thẻ đã chinh phục = số thẻ MASTERED
+          conqueredDecks: overview.learningDistribution?.mastered || 0,
+          
+          // Tổng từ đã học = tổng các thẻ không phải NEW
+          totalWordsLearned: 
+            (overview.learningDistribution?.learning || 0) +
+            (overview.learningDistribution?.review || 0) +
+            (overview.learningDistribution?.mastered || 0),
+          
+          // Placeholder cho total decks (sẽ được update từ loadDecks)
+          totalDecks: this.stats.totalDecks || 0,
+          
+          // Active challenges - placeholder
+          activeChallenges: 3
         };
         
         // Cập nhật currentUser stats
-        this.currentUser.totalDecks = studyStats.totalDecks || 0;
-        this.currentUser.studiedToday = studyStats.completedToday || 0;
+        this.currentUser.studiedToday = overview.hasStudiedToday ? 1 : 0;
         
-        // Set loading completed
         this.isStatsLoading = false;
-        this.cdr.detectChanges(); // Trigger change detection
+        this.cdr.detectChanges();
+        
+        console.log('✅ Dashboard stats loaded from REAL data:', {
+          streak: this.stats.studyStreak,
+          dueCards: this.stats.reviewToday,
+          conquered: this.stats.conqueredDecks,
+          totalWords: this.stats.totalWordsLearned
+        });
       },
       error: (error) => {
-        console.error('Lỗi khi tải thống kê học tập:', error);
+        console.error('Lỗi khi tải thống kê từ Daily Review:', error);
         this.messageService.warning('Không thể tải thống kê học tập. Hiển thị dữ liệu mặc định.');
         
         // Fallback data
@@ -410,7 +440,7 @@ export class DashboardComponent implements OnInit {
           activeChallenges: 0
         };
         this.isStatsLoading = false;
-        this.cdr.detectChanges(); // Trigger change detection
+        this.cdr.detectChanges();
       }
     });
   }

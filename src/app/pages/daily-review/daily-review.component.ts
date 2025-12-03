@@ -1,416 +1,460 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzCardModule } from 'ng-zorro-antd/card';
-import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzSpinModule } from 'ng-zorro-antd/spin';
-import { NzEmptyModule } from 'ng-zorro-antd/empty';
-import { NzMessageService } from 'ng-zorro-antd/message';
-import { NzModalService } from 'ng-zorro-antd/modal';
 import { Router } from '@angular/router';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzProgressModule } from 'ng-zorro-antd/progress';
+import { NzTooltipModule } from 'ng-zorro-antd/tooltip';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzEmptyModule } from 'ng-zorro-antd/empty';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 
-import { CardService } from '../../services/card.service';
-import { SM2Service } from '../../services/sm2.service';
-import { CardDTO, ReviewCardRequest, ReviewCardResponse } from '../../interfaces/card.dto';
-import { QualityRatingComponent } from '../../components/quality-rating/quality-rating.component';
-
-interface DailyReviewStats {
-  totalDue: number;
-  completed: number;
-  remaining: number;
-  streak: number;
-  accuracy: number;
-}
-
-interface ReviewSession {
-  id: string;
-  deckId: string;
-  deckName: string;
-  cards: CardDTO[];
-  currentIndex: number;
-  showAnswer: boolean;
-  stats: DailyReviewStats;
-  startTime: Date;
-}
+import { DailyReviewService, ReviewCard, ReviewSessionResponse } from '../../services/daily-review.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-daily-review',
   standalone: true,
   imports: [
     CommonModule,
-    NzButtonModule,
     NzCardModule,
+    NzButtonModule,
     NzIconModule,
-    NzSpinModule,
+    NzProgressModule,
+    NzTooltipModule,
     NzEmptyModule,
-    QualityRatingComponent
+    NzSpinModule
   ],
-  template: `
-    <div class="daily-review-container">
-      <!-- Header Section -->
-      <div class="review-header">
-        <div class="header-content">
-          <div class="header-left">
-            <button nz-button nzType="text" (click)="goBack()" class="back-button">
-              <span nz-icon nzType="arrow-left"></span>
-            </button>
-            <div class="header-info">
-              <h1 class="review-title">Ôn tập hàng ngày</h1>
-              @if (reviewSession) {
-                <p class="review-subtitle">{{ reviewSession.deckName }}</p>
-              }
-            </div>
-          </div>
-          
-          @if (reviewSession) {
-            <div class="progress-info">
-              <div class="progress-stats">
-                <span class="progress-text">
-                  {{ reviewSession.currentIndex + 1 }}/{{ reviewSession.cards.length }}
-                </span>
-                <div class="progress-bar">
-                  <div 
-                    class="progress-fill" 
-                    [style.width.%]="getProgressPercentage()">
-                  </div>
-                </div>
-              </div>
-              <div class="streak-info">
-                <span nz-icon nzType="fire" nzTheme="fill"></span>
-                {{ reviewSession.stats.streak }} ngày
-              </div>
-            </div>
-          }
-        </div>
-      </div>
-
-      <!-- Loading State -->
-      @if (loading) {
-        <div class="loading-container">
-          <nz-spin nzSize="large">
-            <div class="loading-text">Đang tải thẻ ôn tập...</div>
-          </nz-spin>
-        </div>
-      }
-
-      <!-- Empty State -->
-      @if (!loading && !reviewSession) {
-        <div class="empty-container">
-          <nz-empty 
-            nzNotFoundImage="simple" 
-            nzNotFoundContent="Không có thẻ nào cần ôn tập hôm nay">
-            <div class="empty-actions">
-              <button nz-button nzType="primary" (click)="goBack()">
-                <span nz-icon nzType="home"></span>
-                Về trang chủ
-              </button>
-            </div>
-          </nz-empty>
-        </div>
-      }
-
-      <!-- Review Session -->
-      @if (!loading && reviewSession && getCurrentCard()) {
-        <div class="review-content">
-          <!-- Card Display -->
-          <div class="card-container">
-            <nz-card class="flashcard" [class.flipped]="reviewSession.showAnswer">
-              <div class="card-side card-front">
-                <div class="card-header">
-                  <span class="card-type">Câu hỏi</span>
-                  <div class="card-difficulty" [class]="getDifficultyClass()">
-                    {{ getDifficultyText() }}
-                  </div>
-                </div>
-                <div class="card-content">
-                  <div class="card-text">{{ getCurrentCard()?.front }}</div>
-                </div>
-                <div class="card-actions">
-                  <button 
-                    nz-button 
-                    nzType="primary" 
-                    nzSize="large"
-                    (click)="showAnswer()"
-                    [disabled]="reviewSession.showAnswer">
-                    <span nz-icon nzType="eye"></span>
-                    Hiện đáp án
-                  </button>
-                </div>
-              </div>
-
-              @if (reviewSession.showAnswer) {
-                <div class="card-side card-back">
-                  <div class="card-header">
-                    <span class="card-type">Đáp án</span>
-                  </div>
-                  <div class="card-content">
-                    <div class="card-text">{{ getCurrentCard()?.back }}</div>
-                  </div>
-                </div>
-              }
-            </nz-card>
-          </div>
-
-          <!-- Quality Rating -->
-          @if (reviewSession.showAnswer) {
-            <div class="rating-container">
-              <app-quality-rating
-                [disabled]="false"
-                [showDescription]="true"
-                (qualitySelected)="onQualityRated($event)">
-              </app-quality-rating>
-            </div>
-          }
-        </div>
-      }
-
-      <!-- Review Complete -->
-      @if (showCompleteScreen) {
-        <div class="complete-container">
-          <div class="complete-content">
-            <div class="complete-icon">
-              <span nz-icon nzType="trophy" nzTheme="fill"></span>
-            </div>
-            <h2 class="complete-title">Xuất sắc!</h2>
-            <p class="complete-subtitle">Bạn đã hoàn thành phiên ôn tập hôm nay</p>
-            
-            <div class="complete-stats">
-              <div class="stat-item">
-                <div class="stat-value">{{ completedReviews }}</div>
-                <div class="stat-label">Thẻ đã ôn</div>
-              </div>
-              <div class="stat-item">
-                <div class="stat-value">{{ Math.round(averageQuality * 100) }}%</div>
-                <div class="stat-label">Độ chính xác</div>
-              </div>
-              <div class="stat-item">
-                <div class="stat-value">{{ getTimeSpent() }}</div>
-                <div class="stat-label">Thời gian</div>
-              </div>
-            </div>
-
-            <div class="complete-actions">
-              <button nz-button nzType="default" nzSize="large" (click)="goBack()">
-                <span nz-icon nzType="home"></span>
-                Về trang chủ
-              </button>
-              <button nz-button nzType="primary" nzSize="large" (click)="startNewReview()">
-                <span nz-icon nzType="reload"></span>
-                Ôn tập thêm
-              </button>
-            </div>
-          </div>
-        </div>
-      }
-    </div>
-  `,
-  styleUrl: './daily-review.component.scss'
+  providers: [NzMessageService],
+  templateUrl: './daily-review.component.html',
+  styleUrls: ['./daily-review.component.scss']
 })
-export class DailyReviewComponent {
-  private cardService = inject(CardService);
-  private sm2Service = inject(SM2Service);
-  private message = inject(NzMessageService);
-  private modal = inject(NzModalService);
-  private router = inject(Router);
+export class DailyReviewComponent implements OnInit, OnDestroy {
+  // Expose Math for template
+  Math = Math;
+  
+  // View states
+  currentView: 'overview' | 'review' = 'overview';
+  
+  // Overview data
+  overview: any = null;
+  overviewLoading = true;
+  
+  // Session data
+  sessionId: string | null = null;
+  cards: ReviewCard[] = [];
+  private _currentIndex = 0;
+  isFlipped = false;
+  private _isLoading = true;
 
-  loading = false;
-  reviewSession: ReviewSession | null = null;
-  showCompleteScreen = false;
-  completedReviews = 0;
-  averageQuality = 0;
-  private qualitySum = 0;
+  // Stats tracking
+  completedCount = 0;
+  totalReviewed = 0;
+  qualitySum = 0;
+  
+  // Session performance tracking (REAL DATA)
+  sessionStats = {
+    cardsReviewed: 0,
+    correctCards: 0,      // quality >= 3
+    totalTime: 0,         // seconds
+    perfectStreak: 0,     // current streak of quality >= 4
+    maxPerfectStreak: 0,  // max streak in this session
+    startTime: 0          // timestamp when started
+  };
+  
+  // Track current card start time
+  private cardStartTime = 0;
 
-  protected Math = Math;
+  // Getters for reactive UI
+  get currentIndex(): number {
+    return this._currentIndex;
+  }
+
+  set currentIndex(value: number) {
+    this._currentIndex = value;
+    this.cdr.detectChanges();
+  }
+
+  get isLoading(): boolean {
+    return this._isLoading;
+  }
+
+  set isLoading(value: boolean) {
+    this._isLoading = value;
+    this.cdr.detectChanges();
+  }
+
+  get currentCard(): ReviewCard | undefined {
+    return this.cards[this._currentIndex];
+  }
+
+  get progress(): number {
+    if (this.cards.length === 0) return 0;
+    return Math.round(((this._currentIndex + 1) / this.cards.length) * 100);
+  }
+
+  get isFirstCard(): boolean {
+    return this._currentIndex === 0;
+  }
+
+  get isLastCard(): boolean {
+    return this._currentIndex === this.cards.length - 1;
+  }
+
+  get averageQuality(): number {
+    if (this.totalReviewed === 0) return 0;
+    return this.qualitySum / this.totalReviewed;
+  }
+  
+  // Session Performance Getters (REAL DATA)
+  get accuracyRate(): number {
+    if (this.sessionStats.cardsReviewed === 0) return 0;
+    return Math.round((this.sessionStats.correctCards / this.sessionStats.cardsReviewed) * 100);
+  }
+  
+  get averageTimePerCard(): number {
+    if (this.sessionStats.cardsReviewed === 0) return 0;
+    return Math.round(this.sessionStats.totalTime / this.sessionStats.cardsReviewed);
+  }
+  
+  get sessionProgressPercent(): number {
+    if (this.cards.length === 0) return 0;
+    return Math.round((this.sessionStats.cardsReviewed / this.cards.length) * 100);
+  }
+
+  constructor(
+    private router: Router,
+    private dailyReviewService: DailyReviewService,
+    private authService: AuthService,
+    private message: NzMessageService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
-    this.initializeDailyReview();
+    // Check authentication first
+    if (!this.authService.isLoggedIn()) {
+      console.warn('User not authenticated, redirecting to login');
+      this.message.warning('Vui lòng đăng nhập để sử dụng chức năng này');
+      this.router.navigate(['/auth/login']);
+      return;
+    }
+
+    // Load overview first
+    this.loadOverview();
   }
 
-  async initializeDailyReview(): Promise<void> {
-    try {
-      this.loading = true;
-      
-      // Get cards due for review
-      const dueCards = await this.cardService.getCardsDueForReview().toPromise();
-      
-      if (!dueCards || dueCards.length === 0) {
-        this.loading = false;
-        return;
+  /**
+   * Load daily review overview
+   */
+  loadOverview(): void {
+    this.overviewLoading = true;
+    this.dailyReviewService.getDailyOverview().subscribe({
+      next: (data) => {
+        this.overview = data;
+        this.overviewLoading = false;
+        this.cdr.detectChanges();
+      },
+      error: (error: any) => {
+        console.error('Error loading overview:', error);
+        this.overviewLoading = false;
+        this.cdr.detectChanges();
       }
-
-      // Group cards by deck and create review session
-      const deckGroups = this.groupCardsByDeck(dueCards);
-      const firstDeck = Object.keys(deckGroups)[0];
-      const deckCards = deckGroups[firstDeck];
-
-      this.reviewSession = {
-        id: this.generateSessionId(),
-        deckId: (deckCards[0].deckId || '').toString(),
-        deckName: deckCards[0].deckName || 'Bộ thẻ',
-        cards: this.shuffleCards(deckCards),
-        currentIndex: 0,
-        showAnswer: false,
-        stats: {
-          totalDue: dueCards.length,
-          completed: 0,
-          remaining: dueCards.length,
-          streak: await this.getStudyStreak(),
-          accuracy: 0
-        },
-        startTime: new Date()
-      };
-
-    } catch (error) {
-      console.error('Error initializing daily review:', error);
-      this.message.error('Không thể tải dữ liệu ôn tập');
-    } finally {
-      this.loading = false;
-    }
+    });
   }
 
-  private groupCardsByDeck(cards: CardDTO[]): Record<string, CardDTO[]> {
-    return cards.reduce((groups, card) => {
-      const deckId = card.deckId || 'unknown';
-      if (!groups[deckId]) {
-        groups[deckId] = [];
-      }
-      groups[deckId].push(card);
-      return groups;
-    }, {} as Record<string, CardDTO[]>);
-  }
-
-  private shuffleCards(cards: CardDTO[]): CardDTO[] {
-    const shuffled = [...cards];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled;
-  }
-
-  private generateSessionId(): string {
-    return `review_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-  }
-
-  private async getStudyStreak(): Promise<number> {
-    try {
-      const stats = await this.cardService.getStudyStats().toPromise();
-      return stats?.currentStreak || 0;
-    } catch {
-      return 0;
-    }
-  }
-
-  getCurrentCard(): CardDTO | null {
-    if (!this.reviewSession) return null;
-    return this.reviewSession.cards[this.reviewSession.currentIndex] || null;
-  }
-
-  getProgressPercentage(): number {
-    if (!this.reviewSession) return 0;
-    return ((this.reviewSession.currentIndex + 1) / this.reviewSession.cards.length) * 100;
-  }
-
-  getDifficultyClass(): string {
-    const card = this.getCurrentCard();
-    if (!card) return 'easy';
-    
-    if (card.easinessFactor && card.easinessFactor < 2.0) return 'hard';
-    if (card.easinessFactor && card.easinessFactor > 2.8) return 'easy';
-    return 'medium';
-  }
-
-  getDifficultyText(): string {
-    const difficultyClass = this.getDifficultyClass();
-    switch (difficultyClass) {
-      case 'hard': return 'Khó';
-      case 'easy': return 'Dễ';
-      default: return 'Trung bình';
-    }
-  }
-
-  showAnswer(): void {
-    if (this.reviewSession) {
-      this.reviewSession.showAnswer = true;
-    }
-  }
-
-  async onQualityRated(quality: number): Promise<void> {
-    if (!this.reviewSession || !this.getCurrentCard()) return;
-
-    try {
-      const card = this.getCurrentCard()!;
-      const reviewRequest: ReviewCardRequest = {
-        cardId: card.id!,
-        quality: quality,
-        reviewedAt: new Date()
-      };
-
-      // Submit review to backend
-      const response = await this.cardService.reviewCard(Number(card.deckId!), card.id!, reviewRequest).toPromise();
-      
-      if (response) {
-        // Update local statistics
-        this.completedReviews++;
-        this.qualitySum += quality;
-        this.averageQuality = this.qualitySum / this.completedReviews;
-
-        // Update session stats
-        this.reviewSession.stats.completed++;
-        this.reviewSession.stats.remaining--;
-        this.reviewSession.stats.accuracy = this.averageQuality / 5;
-
-        // Move to next card or complete session
-        this.moveToNextCard();
-      }
-
-    } catch (error) {
-      console.error('Error submitting review:', error);
-      this.message.error('Không thể lưu kết quả ôn tập');
-    }
-  }
-
-  private moveToNextCard(): void {
-    if (!this.reviewSession) return;
-
-    if (this.reviewSession.currentIndex < this.reviewSession.cards.length - 1) {
-      // Move to next card
-      this.reviewSession.currentIndex++;
-      this.reviewSession.showAnswer = false;
-    } else {
-      // Complete the review session
-      this.completeReviewSession();
-    }
-  }
-
-  private completeReviewSession(): void {
-    this.reviewSession = null;
-    this.showCompleteScreen = true;
-    
-    // Show success message
-    this.message.success('Chúc mừng! Bạn đã hoàn thành phiên ôn tập hôm nay');
-  }
-
-  getTimeSpent(): string {
-    if (!this.reviewSession) return '0 phút';
-    
-    const now = new Date();
-    const diffMs = now.getTime() - this.reviewSession.startTime.getTime();
-    const diffMins = Math.round(diffMs / (1000 * 60));
-    
-    if (diffMins < 1) return '< 1 phút';
-    return `${diffMins} phút`;
-  }
-
-  startNewReview(): void {
-    this.showCompleteScreen = false;
-    this.completedReviews = 0;
-    this.averageQuality = 0;
+  /**
+   * Start review session
+   */
+  startReview(): void {
+    this.currentView = 'review';
+    // Initialize review session
+    this.cards = [];
+    this._currentIndex = 0;
+    this.isFlipped = false;
+    this.completedCount = 0;
+    this.totalReviewed = 0;
     this.qualitySum = 0;
-    this.initializeDailyReview();
+    
+    // Reset session stats
+    this.sessionStats = {
+      cardsReviewed: 0,
+      correctCards: 0,
+      totalTime: 0,
+      perfectStreak: 0,
+      maxPerfectStreak: 0,
+      startTime: Date.now()
+    };
+
+    // Load cards to review
+    setTimeout(() => {
+      this.loadReviewCards();
+    }, 0);
   }
 
+  ngOnDestroy(): void {
+    // Complete session if user leaves before finishing
+    if (this.sessionId && this.totalReviewed < this.cards.length) {
+      this.dailyReviewService.completeSession(this.sessionId).subscribe({
+        error: (error) => console.error('Error completing session on destroy:', error)
+      });
+    }
+  }
+
+  /**
+   * Load cards that need to be reviewed today
+   */
+  loadReviewCards(): void {
+    this._isLoading = true;
+    this.cdr.detectChanges();
+
+    console.log('Starting daily review session...');
+    
+    this.dailyReviewService.startReviewSession().subscribe({
+      next: (response: ReviewSessionResponse) => {
+        console.log('Review session started:', response);
+        
+        if (!response || !response.cards || response.cards.length === 0) {
+          console.log('No cards to review today');
+          this._isLoading = false;
+          this.cdr.detectChanges();
+          return;
+        }
+
+        this.sessionId = response.sessionId;
+        this.cards = response.cards;
+        this._isLoading = false;
+        
+        // Start timer for first card
+        this.cardStartTime = Date.now();
+        
+        this.cdr.detectChanges();
+        
+        this.message.success(`Có ${this.cards.length} thẻ cần ôn tập hôm nay!`);
+      },
+      error: (error) => {
+        console.error('Error loading review cards:', error);
+        this.message.error('Không thể tải thẻ ôn tập. Vui lòng thử lại sau.');
+        this._isLoading = false;
+        this.cdr.detectChanges();
+        
+        // Redirect to dashboard on error
+        setTimeout(() => {
+          this.router.navigate(['/app/dashboard']);
+        }, 2000);
+      }
+    });
+  }
+
+  /**
+   * Flip the current card
+   */
+  flipCard(): void {
+    this.isFlipped = !this.isFlipped;
+  }
+
+  /**
+   * Move to next card
+   */
+  nextCard(): void {
+    if (!this.isLastCard) {
+      this._currentIndex++;
+      this.isFlipped = false;
+      
+      // Reset timer for new card
+      this.cardStartTime = Date.now();
+      
+      this.cdr.detectChanges();
+    }
+  }
+
+  /**
+   * Move to previous card
+   */
+  previousCard(): void {
+    if (!this.isFirstCard) {
+      this._currentIndex--;
+      this.isFlipped = false;
+      
+      // Reset timer when going back
+      this.cardStartTime = Date.now();
+      
+      this.cdr.detectChanges();
+    }
+  }
+
+  /**
+   * Rate the current card using SM-2 quality scale (0-5)
+   * 0: Quên hoàn toàn
+   * 1: Sai hoàn toàn
+   * 2: Sai nhưng nhớ được khi xem đáp án
+   * 3: Đúng nhưng khó
+   * 4: Đúng
+   * 5: Hoàn hảo
+   */
+  rateCard(quality: number): void {
+    if (!this.currentCard || !this.sessionId) return;
+
+    const cardId = this.currentCard.cardId || this.currentCard.id;
+    
+    // ✅ Calculate REAL time spent on THIS card (in seconds)
+    const timeSpent = Math.round((Date.now() - this.cardStartTime) / 1000);
+    
+    // Submit review to backend
+    this.dailyReviewService.reviewCard(this.sessionId, cardId, {
+      quality: quality,
+      responseTime: timeSpent
+    }).subscribe({
+      next: () => {
+        // Update legacy stats
+        this.totalReviewed++;
+        this.qualitySum += quality;
+        
+        if (quality >= 3) {
+          this.completedCount++;
+        }
+        
+        // ✅ Update SESSION STATS (REAL DATA)
+        this.sessionStats.cardsReviewed++;
+        this.sessionStats.totalTime += timeSpent;
+        
+        // Track correct/incorrect
+        if (quality >= 3) {
+          this.sessionStats.correctCards++;
+        }
+        
+        // Track perfect streak (quality >= 4)
+        if (quality >= 4) {
+          this.sessionStats.perfectStreak++;
+          if (this.sessionStats.perfectStreak > this.sessionStats.maxPerfectStreak) {
+            this.sessionStats.maxPerfectStreak = this.sessionStats.perfectStreak;
+          }
+        } else {
+          this.sessionStats.perfectStreak = 0; // Reset streak
+        }
+
+        // Show feedback
+        this.showRatingFeedback(quality);
+
+        // Move to next card or complete
+        setTimeout(() => {
+          if (!this.isLastCard) {
+            this.nextCard(); // Timer reset happens in nextCard()
+          } else {
+            this.completeReview();
+          }
+        }, 300);
+      },
+      error: (error) => {
+        console.error('Error submitting review:', error);
+        this.message.error('Không thể lưu kết quả ôn tập');
+      }
+    });
+  }
+
+  /**
+   * Show feedback message based on quality rating
+   */
+  private showRatingFeedback(quality: number): void {
+    const messages: { [key: number]: string } = {
+      0: '💪 Không sao, hãy cố gắng thêm!',
+      1: '📚 Cần ôn tập thêm!',
+      2: '👍 Đang tiến bộ!',
+      3: '⭐ Tốt lắm!',
+      4: '🔥 Rất tốt!',
+      5: '🏆 Hoàn hảo!'
+    };
+
+    this.message.success(messages[quality] || 'Đã ghi nhận!');
+  }
+
+  /**
+   * Complete the review session
+   */
+  private completeReview(): void {
+    if (!this.sessionId) return;
+
+    this.dailyReviewService.completeSession(this.sessionId).subscribe({
+      next: () => {
+        const accuracy = Math.round((this.averageQuality / 5) * 100);
+        this.message.success(`🎉 Hoàn thành! Độ chính xác: ${accuracy}%`, {
+          nzDuration: 3000
+        });
+        
+        setTimeout(() => {
+          this.router.navigate(['/app/dashboard']);
+        }, 2000);
+      },
+      error: (error) => {
+        console.error('Error completing session:', error);
+        // Still navigate back even if completion fails
+        setTimeout(() => {
+          this.router.navigate(['/app/dashboard']);
+        }, 2000);
+      }
+    });
+  }
+
+  /**
+   * Restart the review session
+   */
+  restart(): void {
+    this._currentIndex = 0;
+    this.isFlipped = false;
+    
+    // Reset timer for first card
+    this.cardStartTime = Date.now();
+    
+    this.cdr.detectChanges();
+  }
+
+  /**
+   * Go back to dashboard
+   */
   goBack(): void {
-    this.router.navigate(['/dashboard']);
+    // Ask for confirmation if there are unreviewed cards
+    if (this.totalReviewed < this.cards.length && this.cards.length > 0) {
+      const confirmLeave = confirm('Bạn có chắc muốn thoát? Tiến độ sẽ được lưu lại.');
+      if (!confirmLeave) return;
+    }
+    
+    this.router.navigate(['/app/dashboard']);
+  }
+
+  /**
+   * Get text size class based on text length
+   */
+  getTextSizeClass(text: string): string {
+    if (!text) return '';
+    
+    const length = text.length;
+    if (length <= 10) return 'text-xl';
+    if (length <= 30) return 'text-lg';
+    if (length <= 50) return 'text-md';
+    return 'text-sm';
+  }
+
+  /**
+   * Get difficulty badge color
+   */
+  getDifficultyColor(): string {
+    if (!this.currentCard) return 'default';
+    
+    const ef = this.currentCard.easinessFactor || 2.5;
+    if (ef < 2.0) return 'error';
+    if (ef > 2.8) return 'success';
+    return 'warning';
+  }
+
+  /**
+   * Get difficulty text
+   */
+  getDifficultyText(): string {
+    if (!this.currentCard) return 'Trung bình';
+    
+    const ef = this.currentCard.easinessFactor || 2.5;
+    if (ef < 2.0) return 'Khó';
+    if (ef > 2.8) return 'Dễ';
+    return 'Trung bình';
   }
 }

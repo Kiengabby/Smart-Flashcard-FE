@@ -1,0 +1,312 @@
+<div class="daily-review-container">
+  
+  <!-- ==================== OVERVIEW SCREEN ==================== -->
+  <div *ngIf="currentView === 'overview'" class="overview-screen">
+    
+    <!-- Header -->
+    <div class="overview-header">
+      <button nz-button nzType="text" (click)="goBack()" class="back-btn">
+        <span nz-icon nzType="arrow-left" nzTheme="outline"></span>
+      </button>
+      <h1 class="page-title">Ôn tập hàng ngày</h1>
+      <div class="header-spacer"></div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="overviewLoading" class="overview-loading">
+      <div class="loading-spinner">
+        <span nz-icon nzType="loading" nzTheme="outline"></span>
+      </div>
+      <p>Đang tải thống kê...</p>
+    </div>
+
+    <!-- Overview Content -->
+    <div *ngIf="!overviewLoading && overview" class="overview-content">
+      
+      <!-- Streak Card -->
+      <div class="streak-card">
+        <div class="streak-icon">
+          <span nz-icon nzType="fire" nzTheme="fill"></span>
+        </div>
+        <div class="streak-info">
+          <div class="streak-number">{{ overview.currentStreak || 0 }}</div>
+          <div class="streak-label">Ngày liên tiếp</div>
+        </div>
+        <div class="streak-badge" *ngIf="overview.hasStudiedToday">
+          <span nz-icon nzType="check-circle" nzTheme="fill"></span>
+          Hôm nay
+        </div>
+      </div>
+
+      <!-- Statistics Grid -->
+      <div class="stats-grid">
+        <!-- Total Due Today -->
+        <div class="stat-card primary">
+          <div class="stat-icon">
+            <span nz-icon nzType="book" nzTheme="outline"></span>
+          </div>
+          <div class="stat-content">
+            <div class="stat-number">{{ overview.totalDue || 0 }}</div>
+            <div class="stat-label">Tổng thẻ hôm nay</div>
+          </div>
+        </div>
+
+        <!-- Overdue Cards -->
+        <div class="stat-card danger">
+          <div class="stat-icon">
+            <span nz-icon nzType="clock-circle" nzTheme="outline"></span>
+          </div>
+          <div class="stat-content">
+            <div class="stat-number">{{ overview.overdueCards || 0 }}</div>
+            <div class="stat-label">Thẻ quá hạn</div>
+          </div>
+        </div>
+
+        <!-- New Cards -->
+        <div class="stat-card info">
+          <div class="stat-icon">
+            <span nz-icon nzType="star" nzTheme="outline"></span>
+          </div>
+          <div class="stat-content">
+            <div class="stat-number">{{ overview.newCards || 0 }}</div>
+            <div class="stat-label">Thẻ mới</div>
+          </div>
+        </div>
+
+        <!-- Estimated Time -->
+        <div class="stat-card success">
+          <div class="stat-icon">
+            <span nz-icon nzType="field-time" nzTheme="outline"></span>
+          </div>
+          <div class="stat-content">
+            <div class="stat-number">{{ Math.ceil((overview.estimatedTime || 0) / 60) }}</div>
+            <div class="stat-label">Phút ước tính</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recommendations -->
+      <div class="recommendation-card" *ngIf="overview.recommendations">
+        <div class="recommendation-icon">
+          <span nz-icon nzType="bulb" nzTheme="fill"></span>
+        </div>
+        <div class="recommendation-content">
+          <h4>Gợi ý học tập</h4>
+          <p>{{ overview.recommendations.priority }}</p>
+        </div>
+      </div>
+
+      <!-- Estimated Time -->
+      <div class="time-estimate" *ngIf="overview.estimatedTime">
+        <span nz-icon nzType="clock-circle" nzTheme="outline"></span>
+        Thời gian dự kiến: <strong>{{ (overview.estimatedTime / 60).toFixed(0) }} phút</strong>
+      </div>
+
+      <!-- Start Button -->
+      <div class="action-buttons">
+        <button 
+          nz-button 
+          nzType="primary" 
+          nzSize="large"
+          nzBlock
+          (click)="startReview()"
+          [disabled]="!overview.totalDue || overview.totalDue === 0"
+          class="start-btn">
+          <span nz-icon nzType="play-circle" nzTheme="fill"></span>
+          Bắt đầu ôn tập
+        </button>
+      </div>
+
+      <!-- No Cards Message -->
+      <div class="no-cards-message" *ngIf="overview.totalDue === 0">
+        <div class="success-icon">
+          <span nz-icon nzType="check-circle" nzTheme="fill"></span>
+        </div>
+        <h3>Xuất sắc!</h3>
+        <p>Bạn đã hoàn thành hết thẻ cần ôn tập hôm nay</p>
+        <p class="sub-message">Hãy quay lại vào ngày mai để tiếp tục!</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== REVIEW SCREEN ==================== -->
+  <div *ngIf="currentView === 'review'" class="review-screen">
+    
+    <!-- Header -->
+    <div class="study-header">
+      <button nz-button nzType="text" (click)="goBack()" class="back-btn">
+        <span nz-icon nzType="close" nzTheme="outline"></span>
+      </button>
+      <div class="progress-info">
+        <span class="card-count">{{ currentIndex + 1 }} / {{ cards.length }}</span>
+      </div>
+      <button nz-button nzType="text" (click)="restart()" class="restart-btn" nz-tooltip="Bắt đầu lại">
+        <span nz-icon nzType="reload" nzTheme="outline"></span>
+      </button>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar-container">
+      <nz-progress
+        [nzPercent]="progress"
+        [nzShowInfo]="false"
+        nzStrokeColor="#52c41a"
+        [nzStrokeWidth]="8">
+      </nz-progress>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-container">
+      <div class="loading-spinner">
+        <span nz-icon nzType="loading" nzTheme="outline"></span>
+      </div>
+      <p>Đang tải thẻ ôn tập...</p>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!isLoading && cards.length === 0" class="empty-container">
+      <nz-empty
+        nzNotFoundImage="simple"
+        nzNotFoundContent="Không có thẻ nào cần ôn tập">
+        <p class="empty-subtitle">🎉 Tuyệt vời! Bạn đã hoàn thành hết!</p>
+        <button nz-button nzType="primary" nzSize="large" (click)="goBack()">
+          <span nz-icon nzType="home"></span>
+          Về trang chủ
+        </button>
+      </nz-empty>
+    </div>
+
+    <!-- Flashcard -->
+    <div *ngIf="!isLoading && currentCard" class="flashcard-wrapper">
+      <div 
+        class="flashcard" 
+        [class.flipped]="isFlipped"
+        (click)="flipCard()">
+        <div class="flashcard-inner">
+          
+          <!-- Front Side -->
+          <div class="flashcard-face flashcard-front">
+            <div class="face-label">Câu hỏi</div>
+            <div class="face-content">
+              <div class="word-container">
+                <p class="card-text" [ngClass]="getTextSizeClass(currentCard.front)">
+                  {{ currentCard.front }}
+                </p>
+              </div>
+            </div>
+            <div class="flip-hint" *ngIf="!isFlipped">
+              <span nz-icon nzType="swap" nzTheme="outline"></span>
+              <span>Nhấn để xem đáp án</span>
+            </div>
+          </div>
+
+          <!-- Back Side -->
+          <div class="flashcard-face flashcard-back">
+            <div class="face-label">Đáp án</div>
+            <div class="face-content">
+              <div class="word-container">
+                <p class="card-text" [ngClass]="getTextSizeClass(currentCard.back)">
+                  {{ currentCard.back }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card Info Badge -->
+      <div class="card-info-badge" *ngIf="currentCard">
+        <span class="difficulty-badge" [ngClass]="getDifficultyColor()">
+          {{ getDifficultyText() }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Rating Buttons - Simplified (No time labels) -->
+    <div *ngIf="!isLoading && currentCard && isFlipped" class="rating-container">
+      <div class="rating-title">💡 Đánh giá mức độ nhớ của bạn</div>
+      <div class="rating-buttons anki-style">
+        <!-- Again - Failed -->
+        <button 
+          nz-button 
+          nzType="default"
+          class="quality-btn quality-again"
+          (click)="rateCard(1); $event.stopPropagation()"
+          nz-tooltip="Quên hoàn toàn - Cần học lại">
+          <div class="quality-content">
+            <span nz-icon nzType="close-circle" nzTheme="fill" class="quality-icon"></span>
+            <span class="quality-label">Quên</span>
+          </div>
+        </button>
+
+        <!-- Hard -->
+        <button 
+          nz-button 
+          nzType="default"
+          class="quality-btn quality-hard"
+          (click)="rateCard(3); $event.stopPropagation()"
+          nz-tooltip="Nhớ được nhưng khó khăn">
+          <div class="quality-content">
+            <span nz-icon nzType="warning" nzTheme="fill" class="quality-icon"></span>
+            <span class="quality-label">Khó</span>
+          </div>
+        </button>
+
+        <!-- Good -->
+        <button 
+          nz-button 
+          nzType="default"
+          class="quality-btn quality-good"
+          (click)="rateCard(4); $event.stopPropagation()"
+          nz-tooltip="Nhớ tốt, tự tin">
+          <div class="quality-content">
+            <span nz-icon nzType="check-circle" nzTheme="fill" class="quality-icon"></span>
+            <span class="quality-label">Tốt</span>
+          </div>
+        </button>
+
+        <!-- Easy -->
+        <button 
+          nz-button 
+          nzType="default"
+          class="quality-btn quality-easy"
+          (click)="rateCard(5); $event.stopPropagation()"
+          nz-tooltip="Rất dễ, không cần suy nghĩ">
+          <div class="quality-content">
+            <span nz-icon nzType="heart" nzTheme="fill" class="quality-icon"></span>
+            <span class="quality-label">Dễ</span>
+          </div>
+        </button>
+      </div>
+      <div class="rating-hint">
+        <span nz-icon nzType="info-circle" nzTheme="outline"></span>
+        <span class="hint-text">Chọn chính xác để thuật toán SM-2 tối ưu lịch ôn tập cho bạn</span>
+      </div>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <div *ngIf="!isLoading && currentCard" class="nav-buttons">
+      <button 
+        nz-button 
+        nzType="default"
+        nzSize="large"
+        (click)="previousCard(); $event.stopPropagation()"
+        [disabled]="isFirstCard"
+        class="nav-btn nav-btn-prev">
+        <span nz-icon nzType="left" nzTheme="outline"></span>
+        <span>Trước</span>
+      </button>
+
+      <button 
+        nz-button 
+        nzType="default"
+        nzSize="large"
+        (click)="nextCard(); $event.stopPropagation()"
+        [disabled]="isLastCard"
+        class="nav-btn nav-btn-next">
+        <span>Sau</span>
+        <span nz-icon nzType="right" nzTheme="outline"></span>
+      </button>
+    </div>
+  </div>
+</div>
