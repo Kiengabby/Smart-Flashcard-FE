@@ -1,0 +1,184 @@
+<div class="arena-lobby-container">
+  <div class="lobby-header">
+    <button nz-button nzType="text" (click)="goBack()" class="back-btn">
+      <span nz-icon nzType="arrow-left" nzTheme="outline"></span>
+      Quay lại
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="loading-container">
+    <nz-spin nzSize="large" nzTip="🔄 Đang tải sân chơi..."></nz-spin>
+  </div>
+
+  <div *ngIf="!loading && arenaInfo" class="arena-content">
+    <!-- Sân Chơi Header -->
+    <div class="arena-header">
+      <div class="arena-title">
+        <span nz-icon nzType="trophy" nzTheme="twotone" [nzTwotoneColor]="'#faad14'" class="arena-icon"></span>
+        <h1>🎮 Sân Chơi Cộng Đồng</h1>
+      </div>
+      <p class="arena-description">{{ arenaInfo.deckName }}</p>
+      <p class="arena-subdesc" *ngIf="arenaInfo.deckDescription">{{ arenaInfo.deckDescription }}</p>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="stats-section">
+      <nz-card class="stat-card">
+        <nz-statistic
+          [nzValue]="arenaInfo.totalPlayers"
+          nzTitle="Người chơi"
+          [nzPrefix]="playersIcon"
+          [nzValueStyle]="{ color: '#3f8600' }">
+          <ng-template #playersIcon>
+            <span nz-icon nzType="team" nzTheme="outline"></span>
+          </ng-template>
+        </nz-statistic>
+      </nz-card>
+
+      <nz-card class="stat-card">
+        <nz-statistic
+          [nzValue]="arenaInfo.totalSessions"
+          nzTitle="Lượt chơi"
+          [nzPrefix]="sessionsIcon"
+          [nzValueStyle]="{ color: '#1890ff' }">
+          <ng-template #sessionsIcon>
+            <span nz-icon nzType="fire" nzTheme="outline"></span>
+          </ng-template>
+        </nz-statistic>
+      </nz-card>
+
+      <nz-card class="stat-card">
+        <nz-statistic
+          [nzValue]="arenaInfo.highestScore"
+          nzTitle="Điểm cao nhất"
+          [nzPrefix]="scoreIcon"
+          [nzValueStyle]="{ color: '#cf1322' }">
+          <ng-template #scoreIcon>
+            <span nz-icon nzType="rocket" nzTheme="outline"></span>
+          </ng-template>
+        </nz-statistic>
+      </nz-card>
+
+      <nz-card class="stat-card">
+        <nz-statistic
+          [nzValue]="Math.round(arenaInfo.averageScore)"
+          nzTitle="Điểm trung bình"
+          [nzPrefix]="avgIcon"
+          [nzValueStyle]="{ color: '#faad14' }">
+          <ng-template #avgIcon>
+            <span nz-icon nzType="line-chart" nzTheme="outline"></span>
+          </ng-template>
+        </nz-statistic>
+      </nz-card>
+    </div>
+
+    <!-- Top 3 Players -->
+    <nz-card class="top-players-card" nzTitle="🏆 Top 3 Cao Thủ">
+      <div *ngIf="arenaInfo.topPlayers.length === 0" class="empty-state">
+        <nz-empty nzNotFoundContent="Chưa có người chơi nào. Hãy là người đầu tiên!"></nz-empty>
+      </div>
+
+      <div *ngIf="arenaInfo.topPlayers.length > 0" class="top-players-list">
+        <div *ngFor="let player of arenaInfo.topPlayers" 
+             class="player-item"
+             [class.first-place]="player.rank === 1"
+             [class.second-place]="player.rank === 2"
+             [class.third-place]="player.rank === 3">
+          <div class="player-rank">
+            <nz-badge 
+              [nzCount]="player.rank" 
+              [nzStyle]="{ backgroundColor: getRankColor(player.rank) }">
+              <span nz-icon [nzType]="getRankIcon(player.rank)" 
+                    [style.color]="getRankColor(player.rank)" 
+                    class="rank-icon"></span>
+            </nz-badge>
+          </div>
+          
+          <nz-avatar 
+            [nzSrc]="player.avatar" 
+            [nzSize]="48" 
+            class="player-avatar">
+          </nz-avatar>
+          
+          <div class="player-info">
+            <div class="player-name">{{ player.displayName }}</div>
+            <div class="player-stats">
+              <span>{{ player.totalAttempts }} lượt chơi</span>
+              <nz-divider nzType="vertical"></nz-divider>
+              <span>TB: {{ player.averageScore }}</span>
+            </div>
+          </div>
+          
+          <div class="player-score">
+            <div class="best-score">{{ player.bestScore }}</div>
+            <div class="score-label">Điểm cao nhất</div>
+          </div>
+        </div>
+      </div>
+    </nz-card>
+
+    <!-- User Stats -->
+    <nz-card class="user-stats-card" nzTitle="📊 Thành Tích Của Bạn">
+      <div *ngIf="!arenaInfo.currentUserStats.hasPlayed" class="no-stats">
+        <nz-empty nzNotFoundContent="Bạn chưa chơi lần nào. Hãy bắt đầu thử thách!"></nz-empty>
+      </div>
+
+      <div *ngIf="arenaInfo.currentUserStats.hasPlayed" class="user-stats-grid">
+        <div class="stat-item">
+          <div class="stat-value">{{ arenaInfo.currentUserStats.rank }}</div>
+          <div class="stat-label">Hạng</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">{{ arenaInfo.currentUserStats.bestScore }}</div>
+          <div class="stat-label">Điểm cao nhất</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">{{ arenaInfo.currentUserStats.totalAttempts }}</div>
+          <div class="stat-label">Lượt chơi</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">{{ arenaInfo.currentUserStats.averageScore }}</div>
+          <div class="stat-label">Điểm trung bình</div>
+        </div>
+      </div>
+    </nz-card>
+
+    <!-- Nút Hành Động -->
+    <div class="action-buttons">
+      <button 
+        nz-button 
+        nzType="primary" 
+        nzSize="large" 
+        (click)="startGame()"
+        [nzLoading]="startingGame"
+        class="start-game-btn">
+        <span nz-icon nzType="thunderbolt" nzTheme="outline"></span>
+        🎮 Bắt Đầu Thi Đấu
+      </button>
+      
+      <button 
+        nz-button 
+        nzType="default" 
+        nzSize="large" 
+        (click)="viewLeaderboard()"
+        class="leaderboard-btn">
+        <span nz-icon nzType="trophy" nzTheme="outline"></span>
+        🏆 Bảng Xếp Hạng
+      </button>
+    </div>
+
+    <!-- Hướng Dẫn Chơi -->
+    <div class="game-info">
+      <nz-card nzTitle="📖 Hướng Dẫn Chơi">
+        <ul>
+          <li>🎯 Trả lời <strong>TẤT CẢ</strong> thẻ trong bộ</li>
+          <li>⏱️ <strong>KHÔNG</strong> giới hạn thời gian (thoải mái suy nghĩ)</li>
+          <li>🎧 50% câu hỏi nghe + 50% câu định nghĩa</li>
+          <li>⭐ Công thức điểm: <strong>Số câu đúng × 100 - Thời gian (giây)</strong></li>
+          <li>🏆 Càng đúng nhiều + Càng nhanh = Xếp hạng càng cao</li>
+          <li>🔄 Chơi <strong>không giới hạn lần</strong> để cải thiện kỷ lục</li>
+        </ul>
+      </nz-card>
+    </div>
+  </div>
+</div>

@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 // NG-ZORRO Modules
@@ -68,6 +68,7 @@ export class DeckLibraryComponent implements OnInit {
   decks: DeckDTO[] = [];
   filteredDecks: DeckDTO[] = [];
   private _isLoading = false; // Start with false to avoid initial expression change error
+  highlightedDeckId: number | null = null; // For highlighting newly joined deck
   
   // Learning Progress mapping
   deckProgressMap: Map<number, LearningProgressDTO> = new Map();
@@ -118,6 +119,7 @@ export class DeckLibraryComponent implements OnInit {
     private learningProgressService: LearningProgressService,
     private dailyReviewService: DailyReviewService,
     private router: Router,
+    private route: ActivatedRoute,
     private modalService: NzModalService,
     private message: NzMessageService,
     private cdr: ChangeDetectorRef
@@ -130,21 +132,67 @@ export class DeckLibraryComponent implements OnInit {
     this.dueCardsToday = 0;
     this.filteredDecks = [];
     
+    let shouldLoadDecks = true;
+    
+    // Check for query params (from invitation accept)
+    this.route.queryParams.subscribe(params => {
+      if (params['highlight']) {
+        this.highlightedDeckId = +params['highlight'];
+        
+        // Show success message in setTimeout to avoid expression changed error
+        if (params['message']) {
+          setTimeout(() => {
+            this.message.success(params['message']);
+          }, 0);
+        }
+        
+        // If refresh param exists, force reload data
+        if (params['refresh']) {
+          console.log('🔄 Refreshing deck library after invitation accept');
+          shouldLoadDecks = true; // Ensure we reload
+          
+          // 🔥 Force a fresh API call by clearing any cached data
+          this.decks = [];
+          this.filteredDecks = [];
+          this.deckProgressMap.clear();
+        }
+        
+        // Clear query params after processing
+        setTimeout(() => {
+          this.router.navigate([], {
+            relativeTo: this.route,
+            queryParams: {},
+            replaceUrl: true
+          });
+        }, 100);
+      }
+    });
+    
     // Use setTimeout to avoid initial expression changed error
-    setTimeout(() => {
-      this.loadDecks();
-    }, 0);
+    if (shouldLoadDecks) {
+      setTimeout(() => {
+        this.loadDecks();
+      }, 0);
+    }
   }
 
   /**
    * Load danh sách deck từ API
    */
   loadDecks(): void {
+    console.log('📚 Loading decks from API...');
     this.isLoading = true;
+    
+    // 🔥 Clear existing data to force fresh load
+    this.decks = [];
+    this.filteredDecks = [];
+    this.deckProgressMap.clear();
+    
     this.cdr.detectChanges(); // Force change detection
     
     this.deckService.getDecks().subscribe({
       next: (data: DeckDTO[]) => {
+        console.log(`✅ Received ${data.length} decks from backend:`, data);
         this.decks = data;
         
         // Load learning progress for all decks
@@ -154,6 +202,12 @@ export class DeckLibraryComponent implements OnInit {
         this.applyFilters();
         this.isLoading = false;
         this.cdr.detectChanges(); // Force change detection after data update
+        
+        // Scroll to highlighted deck if exists
+        if (this.highlightedDeckId) {
+          console.log(`🎯 Scrolling to highlighted deck: ${this.highlightedDeckId}`);
+          this.scrollToHighlightedDeck();
+        }
       },
       error: (error) => {
         console.error('Lỗi khi tải danh sách bộ thẻ:', error);
@@ -181,6 +235,46 @@ export class DeckLibraryComponent implements OnInit {
         this.cdr.detectChanges(); // Force change detection after error handling
       }
     });
+  }
+
+  /**
+   * Check if deck is highlighted (newly joined)
+   */
+  isDeckHighlighted(deckId: number): boolean {
+    return this.highlightedDeckId === deckId;
+  }
+
+  /**
+   * Scroll to highlighted deck and clear highlight after animation
+   */
+  private scrollToHighlightedDeck(): void {
+    setTimeout(() => {
+      const element = document.getElementById(`deck-${this.highlightedDeckId}`);
+      if (element) {
+        console.log(`✅ Found highlighted deck element: deck-${this.highlightedDeckId}`);
+        element.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'center' 
+        });
+        
+        // Clear highlight after 3 seconds
+        setTimeout(() => {
+          this.highlightedDeckId = null;
+          this.cdr.detectChanges();
+        }, 3000);
+      } else {
+        // 🔥 Debug: Deck not found in current list
+        console.warn(`⚠️ Highlighted deck not found: deck-${this.highlightedDeckId}`);
+        console.warn('Available deck IDs:', this.filteredDecks.map(d => d.id));
+        
+        // Show warning message to user
+        this.message.warning(`Bộ thẻ vừa tham gia có thể cần chờ một chút để hiển thị. Hãy refresh trang nếu không thấy.`);
+        
+        // Clear highlight
+        this.highlightedDeckId = null;
+        this.cdr.detectChanges();
+      }
+    }, 500);
   }
 
   /**
@@ -283,7 +377,10 @@ export class DeckLibraryComponent implements OnInit {
    * Apply search & filter
    */
   applyFilters(): void {
+    console.log('🔍 Applying filters. this.decks:', this.decks.length, 'items');
+    console.log('🔍 Current filters - search:', this.searchText, 'category:', this.selectedCategory, 'sort:', this.selectedSort);
     let filtered = [...this.decks];
+    console.log('🔍 Initial filtered:', filtered);
 
     // Search filter
     if (this.searchText.trim()) {
@@ -292,11 +389,18 @@ export class DeckLibraryComponent implements OnInit {
         deck.name.toLowerCase().includes(searchLower) ||
         (deck.description && deck.description.toLowerCase().includes(searchLower))
       );
+      console.log('📝 After search filter:', filtered.length, 'items');
     }
 
     // Category filter
     if (this.selectedCategory !== 'all') {
-      filtered = filtered.filter(deck => this.getDeckStatus(deck) === this.selectedCategory);
+      const beforeCount = filtered.length;
+      filtered = filtered.filter(deck => {
+        const status = this.getDeckStatus(deck);
+        console.log(`  Deck "${deck.name}" status: "${status}", target: "${this.selectedCategory}", match: ${status === this.selectedCategory}`);
+        return status === this.selectedCategory;
+      });
+      console.log(`📂 After category filter: ${filtered.length} items (was ${beforeCount})`);
     }
 
     // Sort
@@ -321,7 +425,9 @@ export class DeckLibraryComponent implements OnInit {
         break;
     }
 
+    console.log('✅ Final filteredDecks:', filtered.length, 'items', filtered);
     this.filteredDecks = filtered;
+    this.cdr.detectChanges();
   }
 
   /**

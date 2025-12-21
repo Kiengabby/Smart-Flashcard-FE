@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
@@ -13,19 +14,34 @@ import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
+import { NzTabsModule } from 'ng-zorro-antd/tabs';
+import { NzAvatarModule } from 'ng-zorro-antd/avatar';
+import { NzTagModule } from 'ng-zorro-antd/tag';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzBadgeModule } from 'ng-zorro-antd/badge';
 
 import { DeckService } from '../../services/deck.service';
 import { CardService } from '../../services/card.service';
+import { DeckMemberService } from '../../services/deck-member.service';
+import { InvitationService } from '../../services/invitation.service';
+
+import { AuthService } from '../../services/auth.service';
 import { DeckDTO } from '../../interfaces/deck.dto';
 import { CardDTO } from '../../interfaces/card.dto';
+import { DeckMember, MemberRole } from '../../interfaces/deck-member.model';
+import { SendInvitationRequest } from '../../interfaces/invitation.model';
 import { CardModalComponent } from '../../components/card-modal/card-modal.component';
 import { BulkCreateCardsModalComponent } from '../../components/bulk-create-cards-modal/bulk-create-cards-modal.component';
+
 
 @Component({
   selector: 'app-deck-detail',
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
     NzCardModule,
     NzButtonModule,
     NzIconModule,
@@ -36,7 +52,13 @@ import { BulkCreateCardsModalComponent } from '../../components/bulk-create-card
     NzDividerModule,
     NzTypographyModule,
     NzToolTipModule,
-    NzPopconfirmModule
+    NzPopconfirmModule,
+    NzTabsModule,
+    NzAvatarModule,
+    NzTagModule,
+    NzInputModule,
+    NzFormModule,
+    NzBadgeModule
   ],
   providers: [NzModalService, NzMessageService],
   templateUrl: './deck-detail.component.html',
@@ -44,10 +66,24 @@ import { BulkCreateCardsModalComponent } from '../../components/bulk-create-card
 })
 export class DeckDetailComponent implements OnInit {
   deckId!: number;
-  deck?: DeckDTO = undefined; // Explicitly initialize
+  deck?: DeckDTO = undefined;
   cards: CardDTO[] = [];
-  private _isLoadingDeck = false; // Start with false
-  private _isLoadingCards = false; // Start with false
+  private _isLoadingDeck = false;
+  private _isLoadingCards = false;
+
+  // Members Tab
+  selectedTab = 0; // 0 = Cards, 1 = Members
+  members: DeckMember[] = [];
+  isLoadingMembers = false;
+  memberCount = 0;
+  currentUserId?: number;
+  currentUserRole?: MemberRole; // Track current user's role
+  isCurrentUserOwner = false; // Flag to check if user is owner
+  
+  // Invite Modal
+  isInviteModalVisible = false;
+  inviteForm!: FormGroup;
+  isInviting = false;
 
   // Getter/setter for isLoadingDeck to prevent expression changed error
   get isLoadingDeck(): boolean {
@@ -76,10 +112,24 @@ export class DeckDetailComponent implements OnInit {
     private router: Router,
     private deckService: DeckService,
     private cardService: CardService,
+    private deckMemberService: DeckMemberService,
+    private invitationService: InvitationService,
+    private authService: AuthService,
     private modalService: NzModalService,
     private message: NzMessageService,
-    private cdr: ChangeDetectorRef
-  ) {}
+    private cdr: ChangeDetectorRef,
+    private fb: FormBuilder
+  ) {
+    this.inviteForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]]
+    });
+    
+    // Get current user ID
+    const currentUser = this.authService.getCurrentUser();
+    if (currentUser) {
+      this.currentUserId = +currentUser.id; // Convert to number
+    }
+  }
 
   ngOnInit(): void {
     console.log('DeckDetailComponent ngOnInit called');
@@ -272,6 +322,210 @@ export class DeckDetailComponent implements OnInit {
       // Mặc định quay về deck-library thay vì dashboard  
       this.router.navigate(['/app/deck-library']);
     }
+  }
+
+  // ========================================
+  // MEMBERS TAB METHODS
+  // ========================================
+
+  /**
+   * Load members list
+   */
+  loadMembers(): void {
+    console.log('🔍 Loading members for deck:', this.deckId, 'Current user ID:', this.currentUserId);
+    this.isLoadingMembers = true;
+    this.cdr.detectChanges();
+    
+    this.deckMemberService.getDeckMembers(this.deckId).subscribe({
+      next: (data) => {
+        console.log('📋 Members data received:', data);
+        this.members = data;
+        this.memberCount = data.length;
+        
+        // Find current user and check if owner
+        const currentUser = data.find(m => m.userId === this.currentUserId);
+        console.log('👤 Current user in members list:', currentUser);
+        if (currentUser) {
+          this.currentUserRole = currentUser.role;
+          this.isCurrentUserOwner = currentUser.role === MemberRole.OWNER;
+          console.log('🏆 Is current user owner?', this.isCurrentUserOwner, 'Role:', this.currentUserRole);
+        } else {
+          console.warn('⚠️ Current user not found in members list!');
+        }
+        
+        this.isLoadingMembers = false;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error loading members:', error);
+        this.message.error('Không thể tải danh sách thành viên!');
+        this.isLoadingMembers = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  /**
+   * Tab change handler
+   */
+  onTabChange(index: number): void {
+    this.selectedTab = index;
+    if (index === 1) { // Members tab
+      this.loadMembers();
+    }
+  }
+
+  /**
+   * Open invite modal
+   */
+  openInviteModal(): void {
+    this.isInviteModalVisible = true;
+    this.inviteForm.reset();
+  }
+
+  /**
+   * Handle invite modal cancel
+   */
+  handleInviteCancel(): void {
+    this.isInviteModalVisible = false;
+    this.inviteForm.reset();
+  }
+
+  /**
+   * Send invitation
+   */
+  sendInvitation(): void {
+    if (this.inviteForm.invalid) {
+      Object.values(this.inviteForm.controls).forEach(control => {
+        control.markAsDirty();
+        control.updateValueAndValidity();
+      });
+      return;
+    }
+
+    this.isInviting = true;
+    this.cdr.detectChanges();
+    
+    const request: SendInvitationRequest = {
+      deckId: this.deckId,
+      receiverEmail: this.inviteForm.value.email
+    };
+
+    this.invitationService.sendInvitation(request).subscribe({
+      next: () => {
+        this.message.success('Đã gửi lời mời thành công!');
+        this.isInviteModalVisible = false;
+        this.inviteForm.reset();
+        this.isInviting = false;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error sending invitation:', error);
+        if (error.status === 403) {
+          this.message.error('Bạn không có quyền gửi lời mời! Chỉ chủ sở hữu bộ thẻ mới có thể mời người khác.');
+        } else if (error.status === 404) {
+          this.message.error('Email không tồn tại trong hệ thống!');
+        } else if (error.status === 409) {
+          this.message.error('Người dùng đã là thành viên của bộ thẻ!');
+        } else {
+          this.message.error('Không thể gửi lời mời. Vui lòng thử lại!');
+        }
+        this.isInviting = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  /**
+   * Remove member from deck
+   */
+  removeMember(member: DeckMember): void {
+    // Kiểm tra quyền: chỉ owner mới có thể xóa thành viên
+    if (!this.isCurrentUserOwner) {
+      this.message.error('Chỉ chủ sở hữu bộ thẻ mới có thể xóa thành viên!');
+      return;
+    }
+
+    // Không thể xóa owner
+    if (this.isOwner(member)) {
+      this.message.error('Không thể xóa chủ sở hữu bộ thẻ!');
+      return;
+    }
+
+    this.deckMemberService.removeMember(this.deckId, member.userId).subscribe({
+      next: () => {
+        this.message.success(`Đã xóa ${member.userName} khỏi bộ thẻ!`);
+        this.loadMembers();
+      },
+      error: (error) => {
+        console.error('Error removing member:', error);
+        if (error.status === 403) {
+          this.message.error('Bạn không có quyền xóa thành viên!');
+        } else {
+          this.message.error('Không thể xóa thành viên. Vui lòng thử lại!');
+        }
+      }
+    });
+  }
+
+  /**
+   * Check if user is owner
+   */
+  isOwner(member: DeckMember): boolean {
+    return member.role === MemberRole.OWNER;
+  }
+
+  /**
+   * Check if member is current user
+   */
+  isCurrentUser(member: DeckMember): boolean {
+    return member.userId === this.currentUserId;
+  }
+
+  /**
+   * Check if current user can remove this member
+   */
+  canRemoveMember(member: DeckMember): boolean {
+    // Chỉ owner mới có thể xóa member (không thể xóa chính mình)
+    return this.isCurrentUserOwner && !this.isOwner(member);
+  }
+
+  /**
+   * Get avatar color based on user ID
+   */
+  getAvatarColor(userId: number): string {
+    const colors = [
+      '#f56a00', '#7265e6', '#ffbf00', '#00a2ae',
+      '#1890ff', '#52c41a', '#fa8c16', '#eb2f96'
+    ];
+    return colors[userId % colors.length];
+  }
+
+  /**
+   * Get user initials for avatar
+   */
+  getUserInitials(userName: string): string {
+    const parts = userName.split(' ');
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    }
+    return userName.substring(0, 2).toUpperCase();
+  }
+
+  /**
+   * Navigate to Arena Mode
+   */
+  goToArena(): void {
+    console.log('🎯 goToArena called, deckId:', this.deckId);
+    
+    if (!this.deckId || isNaN(this.deckId)) {
+      console.error('❌ Invalid deckId:', this.deckId);
+      this.message.error('Không tìm thấy ID bộ thẻ');
+      return;
+    }
+    
+    console.log('✅ Navigating to arena lobby with deckId:', this.deckId);
+    this.router.navigate(['/app/arena/lobby', this.deckId]);
   }
 }
 

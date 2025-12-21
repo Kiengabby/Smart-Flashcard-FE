@@ -1,0 +1,373 @@
+<!-- 🎮 CHALLENGES PAGE - PREMIUM UI/UX -->
+<div class="challenges-container">
+  <!-- Header -->
+  <div class="page-header">
+    <button nz-button nzType="text" (click)="goBack()" class="back-btn">
+      <span nz-icon nzType="arrow-left"></span>
+      Quay lại
+    </button>
+  </div>
+
+  <!-- Title Section -->
+  <div class="title-section">
+    <div class="title-content">
+      <h1 class="page-title">
+        <span nz-icon nzType="trophy" nzTheme="twotone" class="title-icon"></span>
+        Thách đấu
+      </h1>
+      <p class="page-subtitle">
+        Thi đấu với bạn bè để kiểm tra kiến thức và cải thiện kỹ năng
+      </p>
+    </div>
+    <div class="title-actions">
+      <button nz-button nzType="primary" nzSize="large" 
+              (click)="createNewChallenge()" 
+              class="create-challenge-btn">
+        <span nz-icon nzType="plus-circle" nzTheme="outline"></span>
+        Tạo thách đấu
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <nz-spin nzSimple [nzSize]="'large'"></nz-spin>
+    <p>Đang tải thách đấu...</p>
+  </div>
+
+  <!-- Tabs Navigation -->
+  <nz-tabset *ngIf="!isLoading" 
+             [(nzSelectedIndex)]="selectedTab" 
+             (nzSelectedIndexChange)="onTabChange($event)"
+             class="challenges-tabs">
+    
+    <!-- Pending Tab -->
+    <nz-tab [nzTitle]="pendingTabTitle">
+      <ng-template #pendingTabTitle>
+        <div class="tab-title">
+          <span nz-icon nzType="clock-circle" class="tab-icon"></span>
+          <span>Chờ phản hồi</span>
+          <nz-badge [nzCount]="pendingChallenges.length" [nzShowZero]="false" class="tab-badge"></nz-badge>
+        </div>
+      </ng-template>
+
+      <!-- Empty State -->
+      <div *ngIf="pendingChallenges.length === 0" class="empty-state">
+        <div class="empty-icon">
+          <span nz-icon nzType="inbox" nzTheme="twotone"></span>
+        </div>
+        <div class="empty-message">
+          <h3>Không có thách đấu chờ phản hồi</h3>
+          <p>Bạn chưa nhận được thách đấu nào từ bạn bè.</p>
+          <p class="tip">Mời bạn bè tham gia và tạo thách đấu mới! 🎯</p>
+        </div>
+      </div>
+
+      <!-- Pending Challenges List -->
+      <div *ngIf="pendingChallenges.length > 0" class="challenges-list">
+        <nz-card *ngFor="let challenge of pendingChallenges" class="challenge-card pending-card">
+          <div class="card-content">
+            <!-- Challenger Info -->
+            <div class="challenger-section">
+              <div class="challenger-label">Thách đấu từ</div>
+              <div class="challenger-info">
+                <nz-avatar 
+                  [nzSize]="56"
+                  [ngStyle]="{'background-color': getAvatarColor(challenge.challenger?.displayName || 'Unknown')}"
+                  class="challenger-avatar">
+                  {{ getUserInitials(challenge.challenger?.displayName || 'U') }}
+                </nz-avatar>
+                <div class="challenger-details">
+                  <div class="challenger-name">{{ challenge.challenger?.displayName || 'Không rõ tên' }}</div>
+                  <div class="challenger-email">{{ challenge.challenger?.email || 'Không có email' }}</div>
+                  <div class="challenge-time">
+                    <span nz-icon nzType="clock-circle"></span>
+                    {{ formatDate(challenge.createdAt) }}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Challenge Info -->
+            <div class="challenge-info-section">
+              <div class="deck-info">
+                <div class="deck-icon">
+                  <span nz-icon nzType="book" nzTheme="twotone"></span>
+                </div>
+                <div class="deck-details">
+                  <div class="deck-name">{{ challenge.deck?.name || 'Không rõ tên bộ thẻ' }}</div>
+                  <div class="deck-description">{{ (challenge.deck?.cardCount || 0) + " thẻ" }}</div>
+                </div>
+              </div>
+
+              <div class="challenge-stats">
+                <div class="stat-item">
+                  <span nz-icon nzType="question-circle"></span>
+                  <span class="stat-value">{{ challenge.totalQuestions }}</span>
+                  <span class="stat-label">câu hỏi</span>
+                </div>
+                <div class="stat-item">
+                  <span nz-icon nzType="clock-circle"></span>
+                  <span class="stat-value">{{ challenge.timeLimit }}</span>
+                  <span class="stat-label">giây</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="challenge-actions">
+              <nz-tag [nzColor]="getStatusColor(challenge.status)" class="status-tag">
+                {{ getStatusText(challenge.status) }}
+              </nz-tag>
+              <div class="action-buttons">
+                <button nz-button nzType="primary" nzSize="large"
+                        (click)="acceptChallenge(challenge)"
+                        class="accept-btn">
+                  <span nz-icon nzType="check-circle"></span>
+                  Chấp nhận
+                </button>
+                <button nz-button nzType="default" nzSize="large" nzDanger
+                        (click)="rejectChallenge(challenge)"
+                        class="reject-btn">
+                  <span nz-icon nzType="close-circle"></span>
+                  Từ chối
+                </button>
+              </div>
+            </div>
+          </div>
+        </nz-card>
+      </div>
+    </nz-tab>
+
+    <!-- Active Tab -->
+    <nz-tab [nzTitle]="activeTabTitle">
+      <ng-template #activeTabTitle>
+        <div class="tab-title">
+          <span nz-icon nzType="fire" nzTheme="twotone" class="tab-icon"></span>
+          <span>Đang diễn ra</span>
+          <nz-badge [nzCount]="activeChallenges.length" [nzShowZero]="false" class="tab-badge"></nz-badge>
+        </div>
+      </ng-template>
+
+      <!-- Empty State -->
+      <div *ngIf="activeChallenges.length === 0" class="empty-state">
+        <div class="empty-icon">
+          <span nz-icon nzType="fire" nzTheme="twotone" [nzTwotoneColor]="'#ff6b6b'"></span>
+        </div>
+        <div class="empty-message">
+          <h3>Không có thách đấu đang diễn ra</h3>
+          <p>Chấp nhận thách đấu hoặc tạo thách đấu mới để bắt đầu!</p>
+        </div>
+      </div>
+
+      <!-- Active Challenges List -->
+      <div *ngIf="activeChallenges.length > 0" class="challenges-list">
+        <nz-card *ngFor="let challenge of activeChallenges" class="challenge-card active-card">
+          <div class="card-content">
+            <!-- Opponent Info -->
+            <div class="challenger-section">
+              <div class="challenger-label">
+                {{ isChallenger(challenge) ? 'Đối thủ' : 'Thách đấu từ' }}
+              </div>
+              <div class="challenger-info">
+                <nz-avatar 
+                  [nzSize]="56"
+                  [ngStyle]="{'background-color': getAvatarColor(getOpponentInfo(challenge)?.displayName || 'Unknown')}"
+                  class="challenger-avatar">
+                  {{ getUserInitials(getOpponentInfo(challenge)?.displayName || 'U') }}
+                </nz-avatar>
+                <div class="challenger-details">
+                  <div class="challenger-name">
+                    {{ getOpponentInfo(challenge)?.displayName || 'Không rõ tên' }}
+                  </div>
+                  <div class="challenger-email">
+                    {{ getOpponentInfo(challenge)?.email || 'Không có email' }}
+                  </div>
+                  <div class="challenge-time">
+                    <span nz-icon nzType="calendar"></span>
+                    Bắt đầu: {{ formatDate(challenge.createdAt) }}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Challenge Info -->
+            <div class="challenge-info-section">
+              <div class="deck-info">
+                <div class="deck-icon">
+                  <span nz-icon nzType="book" nzTheme="twotone"></span>
+                </div>
+                <div class="deck-details">
+                  <div class="deck-name">{{ challenge.deck?.name || 'Không rõ tên bộ thẻ' }}</div>
+                </div>
+              </div>
+
+              <div class="challenge-stats">
+                <div class="stat-item">
+                  <span nz-icon nzType="question-circle"></span>
+                  <span class="stat-value">{{ challenge.totalQuestions }}</span>
+                  <span class="stat-label">câu</span>
+                </div>
+              </div>
+
+              <!-- Progress Info -->
+              <div class="progress-info" *ngIf="challenge.challengerScore !== null || challenge.opponentScore !== null">
+                <div class="score-item" *ngIf="challenge.challengerScore !== null">
+                  <span class="score-label">Điểm challenger:</span>
+                  <span class="score-value">{{ challenge.challengerScore }}/{{ challenge.totalQuestions }}</span>
+                </div>
+                <div class="score-item" *ngIf="challenge.opponentScore !== null">
+                  <span class="score-label">Điểm opponent:</span>
+                  <span class="score-value">{{ challenge.opponentScore }}/{{ challenge.totalQuestions }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="challenge-actions">
+              <nz-tag [nzColor]="getStatusColor(challenge.status)" class="status-tag">
+                {{ getStatusText(challenge.status) }}
+              </nz-tag>
+              <button nz-button nzType="primary" nzSize="large"
+                      (click)="startChallenge(challenge)"
+                      class="start-btn">
+                <span nz-icon nzType="play-circle"></span>
+                Bắt đầu thi
+              </button>
+            </div>
+          </div>
+        </nz-card>
+      </div>
+    </nz-tab>
+
+    <!-- Completed Tab -->
+    <nz-tab [nzTitle]="completedTabTitle">
+      <ng-template #completedTabTitle>
+        <div class="tab-title">
+          <span nz-icon nzType="check-circle" nzTheme="twotone" class="tab-icon"></span>
+          <span>Hoàn thành</span>
+          <nz-badge [nzCount]="completedChallenges.length" [nzShowZero]="false" class="tab-badge"></nz-badge>
+        </div>
+      </ng-template>
+
+      <!-- Empty State -->
+      <div *ngIf="completedChallenges.length === 0" class="empty-state">
+        <div class="empty-icon">
+          <span nz-icon nzType="trophy" nzTheme="twotone" [nzTwotoneColor]="'#ffd700'"></span>
+        </div>
+        <div class="empty-message">
+          <h3>Chưa có thách đấu hoàn thành</h3>
+          <p>Hoàn thành các thách đấu để xem kết quả và thống kê!</p>
+        </div>
+      </div>
+
+      <!-- Completed Challenges List -->
+      <div *ngIf="completedChallenges.length > 0" class="challenges-list">
+        <nz-card *ngFor="let challenge of completedChallenges" class="challenge-card completed-card">
+          <div class="card-content">
+            <!-- Challenge Result Banner -->
+            <div class="result-banner" 
+                 [ngClass]="{
+                   'win-banner': getChallengeResult(challenge).result === 'win',
+                   'lose-banner': getChallengeResult(challenge).result === 'lose',
+                   'tie-banner': getChallengeResult(challenge).result === 'tie'
+                 }">
+              <span nz-icon 
+                    [nzType]="getChallengeResult(challenge).result === 'win' ? 'trophy' : 
+                             getChallengeResult(challenge).result === 'lose' ? 'frown' : 'crown'"
+                    nzTheme="fill"></span>
+              <span class="result-text">
+                {{ getChallengeResult(challenge).result === 'win' ? 'Chiến thắng!' : 
+                   getChallengeResult(challenge).result === 'lose' ? 'Thất bại' : 'Hòa' }}
+              </span>
+            </div>
+
+            <!-- Opponent Info -->
+            <div class="challenger-section">
+              <div class="challenger-label">Đối thủ</div>
+              <div class="challenger-info">
+                <nz-avatar 
+                  [nzSize]="56"
+                  [ngStyle]="{'background-color': getAvatarColor(getOpponentInfo(challenge)?.displayName || 'Unknown')}"
+                  class="challenger-avatar">
+                  {{ getUserInitials(getOpponentInfo(challenge)?.displayName || 'U') }}
+                </nz-avatar>
+                <div class="challenger-details">
+                  <div class="challenger-name">
+                    {{ getOpponentInfo(challenge)?.displayName || 'Không rõ tên' }}
+                  </div>
+                  <div class="challenger-email">
+                    {{ getOpponentInfo(challenge)?.email || 'Không có email' }}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Challenge Info -->
+            <div class="challenge-info-section">
+              <div class="deck-info">
+                <div class="deck-icon">
+                  <span nz-icon nzType="book" nzTheme="twotone"></span>
+                </div>
+                <div class="deck-details">
+                  <div class="deck-name">{{ challenge.deck?.name || 'Không rõ tên bộ thẻ' }}</div>
+                  <div class="deck-description">{{ (challenge.deck?.cardCount || 0) + " thẻ" }}</div>
+                </div>
+              </div>
+
+              <!-- Score Comparison -->
+              <div class="score-comparison">
+                <div class="score-item your-score">
+                  <div class="score-label">Điểm của bạn</div>
+                  <div class="score-value">
+                    {{ getChallengeResult(challenge).userScore }}/{{ challenge.totalQuestions }}
+                  </div>
+                </div>
+                <div class="vs-divider">VS</div>
+                <div class="score-item opponent-score">
+                  <div class="score-label">Điểm đối thủ</div>
+                  <div class="score-value">
+                    {{ getChallengeResult(challenge).opponentScore }}/{{ challenge.totalQuestions }}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="challenge-actions">
+              <nz-tag [nzColor]="getStatusColor(challenge.status)" class="status-tag">
+                {{ getStatusText(challenge.status) }}
+              </nz-tag>
+              <div class="action-buttons">
+                <button nz-button nzType="default" nzSize="large"
+                        (click)="viewResult(challenge)"
+                        class="view-result-btn">
+                  <span nz-icon nzType="eye"></span>
+                  Xem chi tiết
+                </button>
+              </div>
+            </div>
+          </div>
+        </nz-card>
+      </div>
+    </nz-tab>
+  </nz-tabset>
+
+  <!-- Tips Section -->
+  <div *ngIf="!isLoading" class="tips-section">
+    <nz-card class="tips-card">
+      <div class="tips-content">
+        <span nz-icon nzType="bulb" nzTheme="twotone" [nzTwotoneColor]="'#faad14'" class="tips-icon"></span>
+        <div class="tips-text">
+          <h4>💡 Mẹo thi đấu</h4>
+          <ul>
+            <li>Chấp nhận thách đấu để cải thiện kỹ năng và kiểm tra kiến thức</li>
+            <li>Tốc độ trả lời ảnh hưởng đến kết quả khi điểm bằng nhau</li>
+            <li>Xem lại kết quả để học hỏi từ những sai lầm</li>
+            <li>Thách đấu bạn bè thường xuyên để duy trì động lực học tập</li>
+          </ul>
+        </div>
+      </div>
+    </nz-card>
+  </div>
+</div>

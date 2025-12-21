@@ -1,0 +1,269 @@
+<!-- 🎯 CREATE CHALLENGE MODAL - STEP-BY-STEP WIZARD -->
+<div class="create-challenge-modal">
+  
+  <!-- Header -->
+  <div class="modal-header">
+    <h2>
+      <span nz-icon nzType="trophy" nzTheme="twotone"></span>
+      Tạo thách đấu mới
+    </h2>
+    <p>Thách đấu bạn bè để kiểm tra kiến thức và cải thiện kỹ năng</p>
+  </div>
+
+  <!-- Steps Navigation -->
+  <nz-steps [nzCurrent]="currentStep" class="challenge-steps">
+    <nz-step 
+      nzTitle="Chọn bộ thẻ" 
+      nzIcon="book"
+      [nzDescription]="currentStep > 0 && selectedDeck ? selectedDeck.name : 'Chọn bộ thẻ để thách đấu'">
+    </nz-step>
+    <nz-step 
+      nzTitle="Chọn đối thủ" 
+      nzIcon="user"
+      [nzDescription]="currentStep > 1 && selectedFriend ? selectedFriend.displayName : 'Chọn người để thách đấu'">
+    </nz-step>
+    <nz-step 
+      nzTitle="Cài đặt" 
+      nzIcon="setting"
+      nzDescription="Thiết lập độ khó và thời gian">
+    </nz-step>
+  </nz-steps>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-state">
+    <nz-spin nzSimple [nzSize]="'large'"></nz-spin>
+    <p>Đang tải dữ liệu...</p>
+  </div>
+
+  <!-- Step Content -->
+  <div *ngIf="!isLoading" class="step-content">
+
+    <!-- Step 1: Select Deck -->
+    <div *ngIf="currentStep === 0" class="deck-selection-step">
+      <h3>
+        <span nz-icon nzType="book" nzTheme="twotone"></span>
+        Chọn bộ thẻ để thách đấu
+      </h3>
+      <p class="step-description">Chọn một bộ thẻ mà bạn muốn sử dụng cho thách đấu</p>
+
+      <div class="decks-grid" *ngIf="availableDecks.length > 0">
+        <div 
+          *ngFor="let deck of availableDecks"
+          class="deck-card"
+          [class.selected]="challengeForm.get('deckId')?.value === deck.id"
+          (click)="selectDeck(deck)">
+          
+          <div class="deck-header">
+            <div class="deck-icon">
+              <span nz-icon nzType="book" nzTheme="fill"></span>
+            </div>
+            <nz-tag [nzColor]="getDeckDifficultyColor(deck.cardCount)">
+              {{ deck.cardCount }} thẻ
+            </nz-tag>
+          </div>
+          
+          <div class="deck-info">
+            <h4>{{ deck.name }}</h4>
+            <p *ngIf="deck.description">{{ deck.description }}</p>
+            <div class="deck-meta">
+              <span *ngIf="deck.language" class="language-tag">
+                <span nz-icon nzType="global"></span>
+                {{ deck.language }}
+              </span>
+            </div>
+          </div>
+
+          <div class="selection-indicator" *ngIf="challengeForm.get('deckId')?.value === deck.id">
+            <span nz-icon nzType="check-circle" nzTheme="fill"></span>
+          </div>
+        </div>
+      </div>
+
+      <nz-empty *ngIf="availableDecks.length === 0" 
+                nzNotFoundImage="simple" 
+                nzNotFoundContent="Bạn chưa có bộ thẻ nào để thách đấu">
+      </nz-empty>
+    </div>
+
+    <!-- Step 2: Select Friend -->
+    <div *ngIf="currentStep === 1" class="friend-selection-step">
+      <h3>
+        <span nz-icon nzType="user" nzTheme="twotone"></span>
+        Chọn đối thủ
+      </h3>
+      <p class="step-description">Chọn bạn bè để gửi thách đấu</p>
+
+      <div class="friends-list" *ngIf="friends.length > 0">
+        <div 
+          *ngFor="let friend of friends"
+          class="friend-card"
+          [class.selected]="challengeForm.get('opponentId')?.value === friend.id"
+          (click)="selectFriend(friend)">
+          
+          <nz-avatar 
+            [nzSize]="48"
+            [ngStyle]="{'background-color': getAvatarColor(friend.displayName)}"
+            class="friend-avatar">
+            {{ getUserInitials(friend.displayName) }}
+          </nz-avatar>
+          
+          <div class="friend-info">
+            <h4>{{ friend.displayName }}</h4>
+            <p>{{ friend.email }}</p>
+          </div>
+
+          <div class="selection-indicator" *ngIf="challengeForm.get('opponentId')?.value === friend.id">
+            <span nz-icon nzType="check-circle" nzTheme="fill"></span>
+          </div>
+        </div>
+      </div>
+
+      <nz-empty *ngIf="friends.length === 0" 
+                nzNotFoundImage="simple" 
+                nzNotFoundContent="Bạn chưa có bạn bè nào">
+        <div nz-empty-footer>
+          <button nz-button nzType="primary">Thêm bạn bè</button>
+        </div>
+      </nz-empty>
+    </div>
+
+    <!-- Step 3: Configuration -->
+    <div *ngIf="currentStep === 2" class="configuration-step">
+      <h3>
+        <span nz-icon nzType="setting" nzTheme="twotone"></span>
+        Cài đặt thách đấu
+      </h3>
+      <p class="step-description">Thiết lập độ khó và các tham số cho thách đấu</p>
+
+      <form [formGroup]="challengeForm" class="config-form">
+        
+        <!-- Difficulty Selection -->
+        <div class="form-section">
+          <label class="section-label">
+            <span nz-icon nzType="dashboard"></span>
+            Độ khó
+          </label>
+          <div class="difficulty-options">
+            <div 
+              *ngFor="let option of difficultyOptions"
+              class="difficulty-option"
+              [class.selected]="challengeForm.get('difficulty')?.value === option.value"
+              (click)="challengeForm.patchValue({difficulty: option.value}); updateDifficultySettings(option.value)">
+              
+              <div class="difficulty-header">
+                <nz-tag [nzColor]="option.color">{{ option.label }}</nz-tag>
+                <div class="selection-indicator" *ngIf="challengeForm.get('difficulty')?.value === option.value">
+                  <span nz-icon nzType="check-circle" nzTheme="fill"></span>
+                </div>
+              </div>
+              
+              <div class="difficulty-details">
+                <p><strong>{{ option.questions }}</strong> câu hỏi</p>
+                <p><strong>{{ formatTime(option.time) }}</strong> thời gian</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Custom Settings (if custom difficulty) -->
+        <div *ngIf="challengeForm.get('difficulty')?.value === 'custom'" class="form-section">
+          <label class="section-label">
+            <span nz-icon nzType="sliders"></span>
+            Cài đặt tùy chỉnh
+          </label>
+          
+          <div class="custom-controls">
+            <div class="control-group">
+              <label>Số câu hỏi: {{ challengeForm.get('totalQuestions')?.value }}</label>
+              <nz-slider 
+                formControlName="totalQuestions"
+                [nzMin]="3" 
+                [nzMax]="20" 
+                [nzStep]="1"
+                [nzTooltipVisible]="'never'">
+              </nz-slider>
+            </div>
+
+            <div class="control-group">
+              <label>Thời gian: {{ formatTime(challengeForm.get('timeLimit')?.value) }}</label>
+              <nz-slider 
+                formControlName="timeLimit"
+                [nzMin]="60" 
+                [nzMax]="900" 
+                [nzStep]="30"
+                [nzTooltipVisible]="'never'">
+              </nz-slider>
+            </div>
+          </div>
+        </div>
+
+        <!-- Challenge Preview -->
+        <div class="form-section">
+          <label class="section-label">
+            <span nz-icon nzType="eye"></span>
+            Xem trước thách đấu
+          </label>
+          <nz-card class="challenge-preview">
+            <div class="preview-content">
+              <div class="preview-item">
+                <span class="preview-label">Bộ thẻ:</span>
+                <span class="preview-value">{{ selectedDeck?.name || 'Chưa chọn' }}</span>
+              </div>
+              <div class="preview-item">
+                <span class="preview-label">Đối thủ:</span>
+                <span class="preview-value">{{ selectedFriend?.displayName || 'Chưa chọn' }}</span>
+              </div>
+              <div class="preview-item">
+                <span class="preview-label">Câu hỏi:</span>
+                <span class="preview-value">{{ challengeForm.get('totalQuestions')?.value }} câu</span>
+              </div>
+              <div class="preview-item">
+                <span class="preview-label">Thời gian:</span>
+                <span class="preview-value">{{ formatTime(challengeForm.get('timeLimit')?.value) }}</span>
+              </div>
+            </div>
+          </nz-card>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Footer Actions -->
+  <div class="modal-footer">
+    <button nz-button nzType="default" (click)="onCancel()" class="cancel-btn">
+      Hủy
+    </button>
+
+    <button 
+      *ngIf="currentStep > 0"
+      nz-button 
+      nzType="default" 
+      (click)="previousStep()"
+      class="prev-btn">
+      <span nz-icon nzType="arrow-left"></span>
+      Quay lại
+    </button>
+
+    <button 
+      *ngIf="currentStep < 2"
+      nz-button 
+      nzType="primary" 
+      (click)="nextStep()"
+      class="next-btn">
+      Tiếp theo
+      <span nz-icon nzType="arrow-right"></span>
+    </button>
+
+    <button 
+      *ngIf="currentStep === 2"
+      nz-button 
+      nzType="primary" 
+      (click)="createChallenge()"
+      [nzLoading]="isCreating"
+      class="create-btn">
+      <span nz-icon nzType="send"></span>
+      Gửi thách đấu
+    </button>
+  </div>
+
+</div>

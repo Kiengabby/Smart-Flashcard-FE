@@ -9,11 +9,15 @@
   top: 0;
   bottom: 0;
   height: 100vh;
-  overflow: hidden;
-  z-index: 100;
+  overflow-y: auto; /* Allow vertical scroll if needed */
+  overflow-x: hidden; /* Prevent horizontal scroll */
+  z-index: 1000; /* Higher z-index to stay above content */
   background: linear-gradient(180deg, #1a1f36 0%, #0f1419 100%) !important;
   box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Prevent sidebar from scrolling with page */
+  will-change: transform;
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
 }
 
 .menu-sidebar ::ng-deep .ant-layout-sider-children {
@@ -257,6 +261,8 @@
   transition: margin-left 0.3s ease;
   position: relative;
   width: calc(100% - 280px);
+  /* Ensure content scrolls independently */
+  overflow-x: hidden;
 }
 
 .ant-layout-sider-collapsed ~ .main-layout {
@@ -268,15 +274,35 @@
   background: #f0f2f5;
   min-height: 100vh;
   position: relative;
+  /* Allow content to scroll */
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .content-wrapper {
   min-height: 100vh;
   position: relative;
+  /* Padding to prevent content from touching edges */
+  padding: 0;
+  max-width: 100%;
 }
 
 /* Responsive Design */
+@media (max-width: 1024px) {
+  /* Tablet and small laptop screens */
+  .main-layout {
+    margin-left: 280px;
+    width: calc(100% - 280px);
+  }
+
+  .ant-layout-sider-collapsed ~ .main-layout {
+    margin-left: 80px;
+    width: calc(100% - 80px);
+  }
+}
+
 @media (max-width: 768px) {
+  /* Mobile screens - hide sidebar */
   .menu-sidebar {
     transform: translateX(-100%);
   }
@@ -286,6 +312,7 @@
   }
 
   .main-layout {
-    margin-left: 0;
+    margin-left: 0 !important;
+    width: 100% !important;
   }
 }

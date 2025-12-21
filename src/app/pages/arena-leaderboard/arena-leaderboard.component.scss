@@ -1,0 +1,313 @@
+.arena-leaderboard-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px;
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.leaderboard-header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 24px;
+
+  .back-btn {
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    transition: all 0.3s;
+
+    &:hover {
+      color: #1890ff;
+      transform: translateX(-4px);
+    }
+  }
+
+  .leaderboard-title {
+    font-size: 32px;
+    font-weight: bold;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #262626;
+
+    span {
+      font-size: 36px;
+    }
+  }
+}
+
+.filter-card {
+  margin-bottom: 24px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+  .filter-section {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+
+    .search-input {
+      flex: 1;
+      min-width: 300px;
+
+      input {
+        height: 40px;
+        font-size: 16px;
+      }
+    }
+
+    .filter-tabs {
+      ::ng-deep .ant-tabs-nav {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+.leaderboard-card {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-bottom: 24px;
+
+  ::ng-deep .ant-table {
+    .ant-table-thead > tr > th {
+      background: #fafafa;
+      font-weight: 600;
+      font-size: 14px;
+      color: #262626;
+    }
+
+    .ant-table-tbody > tr {
+      transition: all 0.3s;
+
+      &:hover {
+        background: #f5f5f5;
+        transform: scale(1.01);
+      }
+
+      &.highlight-row {
+        background: #e6f7ff;
+        border: 2px solid #1890ff;
+
+        &:hover {
+          background: #d4edff;
+        }
+      }
+
+      &.top-rank {
+        .rank-icon {
+          animation: shine 2s infinite;
+        }
+      }
+    }
+  }
+
+  .rank-icon {
+    display: inline-block;
+  }
+
+  .player-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .player-avatar {
+      flex-shrink: 0;
+    }
+
+    .player-details {
+      flex: 1;
+      min-width: 0;
+
+      .player-name {
+        font-size: 16px;
+        font-weight: 600;
+        color: #262626;
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .player-email {
+        font-size: 14px;
+        color: #8c8c8c;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+
+  .score-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    .score-value {
+      font-size: 18px;
+      font-weight: bold;
+
+      &.best-score {
+        color: #ff4d4f;
+      }
+
+      &.avg-score {
+        color: #1890ff;
+      }
+    }
+
+    .score-icon {
+      font-size: 16px;
+      opacity: 0.6;
+    }
+  }
+
+  .last-played {
+    font-size: 14px;
+    color: #595959;
+  }
+}
+
+@keyframes shine {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
+}
+
+.legend {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  padding: 16px;
+  background: #fafafa;
+  border-radius: 12px;
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #595959;
+
+    .legend-icon {
+      font-size: 20px;
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 1200px) {
+  .leaderboard-card {
+    ::ng-deep .ant-table {
+      .ant-table-thead > tr > th,
+      .ant-table-tbody > tr > td {
+        padding: 12px 8px;
+      }
+    }
+
+    .player-info {
+      .player-avatar {
+        display: none;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .arena-leaderboard-container {
+    padding: 16px;
+  }
+
+  .leaderboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+
+    .leaderboard-title {
+      font-size: 24px;
+
+      span {
+        font-size: 28px;
+      }
+    }
+  }
+
+  .filter-card .filter-section {
+    flex-direction: column;
+    align-items: stretch;
+
+    .search-input {
+      min-width: 100%;
+    }
+
+    .filter-tabs {
+      width: 100%;
+    }
+  }
+
+  .legend {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .leaderboard-card {
+    ::ng-deep .ant-table {
+      font-size: 12px;
+
+      .ant-table-thead > tr > th,
+      .ant-table-tbody > tr > td {
+        padding: 8px 4px;
+      }
+    }
+
+    .player-info {
+      .player-details {
+        .player-name {
+          font-size: 14px;
+        }
+
+        .player-email {
+          display: none;
+        }
+      }
+    }
+
+    .score-cell {
+      flex-direction: column;
+      gap: 4px;
+
+      .score-value {
+        font-size: 16px;
+      }
+
+      .score-icon {
+        display: none;
+      }
+    }
+  }
+}

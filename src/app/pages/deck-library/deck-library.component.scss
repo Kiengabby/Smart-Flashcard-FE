@@ -550,6 +550,13 @@
   overflow: hidden;
   background: white;
 
+  // Highlight animation for newly joined deck
+  &.highlighted-deck {
+    animation: highlightPulse 2s ease-in-out;
+    border: 2px solid #52c41a;
+    box-shadow: 0 8px 24px rgba(82, 196, 26, 0.3);
+  }
+
   &:hover {
     transform: translateY(-8px);
     box-shadow: 0 16px 32px rgba(0,0,0,0.15);
@@ -792,6 +799,17 @@
       position: relative;
       z-index: 2;
     }
+  }
+}
+
+@keyframes highlightPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 8px 24px rgba(82, 196, 26, 0.3);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 12px 32px rgba(82, 196, 26, 0.5);
   }
 }
 

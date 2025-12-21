@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, Router } from '@angular/router';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
@@ -10,6 +10,8 @@ import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { TokenService } from '../../services/token.service';
 import { CardService } from '../../services/card.service';
+import { InvitationService } from '../../services/invitation.service';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-user-layout',
@@ -31,6 +33,7 @@ import { CardService } from '../../services/card.service';
 export class UserLayoutComponent implements OnInit {
   isCollapsed = false;
   currentYear = new Date().getFullYear();
+  pendingInvitationsCount = 0;
   
   // User data - lấy từ TokenService
   currentUser = {
@@ -41,13 +44,18 @@ export class UserLayoutComponent implements OnInit {
   constructor(
     private tokenService: TokenService,
     private cardService: CardService,
-    private router: Router
+    private invitationService: InvitationService,
+    private notificationService: NotificationService,
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.loadUserInfo();
     this.loadMenuData();
     this.updateActiveMenuItem();
+    this.loadInvitationsCount();
+    this.subscribeToNotifications();
   }
 
   loadUserInfo(): void {
@@ -79,6 +87,41 @@ export class UserLayoutComponent implements OnInit {
       },
       error: (error) => {
         console.warn('Could not load study stats for menu:', error);
+      }
+    });
+  }
+
+  /**
+   * Load số lượng lời mời chờ phản hồi
+   */
+  loadInvitationsCount(): void {
+    this.invitationService.getPendingCount().subscribe({
+      next: (count) => {
+        // 🔥 Fix NG0100: Wrap in setTimeout để avoid expression changed error
+        setTimeout(() => {
+          this.pendingInvitationsCount = count;
+          this.cdr.detectChanges();
+        }, 0);
+      },
+      error: (error) => {
+        console.warn('Could not load pending invitations count:', error);
+        // Set to 0 on error to prevent crash
+        setTimeout(() => {
+          this.pendingInvitationsCount = 0;
+          this.cdr.detectChanges();
+        }, 0);
+      }
+    });
+  }
+
+  /**
+   * Subscribe to notification updates để cập nhật real-time
+   */
+  subscribeToNotifications(): void {
+    this.notificationService.unreadCount$.subscribe({
+      next: (count) => {
+        // Update invitation count when notifications change
+        this.loadInvitationsCount();
       }
     });
   }
@@ -136,6 +179,15 @@ export class UserLayoutComponent implements OnInit {
       isActive: false,
       badge: null as string | null, // UC-04: Core feature - SRS
       isHighPriority: true
+    },
+    {
+      title: 'Lời mời học tập',
+      icon: 'mail',
+      routerLink: '/app/invitations',
+      description: 'Quản lý lời mời tham gia bộ thẻ từ bạn bè',
+      isActive: false,
+      badge: null as string | null, // UC-06: Social Learning
+      badgeGetter: () => this.pendingInvitationsCount > 0 ? this.pendingInvitationsCount.toString() : null
     },
     {
       title: 'Cộng đồng',

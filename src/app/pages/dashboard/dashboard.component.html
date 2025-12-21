@@ -103,6 +103,73 @@
     </nz-row>
   </div>
 
+  <!-- 🏆 Arena Ranking Alerts Section - TEMPORARILY DISABLED (Backend API pending) -->
+  <!-- TODO: Uncomment when backend API /api/arena/my-rankings is ready -->
+  <!--
+  <div class="ranking-alerts-section" *ngIf="!isLoadingRankings && rankingAlerts.length > 0">
+    <h2 class="section-title">
+      <span nz-icon nzType="trophy" nzTheme="twotone" [nzTwotoneColor]="'#faad14'"></span>
+      🏆 Thành Tích Sân Chơi
+    </h2>
+    
+    <nz-row [nzGutter]="[16, 16]">
+      <nz-col [nzXs]="24" [nzMd]="12" [nzLg]="8" *ngFor="let alert of rankingAlerts">
+        <nz-card class="ranking-alert-card" [ngClass]="getRankAlertClass(alert)" (click)="goToArenaLeaderboard(alert.deckId)">
+          <div class="ranking-header">
+            <div class="deck-name">{{ alert.deckName }}</div>
+            <nz-badge [nzCount]="alert.currentRank" [nzStyle]="{ backgroundColor: alert.currentRank <= 3 ? '#faad14' : '#1890ff' }">
+              <span class="rank-icon">{{ getRankIcon(alert.currentRank) }}</span>
+            </nz-badge>
+          </div>
+          
+          <div class="ranking-stats">
+            <div class="stat-item">
+              <span class="label">Hạng hiện tại:</span>
+              <span class="value">#{{ alert.currentRank }} / {{ alert.totalPlayers }}</span>
+            </div>
+            
+            <div class="stat-item rank-change" *ngIf="alert.rankChange !== 0">
+              <nz-tag [nzColor]="alert.rankChange > 0 ? 'success' : 'error'">
+                {{ getRankChangeText(alert) }}
+              </nz-tag>
+            </div>
+            
+            <div class="stat-item" *ngIf="alert.currentRank > 1">
+              <span class="label">Khoảng cách Top 1:</span>
+              <span class="value alert-text">{{ alert.pointsBehind }} điểm</span>
+            </div>
+            
+            <div class="stat-item" *ngIf="alert.playersAhead > 0">
+              <span class="label">Số người phía trước:</span>
+              <span class="value competitive-text">{{ alert.playersAhead }} người 🔥</span>
+            </div>
+          </div>
+          
+          <div class="ranking-footer">
+            <div class="challenge-message" *ngIf="alert.currentRank > 1">
+              <span class="emoji">😤</span>
+              <span class="text">{{ alert.topPlayerName }} đang dẫn đầu với {{ alert.topPlayerScore }} điểm!</span>
+            </div>
+            <div class="champion-message" *ngIf="alert.currentRank === 1">
+              <span class="emoji">👑</span>
+              <span class="text">Bạn đang là nhà vô địch! Bảo vệ vị trí của mình!</span>
+            </div>
+            
+            <button nz-button nzType="primary" nzSize="small" class="compete-btn" (click)="goToArenaLobby(alert.deckId); $event.stopPropagation()">
+              <span nz-icon nzType="fire" nzTheme="fill"></span>
+              Thách đấu ngay!
+            </button>
+          </div>
+        </nz-card>
+      </nz-col>
+    </nz-row>
+  </div>
+
+  <div class="ranking-alerts-section" *ngIf="isLoadingRankings">
+    <nz-spin nzTip="Đang tải thành tích..."></nz-spin>
+  </div>
+  -->
+
   <div class="content-grid">
     <nz-row [nzGutter]="[16, 16]">
       <nz-col [nzXs]="24" [nzLg]="16">
@@ -119,80 +186,6 @@
               <span nz-icon nzType="play-circle" nzTheme="fill"></span>
               Bắt đầu Ôn tập
             </button>
-          </div>
-        </nz-card>
-
-        <nz-card class="section-card challenge-notifications-card" [nzTitle]="challengesTitle">
-          <ng-template #challengesTitle>
-            <div class="section-header">
-              <span nz-icon nzType="team" nzTheme="outline"></span>
-              <span class="section-title">Thông báo thách đấu</span>
-              <span class="notification-badge" *ngIf="challengeNotifications.length > 0">
-                {{ challengeNotifications.length }}
-              </span>
-            </div>
-          </ng-template>
-
-          <!-- Empty State -->
-          <nz-empty 
-            *ngIf="challengeNotifications.length === 0"
-            nzNotFoundImage="simple"
-            style="padding: 20px;">
-            <div nz-empty-footer style="text-align: center;">
-              <h4 style="font-size: 16px; margin-bottom: 8px;">🤝 Chưa có thách đấu nào</h4>
-              <p style="color: #8c8c8c; font-size: 14px;">Mời bạn bè tham gia thách đấu để học tập cùng nhau!</p>
-            </div>
-          </nz-empty>
-
-          <!-- Challenge Notifications List -->
-          <div class="challenges-list" *ngIf="challengeNotifications.length > 0">
-            <div 
-              *ngFor="let challenge of challengeNotifications" 
-              class="challenge-item"
-              [class.new]="challenge.isNew">
-              
-              <div class="challenge-avatar">
-                <nz-avatar 
-                  [nzSrc]="challenge.senderAvatar" 
-                  [nzText]="challenge.senderName.charAt(0)"
-                  nzSize="small">
-                </nz-avatar>
-                <span class="challenge-type-icon" [class]="challenge.type">
-                  <span nz-icon [nzType]="getChallengeIcon(challenge.type)" nzTheme="fill"></span>
-                </span>
-              </div>
-
-              <div class="challenge-content">
-                <div class="challenge-header">
-                  <span class="challenge-sender">{{ challenge.senderName }}</span>
-                  <span class="challenge-time">{{ challenge.timeAgo }}</span>
-                </div>
-                <div class="challenge-message">{{ challenge.message }}</div>
-                <div class="challenge-details">
-                  <span class="challenge-deck">📚 {{ challenge.deckName }}</span>
-                  <span class="challenge-target">🎯 {{ challenge.target }}</span>
-                </div>
-              </div>
-
-              <div class="challenge-actions">
-                <button 
-                  nz-button 
-                  nzType="primary" 
-                  nzSize="small"
-                  (click)="acceptChallenge(challenge)">
-                  <span nz-icon nzType="check"></span>
-                  Chấp nhận
-                </button>
-                <button 
-                  nz-button 
-                  nzType="default" 
-                  nzSize="small"
-                  (click)="declineChallenge(challenge)">
-                  <span nz-icon nzType="close"></span>
-                  Từ chối
-                </button>
-              </div>
-            </div>
           </div>
         </nz-card>
       </nz-col>

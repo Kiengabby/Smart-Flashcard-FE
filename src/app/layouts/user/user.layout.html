@@ -31,7 +31,7 @@
       >
         <div class="menu-item-content">
           <div class="menu-icon-wrapper">
-            <nz-badge [nzCount]="item.badge ? +item.badge : 0" [nzShowZero]="false">
+            <nz-badge [nzCount]="item.badgeGetter ? +(item.badgeGetter() || 0) : +(item.badge || 0)" [nzShowZero]="false">
               <nz-icon [nzType]="item.icon" class="menu-icon"></nz-icon>
             </nz-badge>
           </div>

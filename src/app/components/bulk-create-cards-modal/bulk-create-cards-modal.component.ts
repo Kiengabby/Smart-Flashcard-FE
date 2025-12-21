@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, ChangeDetectorRef, NgZone } from '@angular/core';
+import { Component, Inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
@@ -101,7 +101,6 @@ export class BulkCreateCardsModalComponent implements OnInit {
     private cardService: CardService,
     private message: NzMessageService,
     private cdr: ChangeDetectorRef,
-    private ngZone: NgZone,
     @Inject(NZ_MODAL_DATA) public data: { deck: DeckDTO }
   ) {
     this.deck = data.deck;
@@ -312,7 +311,11 @@ export class BulkCreateCardsModalComponent implements OnInit {
   async retranslateCard(result: TranslationResult, index: number): Promise<void> {
     if (result.retranslating) return;
 
-    result.retranslating = true;
+    // Use setTimeout to defer state changes to avoid ExpressionChangedAfterItHasBeenCheckedError
+    setTimeout(() => {
+      result.retranslating = true;
+      this.cdr.detectChanges(); // Force UI update
+    });
     
     try {
       const request = {
@@ -326,22 +329,31 @@ export class BulkCreateCardsModalComponent implements OnInit {
       // Call translation API for single word
       this.cardService.getTranslations(request).subscribe({
         next: (translations) => {
-          if (translations.length > 0) {
-            result.backText = translations[0].translation;
-            result.isEdited = result.backText !== result.originalBackText;
-            result.hasError = !result.backText;
-            this.message.success('Đã dịch lại thành công!');
-          }
-          result.retranslating = false;
+          setTimeout(() => {
+            if (translations.length > 0) {
+              result.backText = translations[0].translation;
+              result.isEdited = result.backText !== result.originalBackText;
+              result.hasError = !result.backText;
+              this.message.success('Đã dịch lại thành công!');
+            }
+            result.retranslating = false;
+            this.cdr.detectChanges(); // Force UI update
+          });
         },
         error: () => {
-          this.message.error('Không thể dịch lại. Vui lòng thử lại!');
-          result.retranslating = false;
+          setTimeout(() => {
+            this.message.error('Không thể dịch lại. Vui lòng thử lại!');
+            result.retranslating = false;
+            this.cdr.detectChanges(); // Force UI update
+          });
         }
       });
     } catch (error) {
-      result.retranslating = false;
-      this.message.error('Có lỗi xảy ra khi dịch lại!');
+      setTimeout(() => {
+        result.retranslating = false;
+        this.message.error('Có lỗi xảy ra khi dịch lại!');
+        this.cdr.detectChanges(); // Force UI update
+      });
     }
   }
 

@@ -1,0 +1,156 @@
+<div class="arena-result-container">
+  <div *ngIf="loading" class="loading-container">
+    <nz-spin nzSize="large" nzTip="Đang tính kết quả..."></nz-spin>
+  </div>
+
+  <div *ngIf="!loading && result" class="result-content">
+    <!-- Confetti Animation -->
+    <div *ngIf="showConfetti" class="confetti-container">
+      <div class="confetti" *ngFor="let i of [1,2,3,4,5,6,7,8,9,10]"></div>
+    </div>
+
+    <!-- Result Header -->
+    <div class="result-header">
+      <nz-result
+        [nzIcon]="result.isPerfectScore ? 'trophy' : 'smile'"
+        [nzTitle]="getResultTitle()"
+        [nzSubTitle]="getResultSubtitle()">
+      </nz-result>
+    </div>
+
+    <!-- Score Card -->
+    <nz-card class="score-card">
+      <div class="final-score">
+        <div class="score-label">Tổng điểm</div>
+        <div class="score-value">{{ result.finalScore }}</div>
+      </div>
+
+      <div class="accuracy-section">
+        <nz-progress
+          [nzPercent]="result.accuracyPercentage"
+          [nzStrokeColor]="getAccuracyColor()"
+          [nzFormat]="accuracyFormat">
+        </nz-progress>
+        <ng-template #accuracyFormat let-percent>
+          <span class="accuracy-text">{{ percent }}%</span>
+        </ng-template>
+      </div>
+    </nz-card>
+
+    <!-- Statistics -->
+    <div class="stats-grid">
+      <nz-card class="stat-card">
+        <nz-statistic
+          [nzValue]="result.correctAnswers + '/' + result.totalQuestions"
+          nzTitle="Câu đúng"
+          [nzPrefix]="correctIcon"
+          [nzValueStyle]="{ color: '#52c41a' }">
+          <ng-template #correctIcon>
+            <span nz-icon nzType="check-circle" nzTheme="outline"></span>
+          </ng-template>
+        </nz-statistic>
+      </nz-card>
+
+      <nz-card class="stat-card">
+        <nz-statistic
+          [nzValue]="formatTime(result.timeUsed)"
+          nzTitle="Thời gian"
+          [nzPrefix]="timeIcon"
+          [nzValueStyle]="{ color: '#1890ff' }">
+          <ng-template #timeIcon>
+            <span nz-icon nzType="clock-circle" nzTheme="outline"></span>
+          </ng-template>
+        </nz-statistic>
+      </nz-card>
+
+      <nz-card class="stat-card">
+        <nz-statistic
+          [nzValue]="result.rank"
+          nzTitle="Hạng hiện tại"
+          [nzPrefix]="rankIcon"
+          [nzValueStyle]="{ color: '#faad14' }">
+          <ng-template #rankIcon>
+            <span nz-icon nzType="trophy" nzTheme="outline"></span>
+          </ng-template>
+        </nz-statistic>
+      </nz-card>
+    </div>
+
+    <!-- Rank Change -->
+    <nz-card class="rank-card">
+      <div class="rank-change">
+        <div class="rank-info">
+          <span class="rank-label">Thứ hạng:</span>
+          <span class="previous-rank">{{ result.previousRank }}</span>
+          <span nz-icon 
+                [nzType]="getRankChangeIcon()" 
+                [style.color]="getRankChangeColor()"
+                class="rank-arrow"></span>
+          <span class="current-rank">{{ result.rank }}</span>
+        </div>
+        
+        <div class="rank-change-value" [style.color]="getRankChangeColor()">
+          <span *ngIf="result.rankChange > 0">↑ +{{ result.rankChange }}</span>
+          <span *ngIf="result.rankChange < 0">↓ {{ result.rankChange }}</span>
+          <span *ngIf="result.rankChange === 0">→ Không đổi</span>
+        </div>
+      </div>
+    </nz-card>
+
+    <!-- Achievements -->
+    <div *ngIf="result.isPerfectScore || result.isNewPersonalBest || result.isTopThree" class="achievements-section">
+      <h3>🏆 Thành tựu</h3>
+      <div class="achievements-list">
+        <nz-badge *ngIf="result.isPerfectScore" 
+                  nzStatus="success" 
+                  nzText="Hoàn hảo! 100% chính xác">
+        </nz-badge>
+        <nz-badge *ngIf="result.isNewPersonalBest" 
+                  nzStatus="processing" 
+                  nzText="Kỷ lục cá nhân mới!">
+        </nz-badge>
+        <nz-badge *ngIf="result.isTopThree" 
+                  nzStatus="warning" 
+                  nzText="Top 3 Cao Thủ!">
+        </nz-badge>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button 
+        nz-button 
+        nzType="primary" 
+        nzSize="large"
+        (click)="playAgain()"
+        class="play-again-btn">
+        <span nz-icon nzType="redo" nzTheme="outline"></span>
+        Chơi lại
+      </button>
+
+      <button 
+        nz-button 
+        nzType="default" 
+        nzSize="large"
+        (click)="viewLeaderboard()"
+        class="leaderboard-btn">
+        <span nz-icon nzType="trophy" nzTheme="outline"></span>
+        Bảng xếp hạng
+      </button>
+
+      <button 
+        nz-button 
+        nzType="text" 
+        nzSize="large"
+        (click)="goToDeck()"
+        class="deck-btn">
+        <span nz-icon nzType="home" nzTheme="outline"></span>
+        Về trang chủ
+      </button>
+    </div>
+  </div>
+</div>
+
+<ng-template #accuracyFormat let-percent>
+  <span style="font-size: 16px; font-weight: 600;">{{ percent }}% Chính xác</span>
+</ng-template>

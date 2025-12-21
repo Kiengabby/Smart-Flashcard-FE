@@ -32,6 +32,14 @@ export const routes: Routes = [
       { path: 'daily-review', loadChildren: () => import('./pages/daily-review/daily-review.routes').then(m => m.dailyReviewRoutes) },
       { path: 'deck-library', loadChildren: () => import('./pages/deck-library/deck-library.routes').then(m => m.DECK_LIBRARY_ROUTES) },
       { path: 'deck/:id', loadChildren: () => import('./pages/deck-detail/deck-detail.routes').then(m => m.DECK_DETAIL_ROUTES) },
+      { path: 'invitations', loadChildren: () => import('./pages/invitations/invitations.routes').then(m => m.INVITATIONS_ROUTES) },
+      
+      // 🏆 Arena Mode Routes
+      { path: 'arena/lobby/:deckId', loadChildren: () => import('./pages/arena-lobby/arena-lobby.routes').then(m => m.ARENA_LOBBY_ROUTES) },
+      { path: 'arena/game/:id', loadChildren: () => import('./pages/arena-game/arena-game.routes').then(m => m.ARENA_GAME_ROUTES) },
+      { path: 'arena/result/:id', loadChildren: () => import('./pages/arena-result/arena-result.routes').then(m => m.ARENA_RESULT_ROUTES) },
+      { path: 'arena/leaderboard/:deckId', loadChildren: () => import('./pages/arena-leaderboard/arena-leaderboard.routes').then(m => m.ARENA_LEADERBOARD_ROUTES) },
+      
       { path: 'study-mode/:id', loadChildren: () => import('./pages/study-mode/study-mode.routes').then(m => m.STUDY_MODE_ROUTES) },
       { 
         path: 'study/:id', 

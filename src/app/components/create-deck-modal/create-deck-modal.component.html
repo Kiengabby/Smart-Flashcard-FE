@@ -17,22 +17,22 @@
     <nz-form-item>
       <nz-form-label nzFor="name" nzRequired class="form-label">
         <div class="label-content">
-          <span nz-icon nzType="edit" nzTheme="outline"></span>
+        <span nz-icon nzType="edit" nzTheme="outline"></span>
           <span>Tên bộ thẻ</span>
         </div>
       </nz-form-label>
       <nz-form-control 
         nzErrorTip="Tên bộ thẻ là bắt buộc và không được vượt quá 100 ký tự">
         <div class="input-container">
-          <input 
-            nz-input 
-            id="name"
-            formControlName="name" 
+        <input 
+          nz-input 
+          id="name"
+          formControlName="name" 
             placeholder="💡 VD: Từ vựng tiếng Anh cơ bản, JLPT N3..."
-            maxlength="100"
+          maxlength="100"
             class="form-input" />
-          <div class="char-count">
-            {{ deckForm.get('name')?.value?.length || 0 }}/100
+        <div class="char-count">
+          {{ deckForm.get('name')?.value?.length || 0 }}/100
           </div>
         </div>
       </nz-form-control>
@@ -42,24 +42,24 @@
     <nz-form-item>
       <nz-form-label nzFor="description" class="form-label">
         <div class="label-content">
-          <span nz-icon nzType="file-text" nzTheme="outline"></span>
+        <span nz-icon nzType="file-text" nzTheme="outline"></span>
           <span>Mô tả bộ thẻ</span>
         </div>
       </nz-form-label>
       <nz-form-control 
         nzErrorTip="Mô tả không được vượt quá 500 ký tự">
         <div class="input-container">
-          <textarea 
-            nz-input 
-            id="description"
-            formControlName="description" 
+        <textarea 
+          nz-input 
+          id="description"
+          formControlName="description" 
             placeholder="📚 VD: Tổng hợp từ vựng cơ bản cho người mới bắt đầu..."
             rows="3"
-            maxlength="500"
+          maxlength="500"
             class="form-input textarea">
-          </textarea>
-          <div class="char-count">
-            {{ deckForm.get('description')?.value?.length || 0 }}/500
+        </textarea>
+        <div class="char-count">
+          {{ deckForm.get('description')?.value?.length || 0 }}/500
           </div>
         </div>
       </nz-form-control>

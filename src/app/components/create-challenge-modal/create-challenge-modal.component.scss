@@ -1,0 +1,415 @@
+/* 🎯 CREATE CHALLENGE MODAL STYLES */
+
+.create-challenge-modal {
+  padding: 0;
+  
+  // Modal Header
+  .modal-header {
+    text-align: center;
+    padding: 32px 32px 24px 32px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    margin: -24px -24px 24px -24px;
+    border-radius: 8px 8px 0 0;
+    
+    h2 {
+      margin: 0 0 8px 0;
+      font-size: 24px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      
+      .anticon {
+        font-size: 28px;
+      }
+    }
+    
+    p {
+      margin: 0;
+      opacity: 0.9;
+      font-size: 14px;
+    }
+  }
+  
+  // Steps
+  .challenge-steps {
+    margin-bottom: 32px;
+    
+    ::ng-deep .ant-steps-item {
+      .ant-steps-item-title {
+        font-size: 14px;
+        font-weight: 500;
+      }
+      
+      .ant-steps-item-description {
+        font-size: 12px;
+        max-width: 120px;
+      }
+    }
+  }
+  
+  // Loading State
+  .loading-state {
+    text-align: center;
+    padding: 40px;
+    color: #8c8c8c;
+    
+    p {
+      margin-top: 16px;
+      font-size: 14px;
+    }
+  }
+  
+  // Step Content
+  .step-content {
+    min-height: 400px;
+    
+    h3 {
+      margin: 0 0 8px 0;
+      font-size: 20px;
+      font-weight: 600;
+      color: #262626;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      
+      .anticon {
+        color: #667eea;
+      }
+    }
+    
+    .step-description {
+      margin-bottom: 24px;
+      color: #595959;
+      font-size: 14px;
+    }
+  }
+  
+  // Deck Selection
+  .deck-selection-step {
+    .decks-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+      
+      .deck-card {
+        padding: 20px;
+        border: 2px solid #f0f0f0;
+        border-radius: 12px;
+        background: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        
+        &:hover {
+          border-color: #667eea;
+          box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+          transform: translateY(-2px);
+        }
+        
+        &.selected {
+          border-color: #667eea;
+          background: #f6f8ff;
+          box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .deck-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 12px;
+          
+          .deck-icon {
+            width: 40px;
+            height: 40px;
+            background: #667eea;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            
+            .anticon {
+              font-size: 20px;
+            }
+          }
+        }
+        
+        .deck-info {
+          h4 {
+            margin: 0 0 4px 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: #262626;
+          }
+          
+          p {
+            margin: 0 0 8px 0;
+            font-size: 13px;
+            color: #8c8c8c;
+            line-height: 1.4;
+          }
+          
+          .deck-meta {
+            .language-tag {
+              display: inline-flex;
+              align-items: center;
+              gap: 4px;
+              font-size: 12px;
+              color: #595959;
+              
+              .anticon {
+                font-size: 14px;
+              }
+            }
+          }
+        }
+        
+        .selection-indicator {
+          position: absolute;
+          top: 12px;
+          right: 12px;
+          color: #52c41a;
+          font-size: 20px;
+        }
+      }
+    }
+  }
+  
+  // Friend Selection
+  .friend-selection-step {
+    .friends-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: 350px;
+      overflow-y: auto;
+      
+      .friend-card {
+        padding: 16px;
+        border: 2px solid #f0f0f0;
+        border-radius: 12px;
+        background: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        position: relative;
+        
+        &:hover {
+          border-color: #667eea;
+          box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+        }
+        
+        &.selected {
+          border-color: #667eea;
+          background: #f6f8ff;
+          box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .friend-avatar {
+          flex-shrink: 0;
+        }
+        
+        .friend-info {
+          flex: 1;
+          
+          h4 {
+            margin: 0 0 4px 0;
+            font-size: 16px;
+            font-weight: 500;
+            color: #262626;
+          }
+          
+          p {
+            margin: 0;
+            font-size: 13px;
+            color: #8c8c8c;
+          }
+        }
+        
+        .selection-indicator {
+          color: #52c41a;
+          font-size: 20px;
+        }
+      }
+    }
+  }
+  
+  // Configuration
+  .configuration-step {
+    .config-form {
+      .form-section {
+        margin-bottom: 32px;
+        
+        .section-label {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 16px;
+          font-weight: 500;
+          color: #262626;
+          margin-bottom: 16px;
+          
+          .anticon {
+            color: #667eea;
+          }
+        }
+        
+        .difficulty-options {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 12px;
+          
+          .difficulty-option {
+            padding: 16px;
+            border: 2px solid #f0f0f0;
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            
+            &:hover {
+              border-color: #667eea;
+              box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+            }
+            
+            &.selected {
+              border-color: #667eea;
+              background: #f6f8ff;
+              box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            }
+            
+            .difficulty-header {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 8px;
+              
+              .selection-indicator {
+                color: #52c41a;
+                font-size: 16px;
+              }
+            }
+            
+            .difficulty-details {
+              p {
+                margin: 2px 0;
+                font-size: 13px;
+                color: #595959;
+              }
+            }
+          }
+        }
+        
+        .custom-controls {
+          .control-group {
+            margin-bottom: 24px;
+            
+            label {
+              display: block;
+              margin-bottom: 8px;
+              font-size: 14px;
+              font-weight: 500;
+              color: #262626;
+            }
+          }
+        }
+        
+        .challenge-preview {
+          .preview-content {
+            .preview-item {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              padding: 8px 0;
+              border-bottom: 1px solid #f0f0f0;
+              
+              &:last-child {
+                border-bottom: none;
+              }
+              
+              .preview-label {
+                font-size: 14px;
+                color: #595959;
+              }
+              
+              .preview-value {
+                font-size: 14px;
+                font-weight: 500;
+                color: #262626;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  // Footer
+  .modal-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 0 0 0;
+    margin-top: 32px;
+    border-top: 1px solid #f0f0f0;
+    
+    .cancel-btn {
+      border-color: #d9d9d9;
+    }
+    
+    .prev-btn, .next-btn, .create-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+    }
+    
+    .create-btn {
+      background: linear-gradient(135deg, #52c41a 0%, #389e0d 100%);
+      border: none;
+      
+      &:hover {
+        background: linear-gradient(135deg, #49b317 0%, #2f7d0a 100%);
+      }
+    }
+  }
+  
+  // Mobile responsive
+  @media (max-width: 768px) {
+    .modal-header {
+      padding: 24px 20px 20px 20px;
+      margin: -20px -20px 20px -20px;
+      
+      h2 {
+        font-size: 20px;
+      }
+    }
+    
+    .step-content {
+      min-height: 350px;
+    }
+    
+    .deck-selection-step .decks-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .configuration-step .config-form .form-section .difficulty-options {
+      grid-template-columns: 1fr;
+    }
+    
+    .modal-footer {
+      flex-direction: column;
+      gap: 12px;
+      
+      .cancel-btn {
+        order: 3;
+      }
+    }
+  }
+}

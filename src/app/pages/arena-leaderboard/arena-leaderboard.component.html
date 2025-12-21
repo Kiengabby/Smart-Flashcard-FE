@@ -1,0 +1,156 @@
+<div class="arena-leaderboard-container">
+  <!-- Header -->
+  <div class="leaderboard-header">
+    <button nz-button nzType="text" (click)="goBack()" class="back-btn">
+      <span nz-icon nzType="arrow-left" nzTheme="outline"></span>
+      Quay lại
+    </button>
+
+    <h1 class="leaderboard-title">
+      <span nz-icon nzType="trophy" nzTheme="twotone" [nzTwotoneColor]="'#faad14'"></span>
+      Bảng Xếp Hạng
+    </h1>
+  </div>
+
+  <!-- Search and Filter -->
+  <nz-card class="filter-card">
+    <div class="filter-section">
+      <nz-input-group [nzPrefix]="searchIcon" class="search-input">
+        <input 
+          nz-input 
+          placeholder="Tìm kiếm người chơi..." 
+          [(ngModel)]="searchText"
+          (ngModelChange)="searchPlayers()"
+        />
+      </nz-input-group>
+      <ng-template #searchIcon>
+        <span nz-icon nzType="search" nzTheme="outline"></span>
+      </ng-template>
+
+      <nz-tabset (nzSelectedIndexChange)="onTabChange($event)" class="filter-tabs">
+        <nz-tab nzTitle="Tất cả"></nz-tab>
+        <nz-tab nzTitle="Hôm nay"></nz-tab>
+        <nz-tab nzTitle="Tuần này"></nz-tab>
+      </nz-tabset>
+    </div>
+  </nz-card>
+
+  <!-- Leaderboard Table -->
+  <nz-card class="leaderboard-card">
+    <nz-spin [nzSpinning]="loading" nzTip="Đang tải...">
+      <nz-table
+        #leaderboardTable
+        [nzData]="filteredPlayers"
+        [nzShowPagination]="true"
+        [nzPageSize]="20"
+        [nzScroll]="{ x: '800px' }"
+        [nzNoResult]="emptyTemplate">
+        <thead>
+          <tr>
+            <th nzWidth="80px" nzAlign="center">Hạng</th>
+            <th nzWidth="300px">Người chơi</th>
+            <th nzWidth="150px" nzAlign="center">Điểm cao nhất</th>
+            <th nzWidth="150px" nzAlign="center">Điểm TB</th>
+            <th nzWidth="120px" nzAlign="center">Lượt chơi</th>
+            <th nzWidth="200px" nzAlign="center">Lần chơi cuối</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr 
+            *ngFor="let player of leaderboardTable.data"
+            [class.highlight-row]="isCurrentUser(player)"
+            [class.top-rank]="player.rank <= 3">
+            <!-- Rank -->
+            <td nzAlign="center">
+              <nz-badge 
+                [nzCount]="player.rank" 
+                [nzStyle]="{ 
+                  backgroundColor: getRankColor(player.rank),
+                  fontSize: '14px',
+                  fontWeight: 'bold'
+                }">
+                <span nz-icon 
+                      [nzType]="getRankIcon(player.rank)" 
+                      [style.color]="getRankColor(player.rank)"
+                      [style.fontSize]="player.rank <= 3 ? '28px' : '24px'"
+                      class="rank-icon">
+                </span>
+              </nz-badge>
+            </td>
+
+            <!-- Player Info -->
+            <td>
+              <div class="player-info">
+                <nz-avatar 
+                  [nzSrc]="player.avatar" 
+                  [nzSize]="40"
+                  class="player-avatar">
+                </nz-avatar>
+                <div class="player-details">
+                  <div class="player-name">
+                    {{ player.displayName }}
+                    <nz-tag *ngIf="isCurrentUser(player)" nzColor="blue">Bạn</nz-tag>
+                  </div>
+                  <div class="player-email">{{ player.email }}</div>
+                </div>
+              </div>
+            </td>
+
+            <!-- Best Score -->
+            <td nzAlign="center">
+              <div class="score-cell">
+                <span class="score-value best-score">{{ player.bestScore }}</span>
+                <span nz-icon nzType="rocket" nzTheme="outline" class="score-icon"></span>
+              </div>
+            </td>
+
+            <!-- Average Score -->
+            <td nzAlign="center">
+              <div class="score-cell">
+                <span class="score-value avg-score">{{ player.averageScore }}</span>
+                <span nz-icon nzType="line-chart" nzTheme="outline" class="score-icon"></span>
+              </div>
+            </td>
+
+            <!-- Total Attempts -->
+            <td nzAlign="center">
+              <nz-badge 
+                [nzCount]="player.totalAttempts" 
+                [nzShowZero]="true"
+                [nzStyle]="{ backgroundColor: '#52c41a' }">
+              </nz-badge>
+            </td>
+
+            <!-- Last Played -->
+            <td nzAlign="center">
+              <span class="last-played">{{ formatDate(player.lastPlayedAt) }}</span>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+
+      <ng-template #emptyTemplate>
+        <nz-empty 
+          nzNotFoundContent="Không tìm thấy người chơi nào"
+          [nzNotFoundImage]="'simple'">
+        </nz-empty>
+      </ng-template>
+    </nz-spin>
+  </nz-card>
+
+  <!-- Legend -->
+  <div class="legend">
+    <div class="legend-item">
+      <span class="legend-icon" style="color: #FFD700;">🥇</span>
+      <span>Hạng 1 - Vô địch</span>
+    </div>
+    <div class="legend-item">
+      <span class="legend-icon" style="color: #C0C0C0;">🥈</span>
+      <span>Hạng 2 - Á quân</span>
+    </div>
+    <div class="legend-item">
+      <span class="legend-icon" style="color: #CD7F32;">🥉</span>
+      <span>Hạng 3 - Hạng 3</span>
+    </div>
+  </div>
+</div>

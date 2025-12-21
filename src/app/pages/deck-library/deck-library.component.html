@@ -209,10 +209,12 @@
           [nzMd]="8" 
           [nzLg]="6"
           [nzXl]="6"
+          [attr.id]="'deck-' + deck.id"
           [style.animation-delay.ms]="i * 100">
           
           <nz-card 
             class="deck-card-premium clickable-deck"
+            [ngClass]="{'highlighted-deck': isDeckHighlighted(deck.id)}"
             nzHoverable
             (click)="viewDeckDetail(deck)"
             [nzTooltipTitle]="'Click để xem chi tiết bộ thẻ: ' + deck.name" 

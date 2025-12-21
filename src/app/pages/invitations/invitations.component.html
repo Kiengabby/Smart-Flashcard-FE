@@ -1,0 +1,154 @@
+<!-- 🎨 INVITATIONS PAGE - PREMIUM UI/UX -->
+<div class="invitations-container">
+  <!-- Header -->
+  <div class="page-header">
+    <button nz-button nzType="text" (click)="goBack()" class="back-btn">
+      <span nz-icon nzType="arrow-left"></span>
+      Quay lại
+    </button>
+  </div>
+
+  <!-- Title Section -->
+  <div class="title-section">
+    <h1 class="page-title">
+      <span nz-icon nzType="mail" class="title-icon"></span>
+      Lời mời học tập
+    </h1>
+    <p class="page-subtitle">
+      Quản lý các lời mời tham gia bộ thẻ từ bạn bè
+    </p>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <nz-spin nzSimple [nzSize]="'large'"></nz-spin>
+    <p>Đang tải lời mời...</p>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!isLoading && invitations.length === 0" class="empty-state">
+    <div class="empty-icon">
+      <span nz-icon nzType="inbox" nzTheme="outline"></span>
+    </div>
+    <div class="empty-message">
+      <h3>Chưa có lời mời nào</h3>
+      <p>Bạn chưa nhận được lời mời học tập nào.</p>
+      <p class="tip">Hãy chia sẻ bộ thẻ của bạn với bạn bè để cùng nhau tiến bộ! 🚀</p>
+    </div>
+  </div>
+
+  <!-- Invitations List -->
+  <div *ngIf="!isLoading && invitations.length > 0" class="invitations-list">
+    <!-- Pending Invitations -->
+    <div class="invitations-section">
+      <h2 class="section-title">
+        <span nz-icon nzType="clock-circle" class="section-icon"></span>
+        Chờ phản hồi
+        <nz-tag [nzColor]="'orange'" class="count-badge">
+          {{ getPendingCount() }}
+        </nz-tag>
+      </h2>
+
+      <div class="invitation-cards">
+        <nz-card *ngFor="let invitation of invitations" 
+                 [class.pending-card]="invitation.status === InvitationStatus.PENDING"
+                 class="invitation-card">
+          <div class="card-content">
+            <!-- Left: Deck Info -->
+            <div class="deck-info">
+              <div class="deck-icon">
+                <span nz-icon nzType="book" nzTheme="twotone"></span>
+              </div>
+              <div class="deck-details">
+                <h3 class="deck-name">{{ invitation.deck.name }}</h3>
+                <p class="deck-description">{{ invitation.deck.description || 'Không có mô tả' }}</p>
+                <div class="deck-stats">
+                  <span class="stat-item">
+                    <span nz-icon nzType="credit-card"></span>
+                    {{ invitation.deck.cardCount || 0 }} thẻ
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Middle: Sender Info -->
+            <div class="sender-info">
+              <div class="sender-label">Lời mời từ</div>
+              <div class="sender-details">
+                <nz-avatar 
+                  [nzSize]="48"
+                  [ngStyle]="{'background-color': getAvatarColor(invitation.inviter.name)}"
+                  class="sender-avatar">
+                  {{ getUserInitials(invitation.inviter.name) }}
+                </nz-avatar>
+                <div class="sender-text">
+                  <div class="sender-name">{{ invitation.inviter.name }}</div>
+                  <div class="sender-email">{{ invitation.inviter.email }}</div>
+                </div>
+              </div>
+              <div class="invitation-time">
+                <span nz-icon nzType="clock-circle"></span>
+                {{ formatDate(invitation.createdAt) }}
+              </div>
+            </div>
+
+            <!-- Right: Status & Actions -->
+            <div class="invitation-actions">
+              <nz-tag [nzColor]="getStatusColor(invitation.status)" class="status-tag">
+                {{ getStatusText(invitation.status) }}
+              </nz-tag>
+
+              <!-- Actions for Pending -->
+              <div *ngIf="invitation.status === InvitationStatus.PENDING" class="action-buttons">
+                <button nz-button nzType="primary" 
+                        (click)="acceptInvitation(invitation)"
+                        class="accept-btn">
+                  <span nz-icon nzType="check-circle"></span>
+                  Chấp nhận
+                </button>
+                <button nz-button nzType="default" nzDanger
+                        (click)="rejectInvitation(invitation)"
+                        class="reject-btn">
+                  <span nz-icon nzType="close-circle"></span>
+                  Từ chối
+                </button>
+              </div>
+
+              <!-- Info for Accepted/Rejected -->
+              <div *ngIf="invitation.status !== InvitationStatus.PENDING" class="status-info">
+                <p class="status-message">
+                  <span *ngIf="invitation.status === InvitationStatus.ACCEPTED">
+                    ✅ Bạn đã tham gia bộ thẻ này
+                  </span>
+                  <span *ngIf="invitation.status === InvitationStatus.REJECTED">
+                    ❌ Bạn đã từ chối lời mời này
+                  </span>
+                </p>
+                <div class="response-time" *ngIf="invitation.respondedAt">
+                  Phản hồi lúc: {{ formatDate(invitation.respondedAt) }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </nz-card>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tips Section -->
+  <div *ngIf="!isLoading && invitations.length > 0" class="tips-section">
+    <nz-card class="tips-card">
+      <div class="tips-content">
+        <span nz-icon nzType="bulb" nzTheme="twotone" class="tips-icon"></span>
+        <div class="tips-text">
+          <h4>💡 Mẹo học tập</h4>
+          <ul>
+            <li>Chấp nhận lời mời để cùng bạn bè học tập và thi đấu</li>
+            <li>Sử dụng tính năng "Thách đấu" để kiểm tra kiến thức</li>
+            <li>Theo dõi tiến độ của nhau để cùng tiến bộ</li>
+          </ul>
+        </div>
+      </div>
+    </nz-card>
+  </div>
+</div>

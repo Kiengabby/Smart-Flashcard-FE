@@ -1,0 +1,74 @@
+<div class="arena-game-container" *ngIf="session">
+  <!-- Header with Timer and Stats -->
+  <div class="game-header">
+    <div class="header-left">
+      <button nz-button nzType="text" nzDanger (click)="quitGame()" class="quit-btn">
+        <span nz-icon nzType="close" nzTheme="outline"></span>
+        Thoát
+      </button>
+    </div>
+
+    <div class="header-center">
+      <div class="timer">
+        <span nz-icon nzType="clock-circle" nzTheme="outline"></span>
+        ⏱️ {{ formatTime(elapsedTime) }}
+      </div>
+    </div>
+
+    <div class="header-right">
+      <div class="progress-info">
+        📊 {{ currentQuestionIndex + 1 }} / {{ session.totalQuestions }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Progress Bar -->
+  <div class="progress-section">
+    <div class="question-counter">
+      Câu {{ currentQuestionIndex + 1 }} / {{ session.totalQuestions }}
+    </div>
+    <nz-progress 
+      [nzPercent]="progress" 
+      [nzShowInfo]="false"
+      nzStrokeColor="#667eea">
+    </nz-progress>
+  </div>
+
+  <!-- Question Card -->
+  <div class="question-section">
+    <nz-card class="question-card">
+      <!-- Question: Từ Vựng -->
+      <div class="question-term">
+        <h2>{{ currentQuestion?.questionText }}</h2>
+        <p class="question-instruction">Chọn nghĩa đúng của từ trên:</p>
+      </div>
+
+      <!-- Answer Options -->
+      <div class="options-grid">
+        <button 
+          *ngFor="let option of currentQuestion?.options; let i = index"
+          nz-button 
+          nzSize="large"
+          [nzType]="selectedOption === option ? 'primary' : 'default'"
+          [disabled]="showFeedback"
+          (click)="selectOption(option)"
+          class="option-btn"
+          [class.selected]="selectedOption === option && !showFeedback"
+          [class.correct]="showFeedback && option === currentQuestion?.correctAnswer"
+          [class.wrong]="showFeedback && selectedOption === option && !answeredCorrectly">
+          <span class="option-letter">{{ ['A', 'B', 'C', 'D'][i] }}</span>
+          <span class="option-text">{{ option }}</span>
+        </button>
+      </div>
+
+      <!-- 🚀 KHÔNG CẦN BUTTON NỮA - Tự động chuyển câu sau khi chọn -->
+      <div class="feedback-section" *ngIf="showFeedback">
+        <div class="feedback-message" [class.correct-msg]="answeredCorrectly" [class.wrong-msg]="!answeredCorrectly">
+          <span *ngIf="answeredCorrectly">✅ Chính xác!</span>
+          <span *ngIf="!answeredCorrectly">❌ Sai rồi! Đáp án đúng: <strong>{{ currentQuestion?.correctAnswer }}</strong></span>
+        </div>
+      </div>
+    </nz-card>
+  </div>
+
+</div>
