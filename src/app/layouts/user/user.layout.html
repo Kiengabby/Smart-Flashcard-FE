@@ -1,41 +1,49 @@
 <nz-layout class="app-layout">
   <nz-sider 
     class="menu-sidebar"
+    [class.resizing]="isResizing"
+    [attr.data-collapsed]="isCollapsed"
+    [attr.data-mini]="isMiniMode"
+    [style.--sidebar-width.px]="sidebarWidth"
     nzCollapsible
-    nzWidth="280px"
+    [nzWidth]="sidebarWidth + 'px'"
     nzBreakpoint="md"
     [(nzCollapsed)]="isCollapsed"
     [nzTrigger]="null"
     nzTheme="dark"
   >
     <!-- Logo Area -->
-    <div class="sidebar-logo" [class.collapsed]="isCollapsed">
+    <div class="sidebar-logo" [class.collapsed]="isCollapsed" [class.mini]="isMiniMode">
       <div class="logo-container">
-        <nz-icon nzType="book" class="logo-icon"></nz-icon>
-        <h1 *ngIf="!isCollapsed" class="logo-text">Word Quest</h1>
+        <img src="/favicon.png" alt="Smart Flashcard Logo" class="logo-icon">
+        <div class="logo-text" *ngIf="!isCollapsed && !isMiniMode">
+        <h1>Smart Flashcard</h1>
+        <p>Workspace</p>
+        </div>
       </div>
     </div>
 
     <!-- Navigation Menu -->
-    <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed" class="sidebar-menu">
+    <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed || isMiniMode" class="sidebar-menu">
       <li 
         *ngFor="let item of menuItems" 
         nz-menu-item 
         [nzSelected]="item.isActive"
         class="menu-item"
         [class.high-priority]="item.isHighPriority"
+        [class.mini-mode]="isMiniMode"
         nz-tooltip 
-        [nzTooltipTitle]="isCollapsed ? item.description : ''"
+        [nzTooltipTitle]="(isCollapsed || isMiniMode) ? item.title : ''"
         nzTooltipPlacement="right"
         (click)="onMenuItemClick(item)"
       >
         <div class="menu-item-content">
           <div class="menu-icon-wrapper">
             <nz-badge [nzCount]="item.badgeGetter ? +(item.badgeGetter() || 0) : +(item.badge || 0)" [nzShowZero]="false">
-              <nz-icon [nzType]="item.icon" class="menu-icon"></nz-icon>
+              <i [class]="'fa-solid ' + item.icon + ' menu-icon'"></i>
             </nz-badge>
           </div>
-          <div *ngIf="!isCollapsed" class="menu-text-section">
+          <div *ngIf="!isCollapsed && !isMiniMode" class="menu-text-section">
             <span class="menu-title">{{ item.title }}</span>
           </div>
         </div>
@@ -43,22 +51,37 @@
     </ul>
 
     <!-- User Profile Section -->
-    <div class="user-profile" [class.collapsed]="isCollapsed">
+    <div class="user-profile" [class.collapsed]="isCollapsed" [class.mini]="isMiniMode">
       <div class="profile-content">
         <nz-avatar 
           [nzSrc]="currentUser.avatar" 
-          [nzSize]="isCollapsed ? 'default' : 'large'"
+          [nzSize]="(isCollapsed || isMiniMode) ? 'default' : 'large'"
           class="user-avatar"
+          nz-tooltip 
+          [nzTooltipTitle]="(isCollapsed || isMiniMode) ? currentUser.name : ''"
+          nzTooltipPlacement="right"
         ></nz-avatar>
-        <div *ngIf="!isCollapsed" class="user-info">
+        <div *ngIf="!isCollapsed && !isMiniMode" class="user-info">
           <div class="user-name">{{ currentUser.name }}</div>
           <div class="user-status">Đang hoạt động</div>
         </div>
       </div>
     </div>
+
+    <!-- Resize Handle -->
+    <div 
+      class="resize-handle"
+      (mousedown)="startResize($event)"
+    >
+      <div class="resize-line"></div>
+    </div>
   </nz-sider>
 
-  <nz-layout class="main-layout">
+  <nz-layout 
+    class="main-layout"
+    [class.sidebar-collapsed]="isCollapsed && !isMiniMode"
+    [class.sidebar-mini]="isMiniMode"
+  >
     <!-- Main Content Area -->
     <nz-content class="main-content">
       <div class="content-wrapper">

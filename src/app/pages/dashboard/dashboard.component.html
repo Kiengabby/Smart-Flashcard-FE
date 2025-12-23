@@ -1,184 +1,86 @@
-<div class="dashboard-container">
+<div class="dashboard-container" style="width: 100%;">
   
-  <div class="welcome-header modern" [class.minimized]="isWelcomeMinimized">
-    <div class="floating-elements">
-      <div class="float-element element-1">🎯</div>
-      <div class="float-element element-2">📚</div>
-      <div class="float-element element-3">🚀</div>
-      <div class="float-element element-4">⭐</div>
-      <div class="float-element element-5">🔥</div>
-    </div>
-    
-    <div class="welcome-content">
-      <div class="greeting-section">
-        <div class="time-based-greeting">
-          <span class="greeting-icon">{{ getGreetingIcon() }}</span>
-          <span class="greeting-text">{{ getGreetingText() }}</span>
+  <!-- Phần 1: Welcome Header + Quick Stats (75%) -->
+  <div class="dashboard-main-section" style="padding: 0 12px 0 0; width: 70%;">
+
+    <div class="welcome-header modern cute-book-bg" [class.minimized]="isWelcomeMinimized">
+      <div class="welcome-content">
+        <div class="greeting-section">
+          <div class="user-greeting">
+            <div>
+              <i class="fa-regular fa-face-grin-squint greeting-icon"></i>
+              <span class="greeting-text">Chào {{ currentUser.name || '' }}!</span>
+            </div>
+            <div class="motivation-section">
+              <p class="welcome-subtitle dynamic">
+                <span class="highlight-text">{{ getMotivationalQuote() }}</span>
+              </p>
+            </div>
+          </div>
         </div>
-        <h1 class="welcome-title animated">
-          <span class="user-name">{{ currentUser.name || 'Kien' }}</span>
-          <span class="wave-emoji">👋</span>
-        </h1>
-      </div>
-      
-      <div class="motivation-section">
-        <p class="welcome-subtitle dynamic">
-          <span class="highlight-text">{{ getMotivationalQuote() }}</span>
-        </p>
-        <div class="progress-indicator">
-          <div class="progress-text">
-            <span *ngIf="!isStatsLoading">Hôm nay bạn đã học được <strong>{{ currentUser.studiedToday || 0 }}</strong> từ mới</span>
-            <span *ngIf="isStatsLoading">Đang tải thông tin học tập... <nz-spin nzSize="small"></nz-spin></span>
-          </div>
-          <div class="mini-progress-bar">
-            <div class="progress-fill" [style.width.%]="getDailyProgress()"></div>
-          </div>
+        
+        <div class="action-hint">
+          <i class="fa-solid fa-lightbulb hint-icon"></i>
+          <span class="hint-text">Bắt đầu với việc ôn tập những thẻ đã đến hạn nhé!</span>
         </div>
       </div>
       
-      <div class="action-hint">
-        <span class="hint-icon">💡</span>
-        <span class="hint-text">Bắt đầu với việc ôn tập những thẻ đã đến hạn nhé!</span>
+      <div class="close-button" (click)="minimizeWelcome()">
+        <span nz-icon nzType="up" nzTheme="outline"></span>
       </div>
     </div>
-    
-    <div class="close-button" (click)="minimizeWelcome()">
-      <span nz-icon nzType="up" nzTheme="outline"></span>
+        <div class="quick-stats" id="stats-overview">
+      <nz-row [nzGutter]="[16, 16]">
+        <nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+          <div class="stat-card conquered-decks">
+            <div class="stat-icon">
+              <i class="fa-solid fa-crown"></i>
+            </div>
+            <div class="stat-info">
+              <div class="stat-value" *ngIf="!isStatsLoading">{{ stats.conqueredDecks }}</div>
+              <div class="stat-value" *ngIf="isStatsLoading"><nz-spin nzSize="small"></nz-spin></div>
+              <div class="stat-label">Bộ thẻ đã chinh phục</div>
+            </div>
+          </div>
+        </nz-col>
+
+        <nz-col [nzXs]="24" [nzSm]="12" [nzMd]="8">
+          <div class="stat-card total-words">
+            <div class="stat-icon">
+              <i class="fa-solid fa-scroll"></i>
+            </div>
+            <div class="stat-info">
+              <div class="stat-value" *ngIf="!isStatsLoading">{{ stats.totalWordsLearned }}</div>
+              <div class="stat-value" *ngIf="isStatsLoading"><nz-spin nzSize="small"></nz-spin></div>
+              <div class="stat-label">Tổng số từ đã học</div>
+            </div>
+          </div>
+        </nz-col>
+
+        <nz-col [nzXs]="24" [nzSm]="24" [nzMd]="8">
+          <div class="stat-card review-today" id="review-today-card">
+            <div class="stat-icon">
+              <i class="fa-solid fa-hourglass-half"></i>
+            </div>
+            <div class="stat-info">
+              <div class="stat-value highlight" *ngIf="!isStatsLoading">{{ stats.reviewToday }}</div>
+              <div class="stat-value highlight" *ngIf="isStatsLoading"><nz-spin nzSize="small"></nz-spin></div>
+              <div class="stat-label">Thẻ cần ôn hôm nay</div>
+            </div>
+          </div>
+        </nz-col>
+      </nz-row>
     </div>
-  </div>
 
-  <div class="quick-stats" id="stats-overview">
-    <nz-row [nzGutter]="[16, 16]">
-      <nz-col [nzXs]="24" [nzSm]="12" [nzLg]="6">
-        <div class="stat-card conquered-decks">
-          <div class="stat-icon">
-            <span nz-icon nzType="trophy" nzTheme="fill"></span>
-          </div>
-          <div class="stat-info">
-            <div class="stat-value" *ngIf="!isStatsLoading">{{ stats.conqueredDecks }}</div>
-            <div class="stat-value" *ngIf="isStatsLoading"><nz-spin nzSize="small"></nz-spin></div>
-            <div class="stat-label">Bộ thẻ đã chinh phục</div>
-          </div>
-        </div>
-      </nz-col>
-
-      <nz-col [nzXs]="24" [nzSm]="12" [nzLg]="6">
-        <div class="stat-card study-streak" id="study-streak">
-          <div class="stat-icon">
-            <span nz-icon nzType="fire" nzTheme="fill"></span>
-          </div>
-          <div class="stat-info">
-            <div class="stat-value" *ngIf="!isStatsLoading">{{ stats.studyStreak }}</div>
-            <div class="stat-value" *ngIf="isStatsLoading"><nz-spin nzSize="small"></nz-spin></div>
-            <div class="stat-label">Chuỗi ngày học liên tiếp</div>
-          </div>
-        </div>
-      </nz-col>
-
-      <nz-col [nzXs]="24" [nzSm]="12" [nzLg]="6">
-        <div class="stat-card total-words">
-          <div class="stat-icon">
-            <span nz-icon nzType="book" nzTheme="fill"></span>
-          </div>
-          <div class="stat-info">
-            <div class="stat-value" *ngIf="!isStatsLoading">{{ stats.totalWordsLearned }}</div>
-            <div class="stat-value" *ngIf="isStatsLoading"><nz-spin nzSize="small"></nz-spin></div>
-            <div class="stat-label">Tổng từ đã học</div>
-          </div>
-        </div>
-      </nz-col>
-
-      <nz-col [nzXs]="24" [nzSm]="12" [nzLg]="6">
-        <div class="stat-card review-today" id="review-today-card">
-          <div class="stat-icon">
-            <span nz-icon nzType="calendar" nzTheme="fill"></span>
-          </div>
-          <div class="stat-info">
-            <div class="stat-value highlight" *ngIf="!isStatsLoading">{{ stats.reviewToday }}</div>
-            <div class="stat-value highlight" *ngIf="isStatsLoading"><nz-spin nzSize="small"></nz-spin></div>
-            <div class="stat-label">Thẻ cần ôn hôm nay</div>
-          </div>
-        </div>
-      </nz-col>
-    </nz-row>
-  </div>
-
-  <!-- 🏆 Arena Ranking Alerts Section - TEMPORARILY DISABLED (Backend API pending) -->
-  <!-- TODO: Uncomment when backend API /api/arena/my-rankings is ready -->
-  <!--
-  <div class="ranking-alerts-section" *ngIf="!isLoadingRankings && rankingAlerts.length > 0">
-    <h2 class="section-title">
-      <span nz-icon nzType="trophy" nzTheme="twotone" [nzTwotoneColor]="'#faad14'"></span>
-      🏆 Thành Tích Sân Chơi
-    </h2>
     
-    <nz-row [nzGutter]="[16, 16]">
-      <nz-col [nzXs]="24" [nzMd]="12" [nzLg]="8" *ngFor="let alert of rankingAlerts">
-        <nz-card class="ranking-alert-card" [ngClass]="getRankAlertClass(alert)" (click)="goToArenaLeaderboard(alert.deckId)">
-          <div class="ranking-header">
-            <div class="deck-name">{{ alert.deckName }}</div>
-            <nz-badge [nzCount]="alert.currentRank" [nzStyle]="{ backgroundColor: alert.currentRank <= 3 ? '#faad14' : '#1890ff' }">
-              <span class="rank-icon">{{ getRankIcon(alert.currentRank) }}</span>
-            </nz-badge>
-          </div>
-          
-          <div class="ranking-stats">
-            <div class="stat-item">
-              <span class="label">Hạng hiện tại:</span>
-              <span class="value">#{{ alert.currentRank }} / {{ alert.totalPlayers }}</span>
-            </div>
-            
-            <div class="stat-item rank-change" *ngIf="alert.rankChange !== 0">
-              <nz-tag [nzColor]="alert.rankChange > 0 ? 'success' : 'error'">
-                {{ getRankChangeText(alert) }}
-              </nz-tag>
-            </div>
-            
-            <div class="stat-item" *ngIf="alert.currentRank > 1">
-              <span class="label">Khoảng cách Top 1:</span>
-              <span class="value alert-text">{{ alert.pointsBehind }} điểm</span>
-            </div>
-            
-            <div class="stat-item" *ngIf="alert.playersAhead > 0">
-              <span class="label">Số người phía trước:</span>
-              <span class="value competitive-text">{{ alert.playersAhead }} người 🔥</span>
-            </div>
-          </div>
-          
-          <div class="ranking-footer">
-            <div class="challenge-message" *ngIf="alert.currentRank > 1">
-              <span class="emoji">😤</span>
-              <span class="text">{{ alert.topPlayerName }} đang dẫn đầu với {{ alert.topPlayerScore }} điểm!</span>
-            </div>
-            <div class="champion-message" *ngIf="alert.currentRank === 1">
-              <span class="emoji">👑</span>
-              <span class="text">Bạn đang là nhà vô địch! Bảo vệ vị trí của mình!</span>
-            </div>
-            
-            <button nz-button nzType="primary" nzSize="small" class="compete-btn" (click)="goToArenaLobby(alert.deckId); $event.stopPropagation()">
-              <span nz-icon nzType="fire" nzTheme="fill"></span>
-              Thách đấu ngay!
-            </button>
-          </div>
-        </nz-card>
-      </nz-col>
-    </nz-row>
-  </div>
-
-  <div class="ranking-alerts-section" *ngIf="isLoadingRankings">
-    <nz-spin nzTip="Đang tải thành tích..."></nz-spin>
-  </div>
-  -->
-
-  <div class="content-grid">
-    <nz-row [nzGutter]="[16, 16]">
-      <nz-col [nzXs]="24" [nzLg]="16">
-        <nz-card class="action-card daily-review-card" *ngIf="stats.reviewToday > 0">
+        <div class="dashboard-main-content">
+      <div class="content-grid">
+        <nz-card class="action-card daily-review-card" >
           <div class="action-content">
             <div class="action-header">
-              <span nz-icon nzType="bell" nzTheme="fill" class="action-icon"></span>
+              <i class="fa-solid fa-bell action-icon"></i>
               <div class="action-text">
-                <h3>Đã đến giờ ôn tập rồi! 🎯</h3>
+                <h3>Đã đến giờ ôn tập rồi!</h3>
                 <p>Bạn có <strong>{{ stats.reviewToday }} thẻ</strong> cần ôn tập hôm nay</p>
               </div>
             </div>
@@ -188,65 +90,73 @@
             </button>
           </div>
         </nz-card>
-      </nz-col>
+      </div>
+    </div>
 
-      <nz-col [nzXs]="24" [nzLg]="8">
-        <nz-card class="section-card streak-card compact" [nzTitle]="streakTitle">
-          <ng-template #streakTitle>
-            <div class="section-header">
-              <span nz-icon nzType="fire" nzTheme="fill" style="color: #ff922b;"></span>
-              <span class="section-title">Chuỗi ngày học</span>
-            </div>
-          </ng-template>
+    
+  </div>
 
-          <div class="streak-display">
-            <div class="streak-number">{{ stats.studyStreak }}</div>
-            <div class="streak-label">ngày liên tiếp</div>
-            <div class="streak-message">Tuyệt vời! Hãy tiếp tục! 💪</div>
+  <!-- Phần 2: Dashboard Main Wrapper (25%) -->
+  <div class="dashboard-secondary-section" style="width: 30%">
+    <!-- Main Content Area -->
+
+    <!-- Right Sidebar for Streak Card -->
+    <div class="dashboard-right-sidebar">
+      <nz-card class="section-card streak-card compact" [nzTitle]="streakTitle">
+        <ng-template #streakTitle>
+          <div class="section-header">
+            <span nz-icon nzType="fire" nzTheme="fill" style="color: #ff922b;"></span>
+            <span class="section-title">Chuỗi ngày học</span>
           </div>
+        </ng-template>
 
-          <div class="calendar-mini compact">
-            <div class="calendar-header">
-              <button nz-button nzType="link" nzSize="small" (click)="previousMonth()">
-                <span nz-icon nzType="left"></span>
-              </button>
-              <span class="current-month">Tháng {{ currentMonth }}</span>
-              <button nz-button nzType="link" nzSize="small" (click)="nextMonth()">
-                <span nz-icon nzType="right"></span>
-              </button>
+        <div class="streak-display">
+          <div class="streak-number">{{ stats.studyStreak }}</div>
+          <div class="streak-label">ngày liên tiếp</div>
+          <div class="streak-message">Tuyệt vời! Hãy tiếp tục! 💪</div>
+        </div>
+
+        <div class="calendar-mini compact">
+          <div class="calendar-header">
+            <button nz-button nzType="link" nzSize="small" (click)="previousMonth()">
+              <span nz-icon nzType="left"></span>
+            </button>
+            <span class="current-month">Tháng {{ currentMonth }}</span>
+            <button nz-button nzType="link" nzSize="small" (click)="nextMonth()">
+              <span nz-icon nzType="right"></span>
+            </button>
+          </div>
+          
+          <div class="calendar-grid">
+            <div class="calendar-weekdays">
+              <div class="weekday">CN</div>
+              <div class="weekday">T2</div>
+              <div class="weekday">T3</div>
+              <div class="weekday">T4</div>
+              <div class="weekday">T5</div>
+              <div class="weekday">T6</div>
+              <div class="weekday">T7</div>
             </div>
             
-            <div class="calendar-grid">
-              <div class="calendar-weekdays">
-                <div class="weekday">CN</div>
-                <div class="weekday">T2</div>
-                <div class="weekday">T3</div>
-                <div class="weekday">T4</div>
-                <div class="weekday">T5</div>
-                <div class="weekday">T6</div>
-                <div class="weekday">T7</div>
-              </div>
-              
-              <div class="calendar-days">
-                <div 
-                  *ngFor="let day of calendarDays"
-                  class="calendar-day"
-                  [class.other-month]="!day.currentMonth"
-                  [class.today]="day.isToday"
-                  [class.has-activity]="day.hasActivity"
-                  [class.level-1]="day.activityLevel === 1"
-                  [class.level-2]="day.activityLevel === 2"
-                  [class.level-3]="day.activityLevel === 3"
-                >
-                  <span class="day-number">{{ day.date }}</span>
-                  <span nz-icon nzType="fire" nzTheme="fill" class="fire-icon" *ngIf="day.hasActivity"></span>
-                </div>
+            <div class="calendar-days">
+              <div 
+                *ngFor="let day of calendarDays"
+                class="calendar-day"
+                [class.other-month]="!day.currentMonth"
+                [class.today]="day.isToday"
+                [class.has-activity]="day.hasActivity"
+                [class.level-1]="day.activityLevel === 1"
+                [class.level-2]="day.activityLevel === 2"
+                [class.level-3]="day.activityLevel === 3"
+              >
+                <span class="day-number">{{ day.date }}</span>
+                <span nz-icon nzType="fire" nzTheme="fill" class="fire-icon" *ngIf="day.hasActivity"></span>
               </div>
             </div>
           </div>
-        </nz-card>
-      </nz-col>
-    </nz-row>
+        </div>
+      </nz-card>
+    </div>
   </div>
 
 </div>

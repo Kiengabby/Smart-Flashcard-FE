@@ -4,6 +4,8 @@
   background: #f5f7fa;
   min-height: calc(100vh - 64px);
   animation: fadeIn 0.3s ease;
+  display: flex;
+  justify-content: space-between;
 }
 
 @keyframes fadeIn {
@@ -11,11 +13,19 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
+.stat-card.total-words, .stat-card.conquered-decks {
+  height: 100%;
+}
+
 // Welcome Header
 .welcome-header {
   margin-bottom: 32px;
-  padding: 40px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 12px;
+  background: 
+    url('../../../../public/banner.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   border-radius: 20px;
   box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
   position: relative;
@@ -54,7 +64,6 @@
 
   // Modern welcome header styles
   &.modern {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
     min-height: 200px;
     display: flex;
     flex-direction: column;
@@ -107,7 +116,6 @@
     .welcome-content {
       display: flex;
       flex-direction: column;
-      gap: 20px;
     }
 
     .greeting-section {
@@ -165,10 +173,9 @@
         .highlight-text {
           color: #fff;
           font-weight: 600;
-          background: linear-gradient(45deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.1) 100%);
+          background: linear-gradient(45deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 0%);
           padding: 4px 12px;
           border-radius: 20px;
-          border: 1px solid rgba(255,255,255,0.3);
         }
       }
 
@@ -226,14 +233,13 @@
       right: 20px;
       width: 36px;
       height: 36px;
-      background: rgba(255, 255, 255, 0.2);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       transition: all 0.3s ease;
-      color: #fff;
+      color: #67814c;
       z-index: 10;
 
       &:hover {
@@ -287,7 +293,7 @@
 }
 
 .stat-card {
-  padding: 24px;
+  padding: 12px;
   border-radius: 16px;
   display: flex;
   align-items: center;
@@ -296,40 +302,27 @@
   cursor: pointer;
   position: relative;
   overflow: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    opacity: 0.1;
-    transition: transform 0.3s ease;
-  }
+  background: #ffffff;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.06);
 
   &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 24px rgba(0,0,0,0.12);
-
-    &::before {
-      transform: scale(1.2);
-    }
+    transform: translateY(-6px);
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12);
 
     .stat-icon {
-      transform: scale(1.1) rotate(5deg);
+      transform: scale(1.15) rotate(8deg);
     }
   }
 
   .stat-icon {
-    width: 64px;
-    height: 64px;
-    border-radius: 16px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 32px;
+    font-size: 18px;
     color: #fff;
     flex-shrink: 0;
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -339,10 +332,10 @@
     flex: 1;
 
     .stat-value {
-      font-size: 36px;
+      font-size: 24px;
       font-weight: 700;
       line-height: 1;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
 
       &.highlight {
         animation: pulse-scale 2s infinite;
@@ -351,73 +344,86 @@
 
     .stat-label {
       font-size: 14px;
-      color: #8c8c8c;
+      color: #6b7280;
       font-weight: 500;
+      letter-spacing: 0.02em;
     }
   }
 
-  // Variants
+  // Variants - Modern Green Theme
   &.conquered-decks {
-    background: linear-gradient(135deg, #fff5e6 0%, #ffe7ba 100%);
+    background: #ffffff;
+    box-shadow: 0 2px 12px rgba(113, 131, 85, 0.1);
+    border: 1px solid rgba(113, 131, 85, 0.12);
     
     &::before {
-      background: #ffa94d;
+      background: #718355;
     }
 
     .stat-icon {
-      background: linear-gradient(135deg, #ffa94d 0%, #ff922b 100%);
+      background: linear-gradient(135deg, #718355 0%, #537d3d 100%);
     }
 
     .stat-value {
-      color: #e67700;
+      color: #537d3d;
+      font-weight: 700;
     }
   }
 
   &.study-streak {
-    background: linear-gradient(135deg, #fff4e6 0%, #ffe8cc 100%);
+    background: #ffffff;
+    box-shadow: 0 2px 12px rgba(106, 130, 80, 0.1);
+    border: 1px solid rgba(106, 130, 80, 0.12);
     
     &::before {
-      background: #ff922b;
+      background: #6a8250;
     }
 
     .stat-icon {
-      background: linear-gradient(135deg, #ff922b 0%, #fd7e14 100%);
+      background: linear-gradient(135deg, #6a8250 0%, #556841 100%);
     }
 
     .stat-value {
-      color: #d9480f;
+      color: #556841;
+      font-weight: 700;
     }
   }
 
   &.total-words {
-    background: linear-gradient(135deg, #e7f5ff 0%, #d0ebff 100%);
+    background: #ffffff;
+    box-shadow: 0 2px 12px rgba(139, 164, 119, 0.1);
+    border: 1px solid rgba(139, 164, 119, 0.12);
     
     &::before {
-      background: #4dabf7;
+      background: #8ba477;
     }
 
     .stat-icon {
-      background: linear-gradient(135deg, #4dabf7 0%, #339af0 100%);
+      background: linear-gradient(135deg, #8ba477 0%, #718355 100%);
     }
 
     .stat-value {
-      color: #1c7ed6;
+      color: #718355;
+      font-weight: 700;
     }
   }
 
   &.review-today {
-    background: linear-gradient(135deg, #fff0f6 0%, #ffdeeb 100%);
+    background: #ffffff;
+    box-shadow: 0 2px 12px rgba(83, 125, 61, 0.1);
+    border: 1px solid rgba(83, 125, 61, 0.12);
     
     &::before {
-      background: #ff6b9d;
+      background: #537d3d;
     }
 
     .stat-icon {
-      background: linear-gradient(135deg, #ff6b9d 0%, #f06595 100%);
+      background: linear-gradient(135deg, #537d3d 0%, #446632 100%);
     }
 
     .stat-value {
-      color: #e64980;
+      color: #446632;
+      font-weight: 700;
     }
   }
 }
@@ -437,11 +443,11 @@
   overflow: hidden;
 
   &.daily-review-card {
-    background: linear-gradient(135deg, #e5f8ff 0%, #b3ecff 100%);
-    border-left: 4px solid #22b8cf;
+    background: linear-gradient(135deg, #ffffff 0%, #fbe4d0 100%);
+    border-left: 4px solid #FAAC68;
 
     ::ng-deep .ant-card-body {
-      padding: 32px;
+      padding: 24px 24px;
     }
 
     .action-content {
@@ -458,24 +464,24 @@
 
         .action-icon {
           font-size: 48px;
-          color: #22b8cf;
+          color: #FAAC68;
         }
 
         .action-text {
           h3 {
-            margin: 0 0 8px 0;
-            font-size: 24px;
+            margin: 0 0 0px 0;
+            font-size: 18px;
             font-weight: 700;
-            color: #0c8599;
+            color: #FAAC68;
           }
 
           p {
             margin: 0;
-            font-size: 16px;
+            font-size: 14px;
             color: #495057;
 
             strong {
-              color: #0c8599;
+              color: #FAAC68;
               font-weight: 700;
             }
           }
@@ -484,16 +490,17 @@
 
       .action-button {
         flex-shrink: 0;
-        height: 48px;
-        padding: 0 32px;
-        font-size: 16px;
-        font-weight: 600;
-        background: linear-gradient(135deg, #22b8cf 0%, #15aabf 100%);
-        border: none;
+    height: 48px;
+    padding: 0 32px;
+    font-size: 16px;
+    font-weight: 600;
+    background: linear-gradient(135deg, #FACE68 0%, #FAAC68 100%);
+    border: none;
+    border-radius: 16px;
 
         &:hover {
           transform: translateY(-2px);
-          box-shadow: 0 8px 16px rgba(34, 184, 207, 0.3);
+          box-shadow: 0 8px 16px rgba(207, 155, 34, 0.3);
         }
       }
     }
@@ -830,6 +837,7 @@
 @media (max-width: 768px) {
   .dashboard-container {
     padding: 16px;
+    display: flex;
   }
 
   .welcome-header {
@@ -1165,7 +1173,7 @@
           }
           
           &.today {
-            background: linear-gradient(135deg, #1890ff 0%, #722ed1 100%);
+            background: linear-gradient(135deg, #6b8351 0%, #6b8351 100%);
             color: white;
             box-shadow: 0 4px 12px rgba(24, 144, 255, 0.4);
             transform: scale(1.08);

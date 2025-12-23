@@ -1,0 +1,143 @@
+/* Cute Book Background Welcome Header */
+.welcome-header.cute-book-bg {
+  background: 
+    url('../../../../public/banner.png');
+  background-size: cover;
+  background-position: right;
+  background-repeat: no-repeat;
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+  min-height: 200px;
+}
+
+/* Green Sidebar Color Theme for Text */
+.welcome-header.cute-book-bg .greeting-text {
+  color: #718355 !important;
+  font-weight: 600;
+}
+
+.welcome-header.cute-book-bg .user-name {
+  color: #537d3d !important;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.95);
+  padding: 8px 16px;
+  border-radius: 25px;
+  display: inline-block;
+  margin-right: 10px;
+  border: 2px solid rgba(113, 131, 85, 0.2);
+}
+
+.welcome-header.cute-book-bg .welcome-title {
+  color: #718355;
+}
+
+.welcome-header.cute-book-bg .highlight-text {
+  color: #537d3d !important;
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 4px 8px;
+  border-radius: 12px;
+  display: inline-block;
+  font-size: 12px;
+}
+
+.welcome-header.cute-book-bg .welcome-subtitle {
+  margin-bottom: 15px;
+  font-size: 12px;
+}
+
+/* User Greeting New Styling */
+.welcome-header.cute-book-bg .user-greeting {
+    color: white;
+    padding: 0px 16px;
+    border-radius: 16px;
+    display: inline-flex;
+    align-items: flex-start;
+    /* gap: 8px; */
+    margin-bottom: 20px;
+    flex-direction: column;
+}
+
+.welcome-header.cute-book-bg .user-greeting .greeting-text {
+  color: #6a8250 !important;
+  font-weight: 800;
+  font-size: 26px;
+}
+
+.welcome-header.cute-book-bg .user-greeting .greeting-icon {
+  color: #6a8250;
+  font-size: 26px;
+}
+
+.welcome-header.cute-book-bg .action-hint {
+  padding: 15px 20px;
+  border-radius: 20px;
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.welcome-header.cute-book-bg .hint-text {
+  color: #718355 !important;
+  font-weight: 500;
+}
+
+.welcome-header.cute-book-bg .hint-icon {
+  color: #718355;
+  font-size: 16px;
+}
+
+.welcome-header.cute-book-bg .time-based-greeting {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 12px 20px;
+  border-radius: 20px;
+  margin-bottom: 15px;
+  border: 1px solid rgba(113, 131, 85, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.welcome-header.cute-book-bg .greeting-icon {
+  margin-right: 10px;
+  font-size: 1.2em;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.welcome-header.cute-book-bg .wave-emoji {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+/* Close button styling */
+.welcome-header.cute-book-bg .close-button {
+  background: rgba(255, 255, 255, 0.95);
+  color: #537d3d;
+  border: 1px solid rgba(113, 131, 85, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.welcome-header.cute-book-bg .close-button:hover {
+  background: rgba(255, 255, 255, 1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .welcome-header.cute-book-bg {
+    min-height: 180px;
+  }
+}
+
+@media (max-width: 768px) {
+  .welcome-header.cute-book-bg {
+    min-height: 160px;
+    padding: 20px;
+  }
+  
+  .welcome-header.cute-book-bg .user-name {
+    padding: 6px 12px;
+    font-size: 0.95em;
+  }
+}

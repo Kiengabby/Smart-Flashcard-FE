@@ -54,7 +54,7 @@ interface CalendarDay {
   ],
   providers: [NzModalService, NzMessageService],
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss'],
+  styleUrls: ['./dashboard.component.scss', './dashboard-cute-book-bg.css'],
 })
 export class DashboardComponent implements OnInit {
   
@@ -166,13 +166,13 @@ export class DashboardComponent implements OnInit {
 
   generateMotivationalQuote(): string {
     const quotes = [
-      'Mỗi từ mới là một bước tiến trong hành trình của bạn! 🚀',
-      'Hôm nay là ngày tuyệt vời để học thêm điều gì đó mới! ✨',
-      'Kiên trì là chìa khóa để thành công trong việc học ngôn ngữ! 💪',
-      'Bạn đang làm rất tốt, hãy tiếp tục phấn đấu! 🌟',
-      'Từng ngày một chút, bạn sẽ đạt được mục tiêu của mình! 🎯',
-      'Học tập là hành trình, không phải đích đến! 🛤️',
-      'Hãy tự hào về những gì bạn đã đạt được! 🏆'
+      'Mỗi từ mới là một bước tiến trong hành trình của bạn!',
+      'Hôm nay là ngày tuyệt vời để học thêm điều gì đó mới!',
+      'Kiên trì là chìa khóa để thành công trong việc học ngôn ngữ!',
+      'Bạn đang làm rất tốt, hãy tiếp tục phấn đấu!',
+      'Từng ngày một chút, bạn sẽ đạt được mục tiêu của mình!',
+      'Học tập là hành trình, không phải đích đến!',
+      'Hãy tự hào về những gì bạn đã đạt được!'
     ];
     return quotes[Math.floor(Math.random() * quotes.length)];
   }

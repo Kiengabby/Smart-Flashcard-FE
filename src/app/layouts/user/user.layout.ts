@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 import { RouterOutlet, Router } from '@angular/router';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzIconModule } from 'ng-zorro-antd/icon';
@@ -18,6 +18,7 @@ import { NotificationService } from '../../services/notification.service';
   standalone: true,
   imports: [
     CommonModule,
+    NgIf,
     RouterOutlet, 
     NzLayoutModule, 
     NzIconModule, 
@@ -32,6 +33,9 @@ import { NotificationService } from '../../services/notification.service';
 })
 export class UserLayoutComponent implements OnInit {
   isCollapsed = false;
+  isMiniMode = false;
+  sidebarWidth = 280; // Default width
+  isResizing = false;
   currentYear = new Date().getFullYear();
   pendingInvitationsCount = 0;
   
@@ -56,6 +60,108 @@ export class UserLayoutComponent implements OnInit {
     this.updateActiveMenuItem();
     this.loadInvitationsCount();
     this.subscribeToNotifications();
+    this.updateSidebarMode();
+  }
+
+  /**
+   * Handle mouse down for resizing
+   */
+  startResize(event: MouseEvent): void {
+    event.preventDefault();
+    this.isResizing = true;
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+    
+    const startX = event.clientX;
+    const startWidth = this.sidebarWidth;
+    let animationFrameId: number;
+    let lastMoveTime = 0;
+    
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!this.isResizing) return;
+      
+      // Throttle mousemove events để giảm lag
+      const now = Date.now();
+      if (now - lastMoveTime < 16) return; // ~60fps
+      lastMoveTime = now;
+      
+      // Cancel previous animation frame
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
+      
+      animationFrameId = requestAnimationFrame(() => {
+        const newWidth = startWidth + (e.clientX - startX);
+        
+        // Constrain width between min and max
+        if (newWidth >= 60 && newWidth <= 400) {
+          this.sidebarWidth = newWidth;
+          this.updateSidebarMode();
+        }
+      });
+    };
+    
+    const handleMouseUp = () => {
+      this.isResizing = false;
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+      
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
+      
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+    
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+  }
+  
+  /**
+   * Update sidebar mode based on width
+   */
+  updateSidebarMode(): void {
+    const oldMiniMode = this.isMiniMode;
+    const oldCollapsed = this.isCollapsed;
+    
+    if (this.sidebarWidth <= 80) {
+      this.isMiniMode = true;
+      this.isCollapsed = false;
+    } else if (this.sidebarWidth <= 200) {
+      this.isMiniMode = false;
+      this.isCollapsed = true;
+    } else {
+      this.isMiniMode = false;
+      this.isCollapsed = false;
+    }
+    
+    // Chỉ trigger change detection khi có thay đổi thực sự
+    if (oldMiniMode !== this.isMiniMode || oldCollapsed !== this.isCollapsed) {
+      this.cdr.detectChanges();
+    }
+  }
+
+  /**
+   * Toggle sidebar collapsed state
+   */
+  toggleSidebar(): void {
+    if (this.isMiniMode) {
+      // From mini mode to expanded
+      this.sidebarWidth = 280;
+      this.isMiniMode = false;
+      this.isCollapsed = false;
+    } else if (this.isCollapsed) {
+      // From collapsed to expanded
+      this.sidebarWidth = 280;
+      this.isCollapsed = false;
+    } else {
+      // From expanded to collapsed
+      this.sidebarWidth = 80;
+      this.isCollapsed = true;
+    }
+    
+    this.updateSidebarMode();
   }
 
   loadUserInfo(): void {
@@ -157,7 +263,7 @@ export class UserLayoutComponent implements OnInit {
   menuItems = [
     {
       title: 'Tổng quan',
-      icon: 'dashboard',
+      icon: 'fa-chart-line',
       routerLink: '/app/dashboard',
       description: 'Xem tổng quan tiến độ học tập và thống kê cá nhân',
       isActive: true,
@@ -165,7 +271,7 @@ export class UserLayoutComponent implements OnInit {
     },
     {
       title: 'Thư viện thẻ',
-      icon: 'book',
+      icon: 'fa-layer-group',
       routerLink: '/app/deck-library',
       description: 'Quản lý và tạo mới các bộ thẻ học tập',
       isActive: false,
@@ -173,7 +279,7 @@ export class UserLayoutComponent implements OnInit {
     },
     {
       title: 'Ôn tập hàng ngày',
-      icon: 'calendar',
+      icon: 'fa-fire',
       routerLink: '/app/daily-review',
       description: 'Ôn tập thẻ đã đến hạn theo thuật toán SM-2',
       isActive: false,
@@ -182,7 +288,7 @@ export class UserLayoutComponent implements OnInit {
     },
     {
       title: 'Lời mời học tập',
-      icon: 'mail',
+      icon: 'fa-envelope-open-text',
       routerLink: '/app/invitations',
       description: 'Quản lý lời mời tham gia bộ thẻ từ bạn bè',
       isActive: false,
@@ -191,7 +297,7 @@ export class UserLayoutComponent implements OnInit {
     },
     {
       title: 'Cộng đồng',
-      icon: 'team',
+      icon: 'fa-trophy',
       routerLink: '/app/community',
       description: 'Tương tác, chia sẻ và thách đấu với cộng đồng',
       isActive: false,
@@ -199,7 +305,7 @@ export class UserLayoutComponent implements OnInit {
     },
     {
       title: 'Thông tin tài khoản',
-      icon: 'user',
+      icon: 'fa-user-ninja',
       routerLink: '/app/profile',
       description: 'Quản lý thông tin cá nhân và cài đặt',
       isActive: false,

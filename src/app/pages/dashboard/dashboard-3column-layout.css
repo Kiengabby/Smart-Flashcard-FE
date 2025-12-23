@@ -1,0 +1,116 @@
+/* Dashboard 75% - 25% Layout */
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  gap: 20px;
+  padding: 20px;
+}
+
+.dashboard-main-section {
+  flex: 0 0 75%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.dashboard-secondary-section {
+  flex: 0 0 25%;
+  display: flex;
+  min-height: 200px;
+}
+
+/* 3-Column Layout for Secondary Section */
+.dashboard-main-wrapper {
+  display: flex;
+  width: 100%;
+  gap: 20px;
+}
+
+.dashboard-main-content {
+  flex: 1;
+  max-width: calc(100% - 320px);
+}
+
+.dashboard-right-sidebar {
+  width: 300px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 20px;
+  height: fit-content;
+  max-height: calc(25vh - 40px);
+  overflow-y: auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .dashboard-container {
+    flex-direction: column;
+  }
+  
+  .dashboard-main-section {
+    flex: 0 0 auto;
+  }
+  
+  .dashboard-secondary-section {
+    flex: 0 0 auto;
+  }
+  
+  .dashboard-main-wrapper {
+    flex-direction: column;
+  }
+  
+  .dashboard-main-content {
+    max-width: 100%;
+  }
+  
+  .dashboard-right-sidebar {
+    width: 100%;
+    position: static;
+    max-height: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 10px;
+    gap: 10px;
+  }
+  
+  .dashboard-main-section {
+    gap: 10px;
+  }
+}
+
+/* Enhanced Streak Card Styling */
+.dashboard-right-sidebar .streak-card {
+  border: 1px solid rgba(113, 131, 85, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+}
+
+.dashboard-right-sidebar .streak-card .ant-card-head {
+  border-bottom: 1px solid rgba(113, 131, 85, 0.15);
+  background: linear-gradient(135deg, rgba(113, 131, 85, 0.05) 0%, rgba(249, 250, 246, 0.9) 100%);
+}
+
+.dashboard-right-sidebar .section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: #718355;
+}
+
+/* Main Content Enhancements */
+.dashboard-main-content .action-card {
+  border: 1px solid rgba(113, 131, 85, 0.2);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.dashboard-main-content .action-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+}
