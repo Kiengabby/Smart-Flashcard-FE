@@ -174,14 +174,14 @@
 }
 
 .char-count.error {
-  color: #ff4d4f;
+  color: #ff7a45;
 }
 
 .error-message {
   display: flex;
   align-items: center;
   gap: 6px;
-  color: #ff4d4f;
+  color: #ff7a45;
   font-size: 13px;
   margin-top: 8px;
   padding: 8px 12px;
@@ -244,8 +244,8 @@
 }
 
 .cancel-btn:hover {
-  border-color: #ff4d4f;
-  color: #ff4d4f;
+  border-color: #ff7a45;
+  color: #ff7a45;
   background-color: #fff1f0;
 }
 

@@ -114,13 +114,13 @@
         transform: translateY(-4px) scale(1.02);
       }
 
-      span[nz-icon] {
+      i {
         margin-right: 10px;
         font-size: 16px;
         transition: transform 0.3s ease;
       }
 
-      &:hover span[nz-icon] {
+      &:hover i {
         transform: rotate(90deg);
       }
     }
@@ -154,7 +154,7 @@
 }
 
 .stat-card {
-  padding: 24px;
+  padding: 12px;
   border-radius: 16px;
   display: flex;
   align-items: center;
@@ -165,18 +165,6 @@
   overflow: hidden;
   background: white;
   border: 1px solid #f0f0f0;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    opacity: 0.1;
-    transition: transform 0.3s ease;
-  }
 
   &:hover {
     transform: translateY(-4px);
@@ -201,6 +189,16 @@
     font-size: 28px;
     color: white;
     transition: transform 0.3s ease;
+
+    i {
+      font-size: 28px;
+    }
+
+    app-card-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
   }
 
   .stat-info {
@@ -213,7 +211,7 @@
       line-height: 1;
 
       &.highlight {
-        color: #ff4d4f;
+        color: #ff7a45;
       }
     }
 
@@ -228,37 +226,30 @@
   // Individual stat card colors
   &.total-decks {
     .stat-icon {
-      background: linear-gradient(135deg, #1890ff, #36cfc9);
+      background: #537d3d;
     }
-    &::before {
-      background: linear-gradient(135deg, #1890ff, #36cfc9);
-    }
+
     .stat-value {
-      color: #1890ff;
+      color: #537d3d;;
     }
   }
 
   &.total-cards {
     .stat-icon {
-      background: linear-gradient(135deg, #52c41a, #73d13d);
-    }
-    &::before {
-      background: linear-gradient(135deg, #52c41a, #73d13d);
+      background: #537d3d;
     }
     .stat-value {
-      color: #52c41a;
+      color: #537d3d;;
     }
   }
 
   &.studying-decks {
     .stat-icon {
-      background: linear-gradient(135deg, #fa8c16, #ffc53d);
+      background: #537d3d;
     }
-    &::before {
-      background: linear-gradient(135deg, #fa8c16, #ffc53d);
-    }
+
     .stat-value {
-      color: #fa8c16;
+      color: #537d3d;;
     }
   }
 }
@@ -293,7 +284,7 @@
 
       .search-section {
         .search-input {
-          border-radius: 12px;
+          border-radius: 12px 0px 0px 12px; 
           font-size: 15px;
         }
 
@@ -301,7 +292,15 @@
           border-radius: 0 12px 12px 0;
 
           .ant-btn {
-            border-radius: 8px;
+            border-radius: 0px 12px 12px 0px;
+            background: #537d3d;
+            border: #537d3d;
+
+            &:hover,
+            &:focus {
+              background: #446632 !important;
+              border-color: #446632 !important;
+            }
           }
         }
       }
@@ -333,10 +332,11 @@
   }
 
   .results-info {
-    padding: 12px 16px;
+    padding: 12px 20px;
     background: #f8f9fa;
     border-radius: 8px;
-    border-left: 4px solid #1890ff;
+    border-left: 4px solid #537d3d;
+    margin-bottom: 16px;
 
     .results-text {
       color: #8c8c8c;
@@ -470,14 +470,14 @@
       margin-bottom: 32px;
 
       .primary-action {
-        background: linear-gradient(135deg, #1890ff, #36cfc9);
+        background: linear-gradient(135deg, #537d3d, #6c8251);
         border: none;
         font-weight: 600;
 
         &:hover {
-          background: linear-gradient(135deg, #40a9ff, #5cdbd3);
+          background: linear-gradient(135deg, #446632, #5a6b43);
           transform: translateY(-2px);
-          box-shadow: 0 8px 16px rgba(24, 144, 255, 0.3);
+          box-shadow: 0 8px 16px rgba(83, 125, 61, 0.3);
         }
       }
     }
@@ -581,25 +581,22 @@
   height: 100%;
   border-radius: 20px;
   border: 1px solid #f0f0f0;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
-  background: white;
 
   // Highlight animation for newly joined deck
   &.highlighted-deck {
     animation: highlightPulse 2s ease-in-out;
-    border: 2px solid #52c41a;
-    box-shadow: 0 8px 24px rgba(82, 196, 26, 0.3);
+    border: 2px solid #f0f0f0;
   }
 
   &:hover {
     transform: translateY(-8px);
-    box-shadow: 0 16px 32px rgba(0,0,0,0.15);
-    border-color: #1890ff;
+    box-shadow: 0 16px 32px rgba(83, 125, 61, 0.15);
+    border-color: #537d3d;
 
     .deck-header .deck-title {
-      color: #1890ff;
+      color: #537d3d;
     }
   }
 
@@ -629,8 +626,8 @@
           transition: all 0.3s ease;
 
           &:hover {
-            color: #1890ff;
-            background: rgba(24, 144, 255, 0.1);
+            color: #537d3d;
+            background: rgba(83, 125, 61, 0.1);
             transform: scale(1.1);
           }
 
@@ -655,6 +652,8 @@
 
   .deck-header {
     margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
 
     .deck-title-section {
       display: flex;
@@ -716,9 +715,15 @@
         gap: 6px;
         font-size: 14px;
 
-        span[nz-icon] {
-          color: #1890ff;
+        i {
+          color: #537d3d;
           font-size: 14px;
+        }
+
+        app-card-icon {
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
 
         .stat-text {
@@ -774,6 +779,7 @@
         border-radius: 8px;
         padding: 6px 14px;
         font-weight: 600;
+        width: 100%;
       }
     }
 
@@ -801,34 +807,12 @@
       left: -2px;
       right: -2px;
       bottom: -2px;
-      background: linear-gradient(45deg, #1890ff, #52c41a);
       border-radius: 8px;
       z-index: -1;
       opacity: 0.7;
     }
 
-    // Add click to view indicator
-    &::after {
-      content: '👆 Click để xem chi tiết';
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      background: rgba(24, 144, 255, 0.9);
-      color: white;
-      font-size: 11px;
-      padding: 4px 8px;
-      border-radius: 12px;
-      opacity: 0;
-      transform: translateY(-10px);
-      transition: all 0.3s ease;
-      pointer-events: none;
-      white-space: nowrap;
-    }
 
-    &:hover::after {
-      opacity: 1;
-      transform: translateY(0);
-    }
 
     // Ensure footer actions are above overlay
     .card-footer-actions {
@@ -861,13 +845,14 @@
   margin: -8px; // Negative margin để tăng click area
   
   .deck-icon {
-    color: #1890ff;
+    color: #537d3d;
     transition: transform 0.2s ease;
+    margin-right: 8px;
   }
   
   &:hover {
-    background-color: #f0f8ff;
-    color: #1890ff;
+    background-color: #f0f8f0;
+    color: #537d3d;
     transform: translateX(2px);
     
     .deck-icon {
@@ -887,16 +872,14 @@
 
   &:hover {
     transform: translateY(-4px) scale(1.02);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15) !important;
-    border-color: #1890ff !important;
 
     .deck-title {
-      color: #1890ff;
+      color: #537d3d;
     }
 
     .deck-icon {
       transform: scale(1.1);
-      color: #1890ff;
+      color: #537d3d;
     }
   }
 
@@ -909,6 +892,169 @@
     height: 100%;
     display: flex;
     flex-direction: column;
+  }
+}
+
+// ===========================
+// 🎯 ANT DESIGN OVERRIDES - Green Theme
+// ===========================
+
+// Input field overrides
+::ng-deep .ant-input {
+  &:hover {
+    border-color: #537d3d !important;
+  }
+  
+  &:focus,
+  &.ant-input-focused {
+    border-color: #537d3d !important;
+    box-shadow: 0 0 0 2px rgba(83, 125, 61, 0.2) !important;
+  }
+}
+
+// Select field overrides  
+::ng-deep .ant-select {
+  .ant-select-selector {
+    &:hover {
+      border-color: #537d3d !important;
+    }
+  }
+  
+  &.ant-select-focused .ant-select-selector,
+  &.ant-select-open .ant-select-selector {
+    border-color: #537d3d !important;
+    box-shadow: 0 0 0 2px rgba(83, 125, 61, 0.2) !important;
+  }
+}
+
+// Button overrides
+::ng-deep .ant-btn {
+  &.ant-btn-primary {
+    background-color: #537d3d;
+    border-color: #537d3d;
+    
+    &:hover,
+    &:focus {
+      background-color: #446632 !important;
+      border-color: #446632 !important;
+    }
+    
+    &:active {
+      background-color: #375024 !important;
+      border-color: #375024 !important;
+    }
+  }
+  
+  &:not(.ant-btn-primary):hover {
+    color: #537d3d !important;
+    border-color: #537d3d !important;
+  }
+}
+
+// Progress bar overrides
+::ng-deep .ant-progress {
+  .ant-progress-bg {
+    background-color: #537d3d !important;
+  }
+}
+
+// Tag overrides
+::ng-deep .ant-tag {
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+// Card overrides
+::ng-deep .ant-card {
+  &:hover {
+    border-color: rgba(83, 125, 61, 0.3);
+  }
+}
+
+// Menu overrides
+::ng-deep .ant-menu {
+  .ant-menu-item {
+    &:hover,
+    &.ant-menu-item-active {
+      color: #537d3d !important;
+    }
+    
+    &.ant-menu-item-selected {
+      color: #537d3d !important;
+      background-color: rgba(83, 125, 61, 0.1) !important;
+    }
+  }
+}
+
+// Dropdown overrides
+::ng-deep .ant-dropdown {
+  .ant-dropdown-menu-item {
+    &:hover {
+      background-color: rgba(83, 125, 61, 0.1) !important;
+      color: #537d3d !important;
+    }
+  }
+}
+
+// Switch overrides
+::ng-deep .ant-switch {
+  &.ant-switch-checked {
+    background-color: #537d3d !important;
+  }
+  
+  &:hover:not(.ant-switch-disabled) {
+    background-color: #446632 !important;
+  }
+}
+
+// Checkbox overrides
+::ng-deep .ant-checkbox {
+  &.ant-checkbox-checked .ant-checkbox-inner {
+    background-color: #537d3d !important;
+    border-color: #537d3d !important;
+  }
+  
+  &:hover .ant-checkbox-inner {
+    border-color: #537d3d !important;
+  }
+}
+
+// Radio overrides
+::ng-deep .ant-radio {
+  &.ant-radio-checked .ant-radio-inner {
+    border-color: #537d3d !important;
+    
+    &:after {
+      background-color: #537d3d !important;
+    }
+  }
+  
+  &:hover .ant-radio-inner {
+    border-color: #537d3d !important;
+  }
+}
+
+// Pagination overrides
+::ng-deep .ant-pagination {
+  .ant-pagination-item {
+    &:hover {
+      border-color: #537d3d !important;
+      color: #537d3d !important;
+    }
+    
+    &.ant-pagination-item-active {
+      border-color: #537d3d !important;
+      background-color: #537d3d !important;
+    }
+  }
+  
+  .ant-pagination-prev,
+  .ant-pagination-next {
+    &:hover {
+      color: #537d3d !important;
+      border-color: #537d3d !important;
+    }
   }
 }
 
@@ -1117,11 +1263,11 @@
     }
 
     &.danger-item {
-      color: #ff4d4f;
+      color: #ff7a45;
 
       &:hover {
         background-color: #fff1f0;
-        color: #ff4d4f;
+        color: #ff7a45;
       }
     }
 

@@ -1,0 +1,82 @@
+.card-icon-container {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--card-size, 24px);
+  height: var(--card-size, 24px);
+}
+
+.card-back,
+.card-front {
+  position: absolute;
+  border-radius: 20%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.card-back {
+  width: 75%;
+  height: 85%;
+  background-color: var(--card-color, #2d4a66);
+  top: 15%;
+  left: 25%;
+  opacity: 0.8;
+  transform: rotate(15deg);
+}
+
+.card-front {
+  width: 75%;
+  height: 85%;
+  background-color: var(--card-color, #2d4a66);
+  top: 0%;
+  left: 0%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    right: 2px;
+    bottom: 2px;
+    background: linear-gradient(135deg, 
+      rgba(255, 255, 255, 0.15) 0%, 
+      transparent 50%);
+    border-radius: inherit;
+    pointer-events: none;
+  }
+}
+
+// Hover effects
+.card-icon-container:hover {
+  .card-back {
+    transform: rotate(12deg) scale(1.05);
+    opacity: 0.9;
+  }
+  
+  .card-front {
+    transform: scale(1.05);
+  }
+}
+
+// Size variations
+.card-icon-container {
+  &[style*="--card-size: 16px"] {
+    .card-back, .card-front {
+      border-radius: 15%;
+    }
+  }
+  
+  &[style*="--card-size: 32px"] {
+    .card-back, .card-front {
+      border-radius: 18%;
+    }
+  }
+  
+  &[style*="--card-size: 48px"] {
+    .card-back, .card-front {
+      border-radius: 22%;
+    }
+  }
+}

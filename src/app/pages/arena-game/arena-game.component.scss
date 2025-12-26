@@ -26,7 +26,7 @@
 
   .quit-btn {
     font-size: 16px;
-    color: #ff4d4f;
+    color: #ff7a45;
     
     &:hover {
       color: #ff7875;
@@ -42,7 +42,7 @@
     gap: 8px;
 
     &.warning {
-      color: #ff4d4f;
+      color: #ff7a45;
       animation: pulse 1s infinite;
     }
   }
@@ -228,12 +228,12 @@
         }
 
         &.wrong {
-          border-color: #ff4d4f;
+          border-color: #ff7a45;
           background: #fff1f0;
           animation: shake 0.5s;
 
           .option-letter {
-            background: #ff4d4f;
+            background: #ff7a45;
             color: white;
           }
         }
@@ -262,8 +262,8 @@
 
         &.wrong-msg {
           background: #fff1f0;
-          color: #ff4d4f;
-          border: 2px solid #ff4d4f;
+          color: #ff7a45;
+          border: 2px solid #ff7a45;
 
           strong {
             color: #52c41a;
@@ -346,7 +346,7 @@
     .combo-text {
       font-size: 20px;
       font-weight: bold;
-      color: #ff4d4f;
+      color: #ff7a45;
       animation: pulse 0.5s infinite;
     }
   }

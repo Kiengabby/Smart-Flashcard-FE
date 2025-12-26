@@ -885,7 +885,7 @@
 .challenge-notifications-card {
   .section-header {
     .notification-badge {
-      background: #ff4d4f;
+      background: #ff7a45;
       color: white;
       font-size: 12px;
       font-weight: 500;
@@ -929,7 +929,7 @@
         right: 8px;
         width: 8px;
         height: 8px;
-        background: #ff4d4f;
+        background: #ff7a45;
         border-radius: 50%;
       }
       
@@ -1439,7 +1439,7 @@
     }
     
     &.rank-down {
-      border: 2px solid #ff4d4f;
+      border: 2px solid #ff7a45;
       background: linear-gradient(135deg, #fff1f0 0%, #fff2f0 100%);
     }
     
@@ -1488,7 +1488,7 @@
           font-size: 15px;
           
           &.alert-text {
-            color: #ff4d4f;
+            color: #ff7a45;
             font-weight: 700;
           }
           

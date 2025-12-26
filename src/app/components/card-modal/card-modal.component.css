@@ -2,11 +2,79 @@
 .card-modal-container {
   max-width: 600px;
   margin: 0 auto;
+  border-radius: 16px;
+  background: white;
+  padding: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  position: relative;
+  z-index: 1001;
+}
+
+/* Close Button */
+.modal-close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  background: #f5f5f5;
+  border: none;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #8c8c8c;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  z-index: 1002;
+}
+
+.modal-close-btn:hover {
+  background: #6d8351;
+  color: white;
+  transform: scale(1.1);
+}
+
+/* Hide ng-zorro modal wrapper but keep backdrop */
+::ng-deep .ant-modal-mask {
+  background: rgba(0, 0, 0, 0.6) !important;
+  backdrop-filter: blur(4px) !important;
+}
+
+::ng-deep .ant-modal-wrap {
+  background: transparent !important;
+}
+
+::ng-deep .ant-modal {
+  background: transparent !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+::ng-deep .ant-modal-content {
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+}
+
+::ng-deep .ant-modal-header {
+  display: none !important;
+}
+
+::ng-deep .ant-modal-footer {
+  display: none !important;
+}
+
+::ng-deep .ant-modal-close {
+  display: none !important;
 }
 
 /* Header Section */
 .modal-header {
-  margin-bottom: 32px;
+  margin-bottom: 20px;
 }
 
 .header-content {
@@ -18,7 +86,7 @@
 .header-icon {
   width: 56px;
   height: 56px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #6d8351 0%, #5a6b44 100%);
   border-radius: 16px;
   display: flex;
   align-items: center;
@@ -50,8 +118,8 @@
   background: #fafafa;
   border: 1px solid #f0f0f0;
   border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 20px;
+  padding: 16px;
+  margin-bottom: 16px;
   transition: all 0.3s ease;
 }
 
@@ -61,16 +129,16 @@
 }
 
 .form-section:focus-within {
-  border-color: #40a9ff;
+  border-color: #6d8351;
   background: white;
-  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.1);
+  box-shadow: 0 0 0 2px rgba(109, 131, 81, 0.1);
 }
 
 .section-header {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .section-icon {
@@ -85,11 +153,11 @@
 }
 
 .front-icon {
-  background: linear-gradient(45deg, #52c41a, #73d13d);
+  background: linear-gradient(45deg, #6d8351, #7a8759);
 }
 
 .back-icon {
-  background: linear-gradient(45deg, #1890ff, #40a9ff);
+  background: linear-gradient(45deg, #6d8351, #6d8351);
 }
 
 .section-info {
@@ -137,19 +205,19 @@
 
 .modern-textarea:focus, 
 .modern-textarea:hover {
-  border-color: #40a9ff;
-  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.1);
+  border-color: #6d8351;
+  box-shadow: 0 0 0 2px rgba(109, 131, 81, 0.1);
   outline: none;
 }
 
 .front-textarea:focus {
-  border-color: #52c41a;
-  box-shadow: 0 0 0 2px rgba(82, 196, 26, 0.1);
+  border-color: #6d8351;
+  box-shadow: 0 0 0 2px rgba(109, 131, 81, 0.1);
 }
 
 .back-textarea:focus {
-  border-color: #1890ff;
-  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.1);
+  border-color: #6d8351;
+  box-shadow: 0 0 0 2px rgba(109, 131, 81, 0.1);
 }
 
 .modern-textarea::placeholder {
@@ -170,33 +238,33 @@
 }
 
 .char-count.warning {
-  color: #faad14;
+  color: #8a984a;
 }
 
 .char-count.error {
-  color: #ff4d4f;
+  color: #8a984a;
 }
 
 .error-message {
   display: flex;
   align-items: center;
   gap: 6px;
-  color: #ff4d4f;
+  color: #8a984a;
   font-size: 13px;
   margin-top: 8px;
   padding: 8px 12px;
-  background: #fff2f0;
-  border: 1px solid #ffccc7;
+  background: #f5f7f2;
+  border: 1px solid #d9e0d1;
   border-radius: 6px;
 }
 
 /* Tips Section */
 .tips-section {
-  background: linear-gradient(135deg, #e6f7ff 0%, #f0f9ff 100%);
-  border: 1px solid #bae7ff;
+  background: linear-gradient(135deg, #eef2ea 0%, #f3f6f0 100%);
+  border: 1px solid #d1d8ce;
   border-radius: 12px;
-  padding: 16px;
-  margin-top: 20px;
+  padding: 12px;
+  margin-top: 16px;
 }
 
 .tips-header {
@@ -204,7 +272,7 @@
   align-items: center;
   gap: 8px;
   font-weight: 600;
-  color: #1890ff;
+  color: #6d8351;
   margin-bottom: 12px;
   font-size: 14px;
 }
@@ -226,40 +294,29 @@
 
 /* Footer Section */
 .modal-footer {
-  margin-top: 32px;
-  padding-top: 24px;
+  margin-top: 20px;
+  padding-top: 16px;
   border-top: 1px solid #f0f0f0;
 }
 
 .footer-actions {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   gap: 12px;
-}
-
-.cancel-btn {
-  border-radius: 8px;
-  font-weight: 500;
-  transition: all 0.3s ease;
-}
-
-.cancel-btn:hover {
-  border-color: #ff4d4f;
-  color: #ff4d4f;
-  background-color: #fff1f0;
 }
 
 .submit-btn {
   border-radius: 8px;
   font-weight: 500;
+  background-color: #6d8351;
   min-width: 120px;
-  box-shadow: 0 2px 8px rgba(24, 144, 255, 0.2);
+  box-shadow: 0 2px 8px rgba(109, 131, 81, 0.2);
   transition: all 0.3s ease;
 }
 
 .submit-btn:hover:not(:disabled) {
   transform: translateY(-1px);
-  box-shadow: 0 4px 16px rgba(24, 144, 255, 0.3);
+  box-shadow: 0 4px 16px rgba(109, 131, 81, 0.3);
 }
 
 .submit-btn:disabled {

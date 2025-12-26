@@ -33,6 +33,7 @@ import { DeckMember, MemberRole } from '../../interfaces/deck-member.model';
 import { SendInvitationRequest } from '../../interfaces/invitation.model';
 import { CardModalComponent } from '../../components/card-modal/card-modal.component';
 import { BulkCreateCardsModalComponent } from '../../components/bulk-create-cards-modal/bulk-create-cards-modal.component';
+import { CardIconComponent } from '../deck-library/card-icon/card-icon.component';
 
 
 @Component({
@@ -58,7 +59,8 @@ import { BulkCreateCardsModalComponent } from '../../components/bulk-create-card
     NzTagModule,
     NzInputModule,
     NzFormModule,
-    NzBadgeModule
+    NzBadgeModule,
+    CardIconComponent
   ],
   providers: [NzModalService, NzMessageService],
   templateUrl: './deck-detail.component.html',
@@ -207,14 +209,19 @@ export class DeckDetailComponent implements OnInit {
    */
   openAddCardModal(): void {
     const modalRef = this.modalService.create({
-      nzTitle: 'Thêm thẻ mới',
+      nzTitle: undefined,
       nzContent: CardModalComponent,
       nzData: {
         deckId: this.deckId
       },
       nzFooter: null,
       nzCentered: true,
-      nzWidth: 600
+      nzWidth: '50%',
+      nzMask: true,
+      nzMaskClosable: true,
+      nzClosable: false,
+      nzBodyStyle: { padding: '0', background: 'transparent' },
+      nzStyle: { background: 'transparent' }
     });
 
     modalRef.afterClose.subscribe((result) => {
@@ -230,7 +237,7 @@ export class DeckDetailComponent implements OnInit {
    */
   openEditCardModal(card: CardDTO): void {
     const modalRef = this.modalService.create({
-      nzTitle: 'Chỉnh sửa thẻ',
+      nzTitle: undefined,
       nzContent: CardModalComponent,
       nzData: {
         deckId: this.deckId,
@@ -238,7 +245,12 @@ export class DeckDetailComponent implements OnInit {
       },
       nzFooter: null,
       nzCentered: true,
-      nzWidth: 600
+      nzWidth: '50%',
+      nzMask: true,
+      nzMaskClosable: true,
+      nzClosable: false,
+      nzBodyStyle: { padding: '0', background: 'transparent' },
+      nzStyle: { background: 'transparent' }
     });
 
     modalRef.afterClose.subscribe((result) => {

@@ -8,6 +8,36 @@
   border-radius: 16px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
   overflow: hidden;
+  position: relative;
+  margin: 0 auto;
+  max-height: 90vh;
+}
+
+/* Close Button */
+.modal-close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #8c8c8c;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  z-index: 1002;
+  backdrop-filter: blur(10px);
+}
+
+.modal-close-btn:hover {
+  background: #6d8351;
+  color: white;
+  transform: scale(1.1);
 }
 
 /* ===== BALANCED HEADER ===== */
@@ -16,7 +46,7 @@
   align-items: center;
   gap: 18px;
   padding: 32px 32px 28px 32px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #6d8351 0%, #5a6b44 100%);
   color: white;
   position: relative;
 }
@@ -77,7 +107,7 @@
 
 /* ===== BALANCED FORM ===== */
 .create-deck-form {
-  padding: 32px 32px 0 32px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
 }
@@ -110,7 +140,7 @@
 }
 
 .label-content [nz-icon] {
-  color: #667eea;
+  color: #6d8351;
   font-size: 17px;
   flex-shrink: 0;
 }
@@ -146,7 +176,7 @@
 }
 
 .form-input:focus {
-  border-color: #667eea !important;
+  border-color: #6d8351 !important;
   background: white !important;
   box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1) !important;
   transform: translateY(-1px) !important;
@@ -209,7 +239,6 @@
   align-items: center;
   gap: 14px;
   padding: 28px 32px;
-  background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
   border-top: 2px solid #f1f5f9;
   margin-top: 32px;
 }
@@ -242,12 +271,12 @@
   height: 46px !important;
   padding: 0 28px !important;
   border-radius: 12px !important;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  background: linear-gradient(135deg, #6d8351 0%, #5a6b44 100%) !important;
   border: none !important;
   color: white !important;
   font-weight: 600 !important;
   font-size: 15px !important;
-  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4) !important;
+  box-shadow: 0 4px 16px rgba(109, 131, 81, 0.4) !important;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   display: flex !important;
   align-items: center !important;
@@ -258,7 +287,7 @@
 
 .submit-btn:hover {
   transform: translateY(-2px) !important;
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5) !important;
+  box-shadow: 0 8px 25px rgba(109, 131, 81, 0.5) !important;
 }
 
 .submit-btn:disabled {
@@ -360,7 +389,7 @@
 
 /* ===== FOCUS & ACCESSIBILITY ===== */
 *:focus-visible {
-  outline: 2px solid #667eea;
+  outline: 2px solid #6d8351;
   outline-offset: 2px;
 }
 
@@ -376,4 +405,48 @@
 
 .create-deck-form ::ng-deep .ant-form-item-control-input-content {
   width: 100%;
+}
+
+/* Hide ng-zorro modal wrapper but keep backdrop */
+::ng-deep .ant-modal-mask {
+  background: rgba(0, 0, 0, 0.6) !important;
+  backdrop-filter: blur(4px) !important;
+}
+
+::ng-deep .ant-modal-wrap {
+  background: transparent !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 100vh !important;
+}
+
+::ng-deep .ant-modal {
+  background: transparent !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  top: 0 !important;
+  left: 0 !important;
+  transform: none !important;
+  position: relative !important;
+}
+
+::ng-deep .ant-modal-content {
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+}
+
+::ng-deep .ant-modal-header {
+  display: none !important;
+}
+
+::ng-deep .ant-modal-footer {
+  display: none !important;
+}
+
+::ng-deep .ant-modal-close {
+  display: none !important;
 }

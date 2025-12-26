@@ -51,7 +51,7 @@
         }
         
         .wrong {
-          color: #ff4d4f;
+          color: #ff7a45;
           font-weight: 600;
         }
       }
@@ -203,7 +203,7 @@
   }
   
   .wrong-icon {
-    color: #ff4d4f;
+    color: #ff7a45;
   }
   
   // States
@@ -228,11 +228,11 @@
   }
   
   &.wrong {
-    border-color: #ff4d4f;
+    border-color: #ff7a45;
     background: #fff2f0;
     
     .option-letter {
-      background: #ff4d4f;
+      background: #ff7a45;
       color: white;
     }
   }

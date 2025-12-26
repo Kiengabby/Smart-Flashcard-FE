@@ -1,8 +1,13 @@
 <div class="create-deck-modal">
+  <!-- Close Button -->
+  <button class="modal-close-btn" (click)="handleCancel()" type="button">
+    <i class="fa-solid fa-xmark"></i>
+  </button>
+  
   <!-- Balanced Header -->
   <div class="modal-header">
     <div class="header-icon">
-      <span nz-icon nzType="plus-circle" nzTheme="fill"></span>
+      <i class="fa-solid fa-circle-plus"></i>
     </div>
     <div class="header-content">
       <h3>✨ Tạo bộ thẻ mới</h3>
@@ -17,7 +22,7 @@
     <nz-form-item>
       <nz-form-label nzFor="name" nzRequired class="form-label">
         <div class="label-content">
-        <span nz-icon nzType="edit" nzTheme="outline"></span>
+        <i class="fa-solid fa-pen-to-square"></i>
           <span>Tên bộ thẻ</span>
         </div>
       </nz-form-label>
@@ -28,7 +33,7 @@
           nz-input 
           id="name"
           formControlName="name" 
-            placeholder="💡 VD: Từ vựng tiếng Anh cơ bản, JLPT N3..."
+            placeholder="VD: Từ vựng tiếng Anh cơ bản, JLPT N3..."
           maxlength="100"
             class="form-input" />
         <div class="char-count">
@@ -42,7 +47,7 @@
     <nz-form-item>
       <nz-form-label nzFor="description" class="form-label">
         <div class="label-content">
-        <span nz-icon nzType="file-text" nzTheme="outline"></span>
+        <i class="fa-solid fa-file-lines"></i>
           <span>Mô tả bộ thẻ</span>
         </div>
       </nz-form-label>
@@ -53,7 +58,7 @@
           nz-input 
           id="description"
           formControlName="description" 
-            placeholder="📚 VD: Tổng hợp từ vựng cơ bản cho người mới bắt đầu..."
+            placeholder="VD: Tổng hợp từ vựng cơ bản cho người mới bắt đầu..."
             rows="3"
           maxlength="500"
             class="form-input textarea">
@@ -68,10 +73,10 @@
     <!-- Quick Hint -->
     <div class="quick-hint">
       <div class="hint-icon">
-        <span nz-icon nzType="lightbulb" nzTheme="fill"></span>
+        <i class="fa-solid fa-lightbulb"></i>
       </div>
       <div class="hint-content">
-        <strong>💡 Mẹo:</strong> Tạo xong có thể dùng AI tạo thẻ nhanh chỉ trong vài giây!
+        <strong>Mẹo:</strong> Tạo xong có thể dùng AI tạo thẻ nhanh chỉ trong vài giây!
       </div>
     </div>
 
@@ -82,7 +87,7 @@
         type="button" 
         (click)="handleCancel()"
         class="cancel-btn">
-        <span nz-icon nzType="close" nzTheme="outline"></span>
+        <i class="fa-solid fa-xmark"></i>
         Hủy bỏ
       </button>
       
@@ -93,8 +98,8 @@
         [nzLoading]="isConfirmLoading"
         [disabled]="deckForm.invalid"
         class="submit-btn">
-        <span nz-icon nzType="rocket" nzTheme="fill" *ngIf="!isConfirmLoading"></span>
-        <span *ngIf="!isConfirmLoading">🚀 Tạo và bắt đầu</span>
+        <i class="fa-solid fa-rocket" *ngIf="!isConfirmLoading"></i>
+        <span *ngIf="!isConfirmLoading">Tạo và bắt đầu</span>
         <span *ngIf="isConfirmLoading">Đang tạo...</span>
       </button>
     </div>

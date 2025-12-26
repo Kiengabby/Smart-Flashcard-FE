@@ -41,6 +41,9 @@ export class ArenaLobbyComponent implements OnInit {
   loading = false;
   startingGame = false;
   
+  // Toggle for game guide
+  isGuideExpanded = false;
+  
   // Make Math available in template
   Math = Math;
 

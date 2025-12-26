@@ -708,7 +708,7 @@
       
       &.error {
         background: #fff2f0;
-        color: #ff4d4f;
+        color: #ff7a45;
       }
       
       &.warning {
@@ -797,11 +797,11 @@
         
         // Anki style colors
         &.quality-again {
-          border-color: #ff4d4f;
-          .quality-icon { color: #ff4d4f; }
+          border-color: #ff7a45;
+          .quality-icon { color: #ff7a45; }
           &:hover {
             background: linear-gradient(135deg, #fff2f0 0%, #ffccc7 100%);
-            border-color: #ff4d4f;
+            border-color: #ff7a45;
           }
         }
         
@@ -834,8 +834,8 @@
         
         // Old 6-button style (fallback)
         &.quality-0 {
-          border-color: #ff4d4f;
-          span[nz-icon] { color: #ff4d4f; }
+          border-color: #ff7a45;
+          span[nz-icon] { color: #ff7a45; }
           &:hover { background: #fff2f0; }
         }
         

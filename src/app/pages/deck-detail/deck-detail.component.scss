@@ -4,6 +4,36 @@
   padding: 24px;
 }
 
+
+
+// CSS override cho tabs border-radius
+::ng-deep .deck-tabs {
+  .ant-tabs-card.ant-tabs-top > .ant-tabs-nav .ant-tabs-tab,
+  .ant-tabs-card.ant-tabs-top > div > .ant-tabs-nav .ant-tabs-tab {
+    border-radius: 16px 16px 0px 0px !important;
+  }
+  
+  .ant-tabs-nav .ant-tabs-tab {
+    border-radius: 16px 16px 0px 0px !important;
+    
+    // Hover effect cho text
+    &:hover:not(.ant-tabs-tab-active) .ant-tabs-tab-btn {
+      color: #6d8351 !important;
+    }
+  }
+}
+
+::ng-deep .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #6d8351;
+  font-weight: 600;
+  app-card-icon {
+    color: #6d8351;
+  }
+}
+
+::ng-deep .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn ::hover {
+  color: #6d8351;
+}
 // Header với improved back button
 .deck-header {
   margin-bottom: 24px;
@@ -19,27 +49,27 @@
     border: 1px solid #d9d9d9;
     
     &:hover {
-      color: #1890ff;
-      border-color: #1890ff;
+      color: #6d8351;
+      border-color: #6d8351;
       background-color: #f0f8ff;
       transform: translateX(-2px);
     }
 
     &:focus {
-      box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+      box-shadow: 0 0 0 2px rgba(109, 131, 81, 0.2);
     }
   }
 }
 
 // Deck Info Card
 .deck-info-card {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #6c8251;
   color: white;
   border-radius: 12px;
   overflow: hidden;
 
   ::ng-deep .ant-card-body {
-    padding: 32px;
+    padding: 12px 16px;
   }
 
   .deck-info {
@@ -61,7 +91,7 @@
   .deck-name {
     font-size: 32px;
     font-weight: 700;
-    margin: 0 0 12px 0;
+    margin: 0 0 0px 0;
     color: white;
   }
 
@@ -112,7 +142,7 @@
 
       &.start-learning-btn {
         background: white;
-        color: #667eea;
+        color: #6c8251;
         border: none;
 
         &:hover:not(:disabled) {
@@ -127,7 +157,7 @@
       }
 
       &.arena-btn {
-        background: linear-gradient(135deg, #ff6b6b 0%, #ff4d4f 100%);
+        background: #FCB53B;
         color: white;
         border: none;
 
@@ -153,6 +183,10 @@
       }
     }
   }
+}
+
+.deck-info-card .ant-card-body {
+  padding: 12px 16px !important;
 }
 
 @keyframes pulse {
@@ -189,7 +223,7 @@
         font-weight: 600;
 
         .title-icon {
-          color: #1890ff;
+          color: #6d8351;
           margin-right: 8px;
         }
       }
@@ -198,7 +232,7 @@
         font-size: 16px;
         color: #8c8c8c;
         background: #e6f7ff;
-        color: #1890ff;
+        color: #6d8351;
         padding: 4px 12px;
         border-radius: 12px;
         font-size: 14px;
@@ -220,16 +254,16 @@
 
     .bulk-create-btn {
       border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(24, 144, 255, 0.1);
+      box-shadow: 0 2px 8px rgba(109, 131, 81, 0.1);
       transition: all 0.3s ease;
-      border-color: #1890ff;
-      color: #1890ff;
+      border-color: #6d8351;
+      color: #6d8351;
 
       &:hover {
         transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(24, 144, 255, 0.2);
-        border-color: #40a9ff;
-        color: #40a9ff;
+        box-shadow: 0 4px 12px rgba(109, 131, 81, 0.2);
+        border-color: #6d8351;
+        color: #6d8351;
       }
 
       @media (max-width: 768px) {
@@ -282,7 +316,7 @@
       .tip {
         font-style: italic;
         font-size: 14px;
-        color: #1890ff;
+        color: #6d8351;
       }
     }
   }
@@ -342,7 +376,7 @@
 
             &.front {
               label {
-                color: #1890ff;
+                color: #6d8351;
               }
               p {
                 font-weight: 500;
@@ -390,7 +424,7 @@
 
       .hint-icon {
         font-size: 24px;
-        color: #1890ff;
+        color: #6d8351;
         flex-shrink: 0;
       }
 
@@ -433,7 +467,7 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 
     &:hover {
-      border-color: #1890ff;
+      border-color: #6d8351;
       box-shadow: 0 4px 16px rgba(24, 144, 255, 0.1);
       transform: translateY(-2px);
     }
@@ -468,14 +502,14 @@
           &.edit-btn {
             &:hover {
               background-color: #e6f7ff;
-              color: #1890ff;
+              color: #6d8351;
             }
           }
 
           &.delete-btn {
             &:hover {
               background-color: #fff1f0;
-              color: #ff4d4f;
+              color: #ff7a45;
             }
           }
         }
@@ -527,7 +561,7 @@
         }
 
         &.back-side .side-content {
-          border-left-color: #1890ff;
+          border-left-color: #6d8351;
         }
       }
 
@@ -565,7 +599,7 @@
       .ant-tabs-tab {
         padding: 12px 24px;
         margin: 0;
-        border-radius: 8px;
+        border-radius: 16px 16px 0px 0px !important;
         transition: all 0.3s ease;
         font-weight: 500;
 
@@ -574,7 +608,7 @@
         }
 
         &.ant-tabs-tab-active {
-          background: #1890ff;
+          background: #6d8351;
           
           .ant-tabs-tab-btn {
             color: #ffffff !important;
@@ -592,8 +626,8 @@
           }
 
           .tab-badge {
-            background: rgba(24, 144, 255, 0.1);
-            color: #1890ff;
+            background: rgba(109, 131, 81, 0.1);
+            color: #6d8351;
             padding: 2px 8px;
             border-radius: 10px;
             font-size: 12px;
@@ -641,13 +675,13 @@
         margin: 0;
         font-size: 24px;
         font-weight: 600;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: #6c8251;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
 
         .title-icon {
-          color: #667eea;
+          color: #6c8251;
           margin-right: 8px;
         }
       }
@@ -805,18 +839,35 @@
         left: 0;
         right: 0;
         height: 4px;
-        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        background: #6d8351;
         transform: scaleX(0);
         transition: transform 0.3s ease;
       }
 
       &:hover {
-        border-color: #667eea;
-        box-shadow: 0 8px 24px rgba(102, 126, 234, 0.15);
+        border-color: #6d8351;
+        box-shadow: 0 8px 24px rgba(109, 131, 81, 0.15);
         transform: translateY(-4px);
 
         &::before {
           transform: scaleX(1);
+        }
+      }
+
+      // Special hover effect for owner cards
+      &.is-owner {
+        &::before {
+          background: #6d8351;
+        }
+
+        &:hover {
+          border-color: #6d8351;
+          box-shadow: 0 8px 24px rgba(109, 131, 81, 0.15);
+
+          &::before {
+            background: #6d8351;
+            transform: scaleX(1);
+          }
         }
       }
 
@@ -926,7 +977,7 @@
 
             &.member-badge {
               background: #e6f7ff;
-              color: #1890ff;
+              color: #6d8351;
               border: 1px solid #91d5ff;
             }
           }
@@ -968,8 +1019,8 @@
           &.remove-btn {
             &:hover {
               background: #fff1f0;
-              border-color: #ff4d4f;
-              color: #ff4d4f;
+              border-color: #ff7a45;
+              color: #ff7a45;
             }
           }
         }
@@ -1067,7 +1118,7 @@
         margin-bottom: 8px;
 
         .required-mark {
-          color: #ff4d4f;
+          color: #ff7a45;
         }
 
         .label-icon {
@@ -1093,7 +1144,7 @@
       }
 
       ::ng-deep .ant-form-item-has-error .email-input {
-        border-color: #ff4d4f;
+        border-color: #ff7a45;
 
         &:focus {
           box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.1);
@@ -1104,7 +1155,7 @@
         display: flex;
         align-items: center;
         gap: 6px;
-        color: #ff4d4f;
+        color: #ff7a45;
         font-size: 13px;
         margin-top: 8px;
       }

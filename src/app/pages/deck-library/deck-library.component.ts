@@ -26,6 +26,7 @@ import { NzProgressModule } from 'ng-zorro-antd/progress';
 import { DeckCardComponent } from '../../components/deck-card/deck-card.component';
 import { CreateDeckModalComponent } from '../../components/create-deck-modal/create-deck-modal.component';
 import { EditDeckModalComponent } from '../../components/edit-deck-modal/edit-deck-modal.component';
+import { CardIconComponent } from './card-icon/card-icon.component';
 
 // Services
 import { DeckService } from '../../services/deck.service';
@@ -57,7 +58,8 @@ import { LearningProgressDTO } from '../../interfaces/learning-progress.dto';
     NzPopconfirmModule,
     NzToolTipModule,
     NzStatisticModule,
-    NzProgressModule
+    NzProgressModule,
+    CardIconComponent
   ],
   providers: [NzModalService, NzMessageService],
   templateUrl: './deck-library.component.html',
@@ -470,11 +472,16 @@ export class DeckLibraryComponent implements OnInit {
    */
   openCreateDeckModal(): void {
     const modalRef = this.modalService.create({
-      nzTitle: 'Tạo bộ thẻ mới',
+      nzTitle: undefined,
       nzContent: CreateDeckModalComponent,
       nzFooter: null,
       nzCentered: true,
-      nzWidth: 600
+      nzWidth: '50%',
+      nzMask: true,
+      nzMaskClosable: true,
+      nzClosable: false,
+      nzBodyStyle: { padding: '0', background: 'transparent' },
+      nzStyle: { background: 'transparent' }
     });
 
     modalRef.afterClose.subscribe((result) => {

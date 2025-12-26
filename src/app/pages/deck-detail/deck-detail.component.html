@@ -3,25 +3,25 @@
   <!-- Back Button -->
   <div class="deck-header">
     <button nz-button nzType="text" (click)="goBack()" class="back-btn">
-      <span nz-icon nzType="arrow-left"></span>
+      <i class="fa-solid fa-arrow-left"></i>
       Quay lại
     </button>
   </div>
 
   <!-- Deck Info Card -->
-  <nz-card *ngIf="!isLoadingDeck && deck" class="deck-info-card" [nzBordered]="false">
+  <nz-card *ngIf="!isLoadingDeck && deck" class="deck-info-card" [nzBordered]="false" style="margin-bottom: 32px;">
     <div class="deck-info">
       <div class="deck-main-info">
         <h1 class="deck-name">{{ deck.name }}</h1>
         <p class="deck-description">{{ deck.description }}</p>
         <div class="deck-stats">
           <div class="stat-item">
-            <span nz-icon nzType="credit-card"></span>
+            <app-card-icon [color]="'#ffffff'" [size]="'14px'"></app-card-icon>
             <span class="stat-value">{{ deck.cardCount || 0 }}</span>
             <span class="stat-label">thẻ</span>
           </div>
           <div class="stat-item">
-            <span nz-icon nzType="team"></span>
+            <i class="fa-solid fa-users"></i>
             <span class="stat-value">{{ memberCount }}</span>
             <span class="stat-label">thành viên</span>
           </div>
@@ -32,15 +32,15 @@
           (click)="startLearning()"
           [disabled]="!cards.length || cards.length < 5"
           class="start-learning-btn">
-          <span nz-icon nzType="rocket"></span>
+          <i class="fa-solid fa-rocket" style="margin-right: 6px;"></i>
           Bắt đầu Chinh phục
         </button>
         <button nz-button nzType="default" nzSize="large"
           (click)="goToArena()"
           [disabled]="!cards.length"
           class="arena-btn">
-          <span nz-icon nzType="trophy" nzTheme="twotone" [nzTwotoneColor]="'#faad14'"></span>
-          🏆 Sân Chơi Cộng Đồng
+          <i class="fa-solid fa-trophy" style="margin-right: 6px; color: #ffffff;"></i>
+          Sân Chơi Cộng Đồng
         </button>
       </div>
     </div>
@@ -52,8 +52,6 @@
     </div>
   </nz-card>
 
-  <nz-divider></nz-divider>
-
   <!-- Tab Navigation -->
   <nz-tabset [(nzSelectedIndex)]="selectedTab" (nzSelectedIndexChange)="onTabChange($event)" 
     nzType="card" nzSize="large" class="deck-tabs">
@@ -61,20 +59,20 @@
     <!-- FLASHCARDS TAB -->
     <nz-tab [nzTitle]="cardsTabTitle">
       <ng-template #cardsTabTitle>
-        <span nz-icon nzType="credit-card"></span>
+        <app-card-icon [color]="'#6d8351'" [size]="'16px'"></app-card-icon>
         Flashcards
         <nz-badge [nzCount]="cards.length" [nzOverflowCount]="999" nzShowZero></nz-badge>
       </ng-template>
 
       <div class="cards-section">
         <div class="section-header">
-          <h2><span nz-icon nzType="credit-card" class="title-icon"></span> Danh sách Flashcard</h2>
+          <h2 style="font-weight: 800; color: #6d8351;"><app-card-icon [color]="'#6d8351'" [size]="'16px'"></app-card-icon> Danh sách Flashcard</h2>
           <div class="section-header-actions">
-            <button nz-button nzSize="large" (click)="openBulkCreateModal()">
-              <span nz-icon nzType="thunderbolt"></span> Tạo nhanh với AI
+            <button style="border-radius: 16px;" nz-button nzSize="large" (click)="openBulkCreateModal()">
+              <i class="fa-solid fa-bolt" style="margin-right: 6px;"></i> Tạo nhanh với AI
             </button>
-            <button nz-button nzType="primary" nzSize="large" (click)="openAddCardModal()">
-              <span nz-icon nzType="plus"></span> Thêm thẻ mới
+            <button style="border-radius: 16px; background: #6d8351;" nz-button nzType="primary" nzSize="large" (click)="openAddCardModal()">
+              <i class="fa-solid fa-plus" style="margin-right: 6px;"></i> Thêm thẻ mới
             </button>
           </div>
         </div>
@@ -89,7 +87,7 @@
             <h3>✨ Bộ thẻ còn trống</h3>
             <p>Hãy thêm ít nhất 5 thẻ để bắt đầu!</p>
             <button nz-button nzType="primary" nzSize="large" (click)="openAddCardModal()" style="margin-top: 16px;">
-              <span nz-icon nzType="plus"></span> Thêm thẻ đầu tiên
+              <i class="fa-solid fa-plus"></i> Thêm thẻ đầu tiên
             </button>
           </div>
         </nz-empty>
@@ -100,22 +98,22 @@
               <span class="card-number">Thẻ #{{ i + 1 }}</span>
               <div class="card-actions">
                 <button nz-button nzType="text" nzSize="small" (click)="openEditCardModal(card)" nz-tooltip="Chỉnh sửa">
-                  <span nz-icon nzType="edit"></span>
+                  <i class="fa-solid fa-edit"></i>
                 </button>
                 <button nz-button nzType="text" nzSize="small" nz-popconfirm nzPopconfirmTitle="Xóa thẻ này?"
                   (nzOnConfirm)="deleteCard(card)" nz-tooltip="Xóa">
-                  <span nz-icon nzType="delete"></span>
+                  <i class="fa-solid fa-trash"></i>
                 </button>
               </div>
             </div>
             <div class="card-content">
               <div class="card-side front-side">
-                <div class="side-label"><span nz-icon nzType="eye"></span> Mặt trước</div>
+                <div class="side-label"><i class="fa-solid fa-eye"></i> Mặt trước</div>
                 <div class="side-content">{{ card.frontText }}</div>
               </div>
-              <div class="card-divider"><span nz-icon nzType="arrow-right"></span></div>
+              <div class="card-divider"><i class="fa-solid fa-arrow-right"></i></div>
               <div class="card-side back-side">
-                <div class="side-label"><span nz-icon nzType="bulb"></span> Mặt sau</div>
+                <div class="side-label"><i class="fa-solid fa-lightbulb"></i> Mặt sau</div>
                 <div class="side-content">{{ card.backText }}</div>
               </div>
             </div>
@@ -127,7 +125,7 @@
     <!-- MEMBERS TAB -->
     <nz-tab [nzTitle]="membersTabTitle">
       <ng-template #membersTabTitle>
-        <span nz-icon nzType="team"></span>
+        <i class="fa-solid fa-users" style="color: #6d8351;"></i>
         Thành viên
         <nz-badge [nzCount]="memberCount" [nzOverflowCount]="999" nzShowZero></nz-badge>
       </ng-template>
@@ -135,7 +133,7 @@
       <div class="members-section">
         <div class="section-header">
           <div class="section-title">
-            <h2><span nz-icon nzType="team" class="title-icon"></span> Thành viên bộ thẻ</h2>
+            <h2><i class="fa-solid fa-users title-icon"></i> Thành viên bộ thẻ</h2>
             <p class="subtitle">Mời bạn bè cùng học để tăng động lực!</p>
           </div>
           <button 
@@ -168,7 +166,7 @@
               nzSize="large" 
               (click)="openInviteModal()" 
               style="margin-top: 16px;">
-              <span nz-icon nzType="user-add"></span> Mời thành viên đầu tiên
+              <i class="fa-solid fa-user-plus"></i> Mời thành viên đầu tiên
             </button>
           </div>
         </nz-empty>
@@ -178,17 +176,17 @@
             <div class="member-header">
               <nz-avatar [nzSize]="64" [nzText]="getUserInitials(member.userName)"
                 [ngStyle]="{'background-color': getAvatarColor(member.userId)}"></nz-avatar>
-              <nz-tag *ngIf="isOwner(member)" [nzColor]="'gold'" class="role-badge">
-                <span nz-icon nzType="crown" nzTheme="fill"></span> Owner
+              <nz-tag *ngIf="isOwner(member)" [nzColor]="'gold'" class="role-badge" style="border-radius: 16px;">
+                <i class="fa-solid fa-crown"></i> Owner
               </nz-tag>
-              <nz-tag *ngIf="!isOwner(member)" [nzColor]="'blue'" class="role-badge">
-                <span nz-icon nzType="user"></span> Member
+              <nz-tag *ngIf="!isOwner(member)" [nzColor]="'#6d8351'" class="role-badge" style="border-radius: 16px;">
+                <i class="fa-solid fa-user"></i> Member
               </nz-tag>
             </div>
             <div class="member-info">
               <h3 class="member-name">{{ member.userName }}</h3>
-              <p class="member-email"><span nz-icon nzType="mail"></span> {{ member.userEmail }}</p>
-              <p class="member-joined"><span nz-icon nzType="calendar"></span> {{ member.joinedAt | date: 'dd/MM/yyyy' }}</p>
+              <p class="member-email"><i class="fa-solid fa-envelope"></i> {{ member.userEmail }}</p>
+              <p class="member-joined"><i class="fa-solid fa-calendar"></i> {{ member.joinedAt | date: 'dd/MM/yyyy' }}</p>
             </div>
             <div class="member-actions">
               <!-- Chỉ hiện nút xóa nếu: user hiện tại là owner và thành viên đó không phải owner -->
@@ -197,12 +195,12 @@
                 nzPopconfirmTitle="Xóa thành viên này khỏi bộ thẻ?" 
                 (nzOnConfirm)="removeMember(member)" 
                 nz-tooltip="Chỉ chủ sở hữu mới có thể xóa thành viên">
-                <span nz-icon nzType="user-delete"></span>
+                <i class="fa-solid fa-user-minus"></i>
               </button>
               
               <!-- Hiển thị label "Bạn" nếu đây là chính user hiện tại -->
               <nz-tag *ngIf="member.userId === currentUserId" [nzColor]="'green'" class="current-user-tag">
-                <span nz-icon nzType="user"></span> Bạn
+                <i class="fa-solid fa-user"></i> Bạn
               </nz-tag>
             </div>
           </div>
@@ -219,7 +217,7 @@
   <div *nzModalContent>
     <div class="invite-modal-content">
       <div class="modal-icon-wrapper">
-        <div class="modal-icon"><span nz-icon nzType="mail" nzTheme="outline"></span></div>
+        <div class="modal-icon"><i class="fa-solid fa-envelope"></i></div>
       </div>
       <p class="modal-description">Nhập email người dùng bạn muốn mời vào <strong>"{{ deck?.name }}"</strong></p>
       <form nz-form [formGroup]="inviteForm" class="invite-form">
@@ -229,12 +227,12 @@
             <nz-input-group nzSize="large" [nzPrefix]="prefixTemplate">
               <input nz-input formControlName="email" placeholder="example@gmail.com" type="email" />
             </nz-input-group>
-            <ng-template #prefixTemplate><span nz-icon nzType="mail"></span></ng-template>
+            <ng-template #prefixTemplate><i class="fa-solid fa-envelope"></i></ng-template>
           </nz-form-control>
         </nz-form-item>
       </form>
       <div class="invite-tips">
-        <div class="tip-item"><span nz-icon nzType="info-circle"></span> Email phải đã đăng ký trong hệ thống</div>
+        <div class="tip-item"><i class="fa-solid fa-info-circle"></i> Email phải đã đăng ký trong hệ thống</div>
       </div>
     </div>
   </div>

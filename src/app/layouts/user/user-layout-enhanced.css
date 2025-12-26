@@ -1,19 +1,41 @@
+/* CRITICAL: Force Fixed Sidebar Position - Must be at top */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+/* Force sidebar to be absolutely fixed */
+[nz-sider], .ant-layout-sider, .menu-sidebar, nz-sider.menu-sidebar {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  height: 100vh !important;
+  z-index: 9999 !important;
+}
+
 .app-layout {
-  min-height: 100vh;
+  max-height: 100vh;
   background: #f0f2f5;
+  position: relative;
 }
 
 .menu-sidebar {
   position: fixed !important;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  height: 100vh;
+  left: 0 !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  height: 100vh !important;
   overflow: hidden; /* Đảm bảo không tràn viền */
-  z-index: 1000; /* Higher z-index to stay above content */
+  z-index: 1000 !important; /* Higher z-index to stay above content */
   background: #f9faf6 !important;
   box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
-  transition: width 0.2s ease-out;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.6, 1);
   /* Prevent sidebar from scrolling with page */
   will-change: width;
   -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
@@ -39,17 +61,21 @@
 /* Main layout adjustment for fixed sidebar */
 .main-layout {
   margin-left: 280px !important; /* Default sidebar width */
-  transition: margin-left 0.2s ease-out;
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.6, 1);
   min-height: 100vh;
+  position: relative;
+  width: calc(100% - 280px);
 }
 
 /* Dynamic margin adjustment based on sidebar state */
 .main-layout.sidebar-collapsed {
   margin-left: 80px !important; /* Collapsed sidebar width */
+  width: calc(100% - 80px);
 }
 
 .main-layout.sidebar-mini {
   margin-left: 60px !important; /* Mini sidebar width */
+  width: calc(100% - 60px);
 }
 
 /* Responsive main layout */
@@ -69,7 +95,25 @@
   transition: none !important;
 }
 
-/* Resize Handle */
+/* Force Fixed Sidebar - Override any other styles */
+.app-layout .menu-sidebar,
+nz-sider.menu-sidebar,
+.ant-layout-sider.menu-sidebar,
+.menu-sidebar.ant-layout-sider {
+  position: fixed !important;
+  left: 0 !important;
+  top: 0 !important;
+  bottom: auto !important;
+  height: 100vh !important;
+  z-index: 9999 !important;
+}
+
+/* Force Fixed Body Layout */
+body {
+  position: relative !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
 .resize-handle {
   position: absolute;
   top: 0;
@@ -482,9 +526,10 @@
   background: #f0f2f5;
   min-height: 100vh;
   position: relative;
-  /* Allow content to scroll */
+  /* Allow content to scroll independently */
   overflow-y: auto;
   overflow-x: hidden;
+  width: 100%;
 }
 
 .content-wrapper {
@@ -493,33 +538,47 @@
   /* Padding to prevent content from touching edges */
   padding: 0;
   max-width: 100%;
+  width: 100%;
 }
 
 /* Responsive Design */
 @media (max-width: 1024px) {
   /* Tablet and small laptop screens */
   .main-layout {
-    margin-left: 280px;
+    margin-left: 280px !important;
     width: calc(100% - 280px);
   }
 
-  .ant-layout-sider-collapsed ~ .main-layout {
-    margin-left: 80px;
+  .main-layout.sidebar-collapsed {
+    margin-left: 80px !important;
     width: calc(100% - 80px);
+  }
+  
+  .main-layout.sidebar-mini {
+    margin-left: 60px !important;
+    width: calc(100% - 60px);
   }
 }
 
 @media (max-width: 768px) {
-  /* Mobile screens - hide sidebar */
+  /* Mobile screens - sidebar overlay */
   .menu-sidebar {
+    position: fixed !important;
     transform: translateX(-100%);
+    transition: transform 0.3s ease;
   }
 
-  .menu-sidebar.ant-layout-sider-collapsed {
+  .menu-sidebar[data-collapsed="false"] {
     transform: translateX(0);
   }
 
   .main-layout {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+  
+  .main-layout.sidebar-collapsed,
+  .main-layout.sidebar-mini {
     margin-left: 0 !important;
     width: 100% !important;
   }

@@ -15,7 +15,7 @@
     <div class="arena-header">
       <div class="arena-title">
         <span nz-icon nzType="trophy" nzTheme="twotone" [nzTwotoneColor]="'#faad14'" class="arena-icon"></span>
-        <h1>🎮 Sân Chơi Cộng Đồng</h1>
+        <h1>Sân Chơi Cộng Đồng</h1>
       </div>
       <p class="arena-description">{{ arenaInfo.deckName }}</p>
       <p class="arena-subdesc" *ngIf="arenaInfo.deckDescription">{{ arenaInfo.deckDescription }}</p>
@@ -69,6 +69,29 @@
             <span nz-icon nzType="line-chart" nzTheme="outline"></span>
           </ng-template>
         </nz-statistic>
+      </nz-card>
+    </div>
+
+        <!-- Hướng Dẫn Chơi -->
+    <div class="game-info" style="margin-bottom: 24px;">
+      <nz-card>
+        <div class="guide-header" (click)="isGuideExpanded = !isGuideExpanded">
+          <span class="guide-title">
+            <span nz-icon [nzType]="isGuideExpanded ? 'up' : 'down'" class="toggle-icon"></span>
+            📝 Hướng Dẫn Chơi
+          </span>
+          <span class="guide-subtitle">{{ isGuideExpanded ? 'Thu gọn' : 'Mở rộng' }}</span>
+        </div>
+        <div class="guide-content" [class.expanded]="isGuideExpanded">
+          <ul>
+            <li>🎯 Trả lời <strong>TẤT CẢ</strong> thẻ trong bộ</li>
+            <li>⏱️ <strong>KHÔNG</strong> giới hạn thời gian (thoải mái suy nghĩ)</li>
+            <li>🎧 50% câu hỏi nghe + 50% câu định nghĩa</li>
+            <li>⭐ Công thức điểm: <strong>Số câu đúng × 100 - Thời gian (giây)</strong></li>
+            <li>🏆 Càng đúng nhiều + Càng nhanh = Xếp hạng càng cao</li>
+            <li>🔄 Chơi <strong>không giới hạn lần</strong> để cải thiện kỷ lục</li>
+          </ul>
+        </div>
       </nz-card>
     </div>
 
@@ -165,20 +188,6 @@
         <span nz-icon nzType="trophy" nzTheme="outline"></span>
         🏆 Bảng Xếp Hạng
       </button>
-    </div>
-
-    <!-- Hướng Dẫn Chơi -->
-    <div class="game-info">
-      <nz-card nzTitle="📖 Hướng Dẫn Chơi">
-        <ul>
-          <li>🎯 Trả lời <strong>TẤT CẢ</strong> thẻ trong bộ</li>
-          <li>⏱️ <strong>KHÔNG</strong> giới hạn thời gian (thoải mái suy nghĩ)</li>
-          <li>🎧 50% câu hỏi nghe + 50% câu định nghĩa</li>
-          <li>⭐ Công thức điểm: <strong>Số câu đúng × 100 - Thời gian (giây)</strong></li>
-          <li>🏆 Càng đúng nhiều + Càng nhanh = Xếp hạng càng cao</li>
-          <li>🔄 Chơi <strong>không giới hạn lần</strong> để cải thiện kỷ lục</li>
-        </ul>
-      </nz-card>
     </div>
   </div>
 </div>

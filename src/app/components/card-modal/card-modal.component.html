@@ -1,9 +1,14 @@
 <div class="card-modal-container">
+  <!-- Close Button -->
+  <button class="modal-close-btn" (click)="handleCancel()" type="button">
+    <i class="fa-solid fa-xmark"></i>
+  </button>
+  
   <!-- Header Section -->
   <div class="modal-header">
     <div class="header-content">
       <div class="header-icon">
-        <span nz-icon [nzType]="isEditMode ? 'edit' : 'plus-circle'" nzTheme="outline"></span>
+        <i class="fa-solid" [ngClass]="isEditMode ? 'fa-pen-to-square' : 'fa-circle-plus'"></i>
       </div>
       <div class="header-text">
         <h2 class="modal-title">{{ isEditMode ? 'Chỉnh sửa thẻ' : 'Thêm thẻ mới' }}</h2>
@@ -18,9 +23,6 @@
     <!-- Front Text Section -->
     <div class="form-section">
       <div class="section-header">
-        <div class="section-icon front-icon">
-          <span nz-icon nzType="eye" nzTheme="outline"></span>
-        </div>
         <div class="section-info">
           <h3 class="section-title">Mặt trước</h3>
           <p class="section-description">Câu hỏi hoặc từ cần học</p>
@@ -34,7 +36,7 @@
               nz-input 
               formControlName="frontText" 
               placeholder="Ví dụ: What is the capital of France?"
-              [rows]="3"
+              [rows]="2"
               class="modern-textarea front-textarea">
             </textarea>
             <div class="input-footer">
@@ -47,7 +49,7 @@
           </div>
           <ng-template #frontTextErrorTpl let-control>
             <div class="error-message">
-              <span nz-icon nzType="exclamation-circle" nzTheme="outline"></span>
+              <i class="fa-solid fa-circle-exclamation"></i>
               <ng-container *ngIf="control.hasError('required')">
                 Vui lòng nhập nội dung mặt trước!
               </ng-container>
@@ -63,17 +65,9 @@
       </nz-form-item>
     </div>
 
-    <!-- Divider -->
-    <div class="form-divider">
-      <span nz-icon nzType="arrow-down" nzTheme="outline"></span>
-    </div>
-
     <!-- Back Text Section -->
     <div class="form-section">
       <div class="section-header">
-        <div class="section-icon back-icon">
-          <span nz-icon nzType="bulb" nzTheme="outline"></span>
-        </div>
         <div class="section-info">
           <h3 class="section-title">Mặt sau</h3>
           <p class="section-description">Câu trả lời hoặc nghĩa của từ</p>
@@ -87,7 +81,7 @@
               nz-input 
               formControlName="backText" 
               placeholder="Ví dụ: Paris"
-              [rows]="4"
+              [rows]="2"
               class="modern-textarea back-textarea">
             </textarea>
             <div class="input-footer">
@@ -100,7 +94,7 @@
           </div>
           <ng-template #backTextErrorTpl let-control>
             <div class="error-message">
-              <span nz-icon nzType="exclamation-circle" nzTheme="outline"></span>
+              <i class="fa-solid fa-circle-exclamation"></i>
               <ng-container *ngIf="control.hasError('required')">
                 Vui lòng nhập nội dung mặt sau!
               </ng-container>
@@ -119,7 +113,7 @@
     <!-- Tips Section -->
     <div class="tips-section" *ngIf="!isEditMode">
       <div class="tips-header">
-        <span nz-icon nzType="bulb" nzTheme="outline"></span>
+        <i class="fa-solid fa-lightbulb"></i>
         <span>Mẹo tạo thẻ hiệu quả</span>
       </div>
       <ul class="tips-list">
@@ -135,23 +129,13 @@
     <div class="footer-actions">
       <button 
         nz-button 
-        nzType="default" 
-        nzSize="large"
-        (click)="handleCancel()"
-        [disabled]="isConfirmLoading"
-        class="cancel-btn">
-        <span nz-icon nzType="close" nzTheme="outline"></span>
-        Hủy
-      </button>
-      <button 
-        nz-button 
         nzType="primary" 
         nzSize="large"
         (click)="handleOk()"
         [nzLoading]="isConfirmLoading"
         [disabled]="!cardForm.valid"
         class="submit-btn">
-        <span *ngIf="!isConfirmLoading" nz-icon [nzType]="isEditMode ? 'check' : 'plus'" nzTheme="outline"></span>
+        <i *ngIf="!isConfirmLoading" class="fa-solid" [ngClass]="isEditMode ? 'fa-check' : 'fa-plus'" style="margin-right: 6px;"></i>
         {{ isEditMode ? 'Cập nhật thẻ' : 'Tạo thẻ mới' }}
       </button>
     </div>
