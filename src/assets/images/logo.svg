@@ -1,0 +1,24 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="24" cy="24" r="22" fill="#6d8351" stroke="#5a6b44" stroke-width="2"/>
+  
+  <!-- Flashcard stack -->
+  <rect x="12" y="18" width="20" height="14" rx="2" fill="white" stroke="#8a994d" stroke-width="1"/>
+  <rect x="14" y="16" width="20" height="14" rx="2" fill="#f8f9fa" stroke="#8a994d" stroke-width="1"/>
+  <rect x="16" y="14" width="20" height="14" rx="2" fill="white" stroke="#8a994d" stroke-width="1"/>
+  
+  <!-- Smart symbol (lightbulb) -->
+  <g transform="translate(24, 21)">
+    <!-- Bulb -->
+    <ellipse cx="0" cy="-2" rx="3" ry="4" fill="#6d8351"/>
+    <!-- Base -->
+    <rect x="-2" y="2" width="4" height="2" rx="1" fill="#5a6b44"/>
+    <!-- Glow effect -->
+    <circle cx="0" cy="-2" r="5" fill="none" stroke="#8a994d" stroke-width="0.5" opacity="0.6"/>
+  </g>
+  
+  <!-- Corner sparkles -->
+  <circle cx="36" cy="12" r="1.5" fill="#8a994d"/>
+  <circle cx="12" cy="36" r="1" fill="#7a9359"/>
+  <circle cx="38" cy="36" r="1.5" fill="#8a994d"/>
+</svg>

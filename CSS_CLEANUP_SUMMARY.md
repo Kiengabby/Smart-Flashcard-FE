@@ -38,7 +38,6 @@
 #### **SAU** (200 dòng clean):
 ```scss
 .login-wrapper {
-  height: 100vh;
   background: $primary;
   display: flex;
   align-items: center;

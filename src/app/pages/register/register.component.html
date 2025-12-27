@@ -4,14 +4,15 @@
     <div class="register-form-section">
       <div class="form-content">
         <div class="brand-section">
-          <div class="brand-icon">🎯</div>
-          <h1 class="brand-name">Word Quest</h1>
+          <div class="brand-icon">
+            <img src="favicon.png" alt="Smart Flashcard Logo" class="logo-image">
+          </div>
+          <h1 class="brand-name">Smart Flashcard</h1>
           <p class="brand-tagline">Chinh phục từ vựng với AI thông minh</p>
         </div>
 
         <div class="form-header">
-          <h2 class="form-title">Tạo tài khoản</h2>
-          <p class="form-subtitle">Bắt đầu cuộc phiêu lưu từ vựng cùng Word Quest</p>
+          <h2 class="form-title" style="text-align: center;">Tạo tài khoản</h2>
         </div>
 
         <form nz-form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
@@ -91,81 +92,8 @@
       </div>
     </div>
 
-    <!-- Right Side: Features -->
-    <div class="register-features-section">
-      <div class="features-content">
-        <div class="features-header">
-          <nz-icon nzType="star" nzTheme="fill" class="star-icon"></nz-icon>
-          <h2 class="features-title">Tính năng nổi bật</h2>
-        </div>
-
-        <div class="features-list">
-          <div class="feature-item">
-            <div class="feature-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-              <nz-icon nzType="bulb" nzTheme="outline"></nz-icon>
-            </div>
-            <div class="feature-content">
-              <h3 class="feature-title">Học thông minh với AI</h3>
-              <p class="feature-description">AI tự động tạo flashcard, gợi ý hình ảnh và câu ví dụ giúp bạn học nhanh hơn</p>
-            </div>
-          </div>
-
-          <div class="feature-item">
-            <div class="feature-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
-              <nz-icon nzType="rocket" nzTheme="outline"></nz-icon>
-            </div>
-            <div class="feature-content">
-              <h3 class="feature-title">Phương pháp 4 bước</h3>
-              <p class="feature-description">Chinh phục từ vựng qua 4 bước: Xem, Quiz, Nghe và Thử thách thực tế</p>
-            </div>
-          </div>
-
-          <div class="feature-item">
-            <div class="feature-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
-              <nz-icon nzType="thunderbolt" nzTheme="outline"></nz-icon>
-            </div>
-            <div class="feature-content">
-              <h3 class="feature-title">Ôn tập thông minh</h3>
-              <p class="feature-description">Hệ thống SRS giúp bạn ôn đúng lúc, nhớ lâu hơn với ít thời gian hơn</p>
-            </div>
-          </div>
-
-          <div class="feature-item">
-            <div class="feature-icon" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
-              <nz-icon nzType="trophy" nzTheme="outline"></nz-icon>
-            </div>
-            <div class="feature-content">
-              <h3 class="feature-title">Thách đấu bạn bè</h3>
-              <p class="feature-description">Tạo động lực học tập qua các cuộc thi nhỏ với bạn bè</p>
-            </div>
-          </div>
-
-          <div class="feature-item">
-            <div class="feature-icon" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);">
-              <nz-icon nzType="team" nzTheme="outline"></nz-icon>
-            </div>
-            <div class="feature-content">
-              <h3 class="feature-title">Cộng đồng học tập</h3>
-              <p class="feature-description">Chia sẻ và học hỏi mẹo ghi nhớ từ hàng nghìn người học khác</p>
-            </div>
-          </div>
-
-          <div class="feature-item">
-            <div class="feature-icon" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
-              <nz-icon nzType="line-chart" nzTheme="outline"></nz-icon>
-            </div>
-            <div class="feature-content">
-              <h3 class="feature-title">Theo dõi tiến độ</h3>
-              <p class="feature-description">Xem biểu đồ chi tiết về quá trình học tập và đạt được các huy hiệu</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Decorative Elements -->
-      <div class="decorative-shape shape-1"></div>
-      <div class="decorative-shape shape-2"></div>
-      <div class="decorative-shape shape-3"></div>
+    <!-- Right Side: Hero Section -->
+    <div class="register-hero-section">
     </div>
   </div>
 </div>

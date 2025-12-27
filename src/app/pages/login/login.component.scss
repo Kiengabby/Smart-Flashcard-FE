@@ -1,7 +1,7 @@
 /* ===== BALANCED LOGIN STYLES - BEAUTIFUL & PERFORMANT ===== */
 
 /* Variables */
-$primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+$primary-gradient: linear-gradient(135deg, #6d8351 0%, #5a6b44 100%);
 $secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
 $success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
 $text-dark: #1f2937;
@@ -11,7 +11,7 @@ $white: #ffffff;
 /* Main wrapper - Beautiful gradient background */
 .login-wrapper {
   height: 100vh;
-  background: $primary-gradient;
+  background:#fff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -82,6 +82,13 @@ $white: #ffffff;
   font-size: 48px;
   margin-bottom: 12px;
   animation: gentle-bounce 3s ease-in-out infinite;
+  
+  .logo-image {
+    width: 100px;
+    height: 100px;
+    display: block;
+    margin: 0 auto;
+  }
 }
 
 .brand-name {
@@ -124,8 +131,8 @@ $white: #ffffff;
 
     &:focus,
     &:focus-within {
-      border-color: #667eea;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1), 0 4px 12px rgba(0, 0, 0, 0.05);
+      border-color: #6d8351;
+      box-shadow: 0 0 0 3px rgba(109, 131, 81, 0.1), 0 4px 12px rgba(0, 0, 0, 0.05);
       transform: translateY(-1px);
     }
   }
@@ -160,13 +167,13 @@ $white: #ffffff;
   font-weight: 700;
   letter-spacing: 0.5px;
   text-transform: uppercase;
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 6px 20px rgba(109, 131, 81, 0.3);
   transition: all 0.3s ease;
   margin-bottom: 20px;
 
   &:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 8px 25px rgba(109, 131, 81, 0.4);
   }
 
   &:active:not(:disabled) {
@@ -191,41 +198,28 @@ $white: #ffffff;
   animation: fade-in 1s ease-out;
 
   .link-primary {
-    color: #667eea;
+    color: #6d8351;
     text-decoration: none;
     font-weight: 700;
     transition: all 0.3s ease;
 
     &:hover {
-      color: #5568d3;
+      color: #5a6b44;
       text-decoration: underline;
     }
   }
 }
 
-/* Hero section - Compact and beautiful */
+/* Hero section with background image */
 .login-hero-section {
-  background: $primary-gradient;
-  padding: 40px 32px;
+  background: #adc398 url('../../../assets/login.png') center/cover no-repeat;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  color: $white;
+  align-items: center;
   position: relative;
   overflow: hidden;
-
-  /* Decorative circles */
-  &::before {
-    content: "";
-    position: absolute;
-    width: 180px;
-    height: 180px;
-    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-    border-radius: 50%;
-    top: 20%;
-    right: -40px;
-    animation: gentle-pulse 8s ease-in-out infinite;
-  }
+  min-height: 600px;
 }
 
 .hero-content {
@@ -249,7 +243,7 @@ $white: #ffffff;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
   .gradient-text {
-    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    background: linear-gradient(135deg, #8a994d 0%, #8a994d 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -434,7 +428,7 @@ $white: #ffffff;
 
   i {
     font-size: 16px;
-    color: #10b981;
+    color: #6d8351;
     filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
   }
 }
@@ -447,7 +441,7 @@ $white: #ffffff;
   transition: all 0.3s ease;
 
   &:hover {
-    color: #667eea;
+    color: #6d8351;
     transform: scale(1.1);
   }
 }
@@ -583,10 +577,10 @@ $white: #ffffff;
   }
 
   .submit-btn {
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.25) !important;
+    box-shadow: 0 4px 15px rgba(109, 131, 81, 0.25) !important;
     
     &:hover:not(:disabled) {
-      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.35) !important;
+      box-shadow: 0 6px 20px rgba(109, 131, 81, 0.35) !important;
       transform: translateY(-1px) !important;
     }
   }
@@ -601,7 +595,7 @@ $white: #ffffff;
   }
 
   .login-wrapper {
-    background: #667eea !important;
+    background: #6d8351 !important;
   }
 
   .stat-card,
