@@ -87,6 +87,23 @@
       <span nz-icon nzType="info-circle" nzTheme="outline"></span>
       Nhấn vào thẻ để lật và xem câu trả lời
     </p>
+
+    <!-- Community Tips Button -->
+    <div class="community-tips-section">
+      <button 
+        nz-button 
+        nzType="dashed" 
+        nzSize="large"
+        nzBlock
+        class="community-tips-btn"
+        (click)="openCommunityTips()"
+        nz-tooltip="Xem mẹo học từ cộng đồng hoặc chia sẻ cách nhớ hiệu quả"
+        nzTooltipPlacement="top">
+        <span nz-icon nzType="bulb" nzTheme="outline"></span>
+        <span class="btn-text">💡 Mẹo học từ cộng đồng</span>
+        <span class="btn-hint">(Khó nhớ? Xem mẹo từ bạn bè!)</span>
+      </button>
+    </div>
   </div>
 
   <!-- Controls -->
@@ -168,5 +185,12 @@
       Quay lại
     </button>
   </div>
+
+  <!-- Community Tips Modal -->
+  <app-community-tips-modal
+    [visible]="showCommunityTipsModal"
+    [card]="currentCard!"
+    (visibleChange)="showCommunityTipsModal = false">
+  </app-community-tips-modal>
 </div>
 

@@ -1,0 +1,28 @@
+<nz-modal 
+  [nzVisible]="visible"
+  nzTitle="Test Modal"
+  [nzFooter]="null"
+  (nzOnCancel)="onVisibleChange(false)">
+
+  <h1 style="color: red; font-size: 24px;">HELLO WORLD TEST!</h1>
+  
+  <div style="background: green; color: white; padding: 20px; font-size: 18px;">
+    <p>Modal visible: {{ visible }}</p>
+    <p>Card exists: {{ !!card }}</p>
+    <p>Card ID: {{ card?.id }}</p>
+  </div>
+
+  <div style="background: blue; color: white; padding: 20px; margin: 20px 0;">
+    <p>Tips array length: {{ tips.length }}</p>
+    <p>Is loading: {{ isLoading }}</p>
+  </div>
+
+  <div style="background: yellow; color: black; padding: 20px;">
+    <h3>TIPS CONTENT:</h3>
+    <div style="border: 2px solid red; padding: 10px; margin: 10px 0;" *ngFor="let tip of tips">
+      <p><strong>User:</strong> {{ tip.userDisplayName }}</p>
+      <p><strong>Content:</strong> {{ tip.content }}</p>
+    </div>
+  </div>
+
+</nz-modal>

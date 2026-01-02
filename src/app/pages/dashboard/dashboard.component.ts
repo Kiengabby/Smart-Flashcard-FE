@@ -1,6 +1,7 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 // NG-ZORRO Modules
 import { NzGridModule } from 'ng-zorro-antd/grid';
@@ -15,6 +16,7 @@ import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzAlertModule } from 'ng-zorro-antd/alert';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 
 // Services & Interfaces
 import { DeckService } from '../../services/deck.service';
@@ -22,8 +24,10 @@ import { TokenService } from '../../services/token.service';
 import { CardService } from '../../services/card.service';
 import { DailyReviewService } from '../../services/daily-review.service';
 import { ArenaService } from '../../services/arena.service';
+import { InvitationService } from '../../services/invitation.service';
 import { DeckDTO } from '../../interfaces/deck.dto';
 import { UserRankingAlert } from '../../interfaces/arena.model';
+import { Invitation, InvitationStatus } from '../../interfaces/invitation.model';
 import { CreateDeckModalComponent } from '../../components/create-deck-modal/create-deck-modal.component';
 
 // Type Definitions
@@ -51,10 +55,19 @@ interface CalendarDay {
     NzBadgeModule,
     NzTagModule,
     NzAlertModule,
+    NzToolTipModule,
   ],
   providers: [NzModalService, NzMessageService],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss', './dashboard-cute-book-bg.css'],
+  animations: [
+    trigger('slideInUp', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(30px)' }),
+        animate('300ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
+      ])
+    ])
+  ]
 })
 export class DashboardComponent implements OnInit {
   
@@ -90,6 +103,12 @@ export class DashboardComponent implements OnInit {
   rankingAlerts: UserRankingAlert[] = [];
   isLoadingRankings = true;
 
+  // Invitations
+  pendingInvitations: Invitation[] = [];
+  isLoadingInvitations = true;
+  InvitationStatus = InvitationStatus;
+  private processingInvitations = new Set<number>();
+
   // ===========================
   // CALENDAR STATE
   // ===========================
@@ -112,10 +131,12 @@ export class DashboardComponent implements OnInit {
     private cardService: CardService,
     private dailyReviewService: DailyReviewService,
     private arenaService: ArenaService,
+    private invitationService: InvitationService,
     private cdr: ChangeDetectorRef,
     private modalService: NzModalService,
     private messageService: NzMessageService,
-    private router: Router
+    private router: Router,
+    private ngZone: NgZone
   ) {}
 
   ngOnInit(): void {
@@ -127,6 +148,7 @@ export class DashboardComponent implements OnInit {
       this.loadStudyStats();
       this.loadCalendarData();
       this.loadDecks();
+      this.loadPendingInvitations();
       // this.loadRankingAlerts(); // 🔕 DISABLED: Waiting for backend API
     });
   }
@@ -405,6 +427,18 @@ export class DashboardComponent implements OnInit {
     return colors[hash % colors.length];
   }
 
+  getAvatarGradient(name: string): string {
+    const gradients = [
+      'linear-gradient(135deg, #aed581 0%, #9ccc65 100%)',  // Light lime - nhẹ nhàng
+      'linear-gradient(135deg, #c5e1a5 0%, #aed581 100%)',  // Pale lime - pastel
+      'linear-gradient(135deg, #9ccc65 0%, #8bc34a 100%)',  // Lime green - mềm mại
+      'linear-gradient(135deg, #dcedc8 0%, #c5e1a5 100%)',  // Very pale lime - rất nhẹ
+      'linear-gradient(135deg, #8bc34a 0%, #7cb342 100%)'   // Sage green - thanh lịch
+    ];
+    const hash = name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    return gradients[hash % gradients.length];
+  }
+
   getUserInitials(name: string): string {
     return name.split(' ').map(word => word[0]).join('').toUpperCase().substring(0, 2);
   }
@@ -417,7 +451,33 @@ export class DashboardComponent implements OnInit {
   }
 
   navigateToDailyReview(): void {
-    this.router.navigate(['/app/daily-review']);
+    // Bắt đầu ôn tập trực tiếp mà không hiển thị giao diện thống kê
+    this.startDirectReview();
+  }
+
+  private startDirectReview(): void {
+    // Bắt đầu session ôn tập và chuyển thẳng vào giao diện học
+    this.dailyReviewService.startReviewSession().subscribe({
+      next: (response) => {
+        if (response && response.cards && response.cards.length > 0) {
+          // Chuyển vào giao diện flashcard study với dữ liệu từ daily review
+          this.router.navigate(['/app/flashcard-study'], {
+            queryParams: { 
+              sessionId: response.sessionId,
+              source: 'daily-review'
+            },
+            state: { reviewSession: response }
+          });
+        } else {
+          // Không có thẻ nào để ôn tập
+          this.messageService.info('Không có thẻ nào cần ôn tập hôm nay!');
+        }
+      },
+      error: (error) => {
+        console.error('Error starting direct review session:', error);
+        this.messageService.error('Không thể bắt đầu phiên ôn tập. Vui lòng thử lại!');
+      }
+    });
   }
 
   // ===========================
@@ -519,4 +579,122 @@ export class DashboardComponent implements OnInit {
       this.currentUser.totalDecks = this.decks.length;
     }
   }
+
+  // ===========================
+  // INVITATION MANAGEMENT
+  // ===========================
+  
+  loadPendingInvitations(): void {
+    this.isLoadingInvitations = true;
+    
+    this.invitationService.getReceivedInvitations().subscribe({
+      next: (invitations) => {
+        // Chỉ lấy invitations có status PENDING
+        this.pendingInvitations = invitations.filter(inv => inv.status === InvitationStatus.PENDING);
+        this.isLoadingInvitations = false;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error loading pending invitations:', error);
+        this.pendingInvitations = [];
+        this.isLoadingInvitations = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  acceptInvitation(invitation: Invitation): void {
+    this.processingInvitations.add(invitation.id);
+    
+    this.invitationService.respondToInvitation(invitation.id, true).subscribe({
+      next: () => {
+        // Dùng NgZone để tránh NG0100 error
+        this.ngZone.run(() => {
+          // Xóa khỏi processing set
+          this.processingInvitations.delete(invitation.id);
+          
+          // Hiển thị thông báo thành công
+          this.messageService.success(
+            `🎉 Đã thêm bộ thẻ "${invitation.deck.name}" vào thư viện của bạn!`,
+            { nzDuration: 3000 }
+          );
+          
+          // Refresh data
+          this.loadPendingInvitations();
+          this.loadDecks();
+          
+          // Trigger change detection
+          this.cdr.detectChanges();
+          
+          // Điều hướng đến thư viện sau 800ms
+          setTimeout(() => {
+            this.router.navigate(['/app/deck-library']).then(
+              success => {
+                if (!success) {
+                  console.error('Navigation failed to /app/deck-library');
+                  this.messageService.info('Vui lòng vào menu Thư viện để xem bộ thẻ mới!');
+                }
+              }
+            );
+          }, 800);
+        });
+      },
+      error: (error) => {
+        this.ngZone.run(() => {
+          console.error('Error accepting invitation:', error);
+          this.processingInvitations.delete(invitation.id);
+          this.messageService.error('Có lỗi xảy ra khi chấp nhận lời mời. Vui lòng thử lại!');
+          this.cdr.detectChanges();
+        });
+      }
+    });
+  }
+
+  rejectInvitation(invitation: Invitation): void {
+    this.processingInvitations.add(invitation.id);
+    
+    this.invitationService.respondToInvitation(invitation.id, false).subscribe({
+      next: () => {
+        this.ngZone.run(() => {
+          this.processingInvitations.delete(invitation.id);
+          this.messageService.info(`Đã từ chối lời mời từ ${invitation.inviter.name}`);
+          this.loadPendingInvitations();
+          this.cdr.detectChanges();
+        });
+      },
+      error: (error) => {
+        this.ngZone.run(() => {
+          console.error('Error rejecting invitation:', error);
+          this.processingInvitations.delete(invitation.id);
+          this.messageService.error('Có lỗi xảy ra khi từ chối lời mời. Vui lòng thử lại!');
+          this.cdr.detectChanges();
+        });
+      }
+    });
+  }
+
+  isInvitationProcessing(invitationId: number): boolean {
+    return this.processingInvitations.has(invitationId);
+  }
+
+  formatTimeAgo(date: Date): string {
+    const now = new Date();
+    const diffMs = now.getTime() - new Date(date).getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    if (diffMins < 1) return 'Vừa xong';
+    if (diffMins < 60) return `${diffMins} phút trước`;
+    if (diffHours < 24) return `${diffHours} giờ trước`;
+    return `${diffDays} ngày trước`;
+  }
+
+  trackByInvitationId(index: number, invitation: Invitation): number {
+    return invitation.id;
+  }
+
+  // ===========================
+  // HELPER METHODS
+  // ===========================
 }

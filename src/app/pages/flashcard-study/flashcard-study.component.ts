@@ -11,9 +11,11 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { CardService } from '../../services/card.service';
 import { DeckService } from '../../services/deck.service';
 import { LearningProgressService } from '../../services/learning-progress.service';
+import { DailyReviewService } from '../../services/daily-review.service';
 import { CardDTO, ReviewCardRequest } from '../../interfaces/card.dto';
 import { DeckDTO } from '../../interfaces/deck.dto';
 import { WebSpeechService } from '../../services/web-speech.service';
+import { CommunityTipsModalComponent } from '../../components/community-tips-modal/community-tips-modal.component';
 
 @Component({
   selector: 'app-flashcard-study',
@@ -24,7 +26,8 @@ import { WebSpeechService } from '../../services/web-speech.service';
     NzButtonModule,
     NzIconModule,
     NzProgressModule,
-    NzTooltipModule
+    NzTooltipModule,
+    CommunityTipsModalComponent
   ],
   providers: [NzMessageService],
   templateUrl: './flashcard-study.component.html',
@@ -39,6 +42,14 @@ export class FlashcardStudyComponent implements OnInit {
   private _isLoading = true;
   isAudioLoading = false;
   private audioElement: HTMLAudioElement | null = null;
+  
+  // Daily Review Session properties
+  sessionId: string | null = null;
+  isFromDailyReview = false;
+  reviewSession: any = null;
+  
+  // Community Tips Modal
+  showCommunityTipsModal = false;
 
   get currentIndex(): number {
     return this._currentIndex;
@@ -81,6 +92,7 @@ export class FlashcardStudyComponent implements OnInit {
     private cardService: CardService,
     private deckService: DeckService,
     private learningProgressService: LearningProgressService,
+    private dailyReviewService: DailyReviewService,
     private message: NzMessageService,
     private cdr: ChangeDetectorRef,
     private http: HttpClient,
@@ -95,17 +107,36 @@ export class FlashcardStudyComponent implements OnInit {
     
     // Use setTimeout to avoid initial expression changed error
     setTimeout(() => {
-      // Lấy deckId từ parent route (vì route structure là /study/:id/flashcard)
-      this.route.parent?.params.subscribe(parentParams => {
-        this.deckId = +parentParams['id'];
-        console.log('Got deckId from parent params:', this.deckId);
-        if (this.deckId && this.deckId > 0) {
-          this.loadDeckInfo();
-          this.loadCards();
+      // Check if this is from daily review
+      this.route.queryParams.subscribe(queryParams => {
+        this.sessionId = queryParams['sessionId'];
+        this.isFromDailyReview = queryParams['source'] === 'daily-review';
+        
+        if (this.isFromDailyReview && this.sessionId) {
+          // Get review session data from navigation state
+          const navigation = this.router.getCurrentNavigation();
+          this.reviewSession = navigation?.extras?.state?.['reviewSession'];
+          
+          if (this.reviewSession) {
+            this.loadDailyReviewCards();
+          } else {
+            // If no data in state, try to start a new session
+            this.startNewReviewSession();
+          }
         } else {
-          console.error('Invalid deckId:', this.deckId);
-          // Redirect silently without showing error message
-          this.router.navigate(['/app/dashboard']);
+          // Normal deck study mode
+          this.route.parent?.params.subscribe(parentParams => {
+            this.deckId = +parentParams['id'];
+            console.log('Got deckId from parent params:', this.deckId);
+            if (this.deckId && this.deckId > 0) {
+              this.loadDeckInfo();
+              this.loadCards();
+            } else {
+              console.error('Invalid deckId:', this.deckId);
+              // Redirect silently without showing error message
+              this.router.navigate(['/app/dashboard']);
+            }
+          });
         }
       });
     }, 0);
@@ -130,6 +161,69 @@ export class FlashcardStudyComponent implements OnInit {
         this.cdr.detectChanges();
         // Redirect back to deck detail if loading fails
         this.router.navigate(['/app/deck', this.deckId]);
+      }
+    });
+  }
+
+  loadDailyReviewCards(): void {
+    this._isLoading = true;
+    this.cdr.detectChanges();
+    
+    console.log('Loading cards from daily review session:', this.reviewSession);
+    
+    try {
+      // Convert daily review cards to flashcard format
+      this.cards = this.reviewSession.cards.map((reviewCard: any) => ({
+        id: reviewCard.cardId || reviewCard.id,
+        frontText: reviewCard.front || reviewCard.frontText,
+        backText: reviewCard.back || reviewCard.backText,
+        deckId: reviewCard.deckId,
+        difficulty: reviewCard.easinessFactor || 2.5,
+        repetition: 0,
+        interval: 1,
+        audioUrl: reviewCard.audioUrl
+      }));
+      
+      // Set deck name for header if available
+      if (this.reviewSession.cards.length > 0 && this.reviewSession.cards[0].deckName) {
+        this.deck = {
+          id: this.reviewSession.cards[0].deckId,
+          name: this.reviewSession.cards[0].deckName,
+        } as DeckDTO;
+      } else {
+        this.deck = {
+          id: 0,
+          name: 'Ôn tập hàng ngày',
+        } as DeckDTO;
+      }
+      
+      this._isLoading = false;
+      this.cdr.detectChanges();
+      console.log('Successfully loaded daily review cards:', this.cards);
+    } catch (error) {
+      console.error('Error processing daily review cards:', error);
+      this.message.error('Không thể tải thẻ ôn tập. Quay về trang chính.');
+      this._isLoading = false;
+      this.cdr.detectChanges();
+      this.router.navigate(['/app/dashboard']);
+    }
+  }
+
+  startNewReviewSession(): void {
+    this._isLoading = true;
+    this.cdr.detectChanges();
+    
+    this.dailyReviewService.startReviewSession().subscribe({
+      next: (response: any) => {
+        this.reviewSession = response;
+        this.loadDailyReviewCards();
+      },
+      error: (error: any) => {
+        console.error('Error starting new review session:', error);
+        this.message.error('Không thể bắt đầu phiên ôn tập. Quay về trang chính.');
+        this._isLoading = false;
+        this.cdr.detectChanges();
+        this.router.navigate(['/app/dashboard']);
       }
     });
   }
@@ -264,21 +358,39 @@ export class FlashcardStudyComponent implements OnInit {
       quality: result.quality
     });
 
-    // Call backend API to save review result
-    const answerRequest = {
-      quality: result.quality
-    };
+    // Call the appropriate backend endpoint based on study mode
+    if (this.isFromDailyReview && this.sessionId) {
+      // Use daily review API
+      const reviewRequest = {
+        quality: result.quality,
+        responseTime: 0 // You can track actual response time if needed
+      };
+      
+      this.dailyReviewService.reviewCard(this.sessionId, cardId, reviewRequest).subscribe({
+        next: (response) => {
+          console.log('Daily review submitted successfully:', response);
+        },
+        error: (error) => {
+          console.error('Error submitting daily review:', error);
+          this.message.error('Lỗi khi lưu kết quả ôn tập: ' + (error.message || 'Vui lòng thử lại'));
+        }
+      });
+    } else {
+      // Use regular card review API
+      const answerRequest = {
+        quality: result.quality
+      };
 
-    // Call the correct backend endpoint  
-    this.http.post(`http://localhost:8080/api/cards/${cardId}/review`, answerRequest).subscribe({
-      next: (response) => {
-        console.log('Review submitted successfully:', response);
-      },
-      error: (error) => {
-        console.error('Error submitting review:', error);
-        this.message.error('Lỗi khi lưu kết quả học: ' + (error.message || 'Vui lòng thử lại'));
-      }
-    });
+      this.http.post(`http://localhost:8080/api/cards/${cardId}/review`, answerRequest).subscribe({
+        next: (response) => {
+          console.log('Review submitted successfully:', response);
+        },
+        error: (error) => {
+          console.error('Error submitting review:', error);
+          this.message.error('Lỗi khi lưu kết quả học: ' + (error.message || 'Vui lòng thử lại'));
+        }
+      });
+    }
   }
 
   /**
@@ -318,32 +430,55 @@ export class FlashcardStudyComponent implements OnInit {
   }
 
   completeStudy(): void {
-    // Calculate average score based on ratings
-    const avgScore = this.cards.length > 0 ? 85 : 0; // Simplified score calculation
-    
-    // Update learning progress
-    this.learningProgressService.updateProgress(this.deckId, {
-      mode: 'flashcard',
-      completed: true,
-      score: avgScore
-    }).subscribe({
-      next: () => {
-        this.message.success('🎉 Hoàn thành Flashcard Study! Quiz Practice đã được mở khóa!');
-        // Navigate back to learning path to see progress
-        setTimeout(() => {
+    if (this.isFromDailyReview && this.sessionId) {
+      // Complete daily review session
+      this.dailyReviewService.completeSession(this.sessionId).subscribe({
+        next: () => {
+          this.message.success('🎉 Hoàn thành phiên ôn tập hàng ngày!');
+          setTimeout(() => {
+            this.router.navigate(['/app/dashboard']);
+          }, 1000);
+        },
+        error: (error) => {
+          console.error('Error completing daily review session:', error);
+          // Still navigate even if completion fails
+          this.router.navigate(['/app/dashboard']);
+        }
+      });
+    } else {
+      // Complete regular deck study
+      const avgScore = this.cards.length > 0 ? 85 : 0; // Simplified score calculation
+      
+      // Update learning progress
+      this.learningProgressService.updateProgress(this.deckId, {
+        mode: 'flashcard',
+        completed: true,
+        score: avgScore
+      }).subscribe({
+        next: () => {
+          this.message.success('🎉 Hoàn thành Flashcard Study! Quiz Practice đã được mở khóa!');
+          // Navigate back to learning path to see progress
+          setTimeout(() => {
+            this.router.navigate(['/app/deck', this.deckId, 'learning-path']);
+          }, 1000);
+        },
+        error: (error) => {
+          console.error('Error updating progress:', error);
+          // Still navigate even if update fails
           this.router.navigate(['/app/deck', this.deckId, 'learning-path']);
-        }, 1000);
-      },
-      error: (error) => {
-        console.error('Error updating progress:', error);
-        // Still navigate even if update fails
-        this.router.navigate(['/app/deck', this.deckId, 'learning-path']);
-      }
-    });
+        }
+      });
+    }
   }
 
   goBack(): void {
-    this.router.navigate(['/app/deck', this.deckId, 'learning-path']);
+    if (this.isFromDailyReview) {
+      // If from daily review, go back to dashboard
+      this.router.navigate(['/app/dashboard']);
+    } else {
+      // If from deck study, go back to deck learning path
+      this.router.navigate(['/app/deck', this.deckId, 'learning-path']);
+    }
   }
 
   restart(): void {
@@ -531,6 +666,27 @@ export class FlashcardStudyComponent implements OnInit {
       this.isAudioLoading = loading;
       this.cdr.detectChanges();
     }, 0);
+  }
+
+  /**
+   * Open Community Tips Modal
+   */
+  openCommunityTips(): void {
+    console.log('openCommunityTips called');
+    console.log('currentCard:', this.currentCard);
+    if (!this.currentCard) {
+      this.message.warning('Không có thẻ nào để xem mẹo học');
+      return;
+    }
+    console.log('Setting showCommunityTipsModal = true');
+    this.showCommunityTipsModal = true;
+  }
+
+  /**
+   * Close Community Tips Modal
+   */
+  closeCommunityTips(): void {
+    this.showCommunityTipsModal = false;
   }
 }
 

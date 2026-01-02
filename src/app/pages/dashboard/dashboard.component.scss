@@ -1577,3 +1577,1228 @@
     }
   }
 }
+
+// ===========================
+// DASHBOARD INVITATIONS SECTION
+// ===========================
+.invitations-section {
+  margin-bottom: 24px;
+  
+  .invitations-header {
+    margin-bottom: 20px;
+    padding: 0 4px;
+    
+    h3 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #262626;
+      margin: 0 0 8px 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      
+      i {
+        font-size: 22px;
+        color: #ff7875;
+        background: linear-gradient(135deg, #ff9c6e 0%, #ff7875 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      
+      ::ng-deep .ant-badge {
+        margin-left: 8px;
+        
+        .ant-badge-count {
+          background: linear-gradient(135deg, #ff7875 0%, #ff4d4f 100%);
+          border: none;
+          box-shadow: 0 2px 8px rgba(255, 120, 117, 0.3);
+          font-weight: 600;
+        }
+      }
+    }
+    
+    .invitations-subtitle {
+      color: #8c8c8c;
+      font-size: 14px;
+      margin: 0;
+      font-weight: 500;
+    }
+  }
+  
+  .invitations-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .invitation-item {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    border: 2px solid transparent;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    
+    // Gradient border effect
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      padding: 2px;
+      background: linear-gradient(135deg, #ff9c6e 0%, #667eea 50%, #52c41a 100%);
+      border-radius: 16px;
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask-composite: exclude;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      
+      &::before {
+        opacity: 1;
+      }
+      
+      .invitation-actions {
+        .accept-btn, .reject-btn {
+          transform: scale(1.1);
+        }
+      }
+    }
+    
+    .invitation-content {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .invitation-deck-info {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex: 1;
+      min-width: 0; // Prevent flex item overflow
+      
+      .deck-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 20px;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        
+        i {
+          filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+        }
+      }
+      
+      .deck-details {
+        min-width: 0;
+        
+        .deck-name {
+          font-size: 16px;
+          font-weight: 700;
+          color: #262626;
+          margin: 0 0 4px 0;
+          line-height: 1.3;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        
+        .deck-meta {
+          font-size: 13px;
+          color: #8c8c8c;
+          margin: 0;
+          font-weight: 500;
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          
+          &::before {
+            content: '📚';
+            font-size: 12px;
+          }
+        }
+      }
+    }
+    
+    .invitation-sender {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+      
+      ::ng-deep .ant-avatar {
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+        border: 2px solid white;
+        font-weight: 600;
+        font-size: 13px;
+      }
+      
+      .sender-details {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        min-width: 0;
+        
+        .sender-name {
+          font-size: 14px;
+          font-weight: 600;
+          color: #262626;
+          line-height: 1.2;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        
+        .invitation-time {
+          font-size: 12px;
+          color: #bfbfbf;
+          font-weight: 500;
+        }
+      }
+    }
+    
+    .invitation-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+      
+      .accept-btn, .reject-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        
+        i {
+          font-size: 14px;
+        }
+        
+        &:active {
+          transform: scale(0.95);
+        }
+      }
+      
+      .accept-btn {
+        background: linear-gradient(135deg, #52c41a 0%, #73d13d 100%);
+        color: white;
+        
+        &:hover {
+          background: linear-gradient(135deg, #449e16 0%, #5cb630 100%);
+          box-shadow: 0 4px 12px rgba(82, 196, 26, 0.4);
+        }
+        
+        &:disabled {
+          background: #f0f0f0;
+          color: #bfbfbf;
+          transform: none;
+          box-shadow: none;
+          cursor: not-allowed;
+        }
+      }
+      
+      .reject-btn {
+        background: linear-gradient(135deg, #ff7875 0%, #ff4d4f 100%);
+        color: white;
+        
+        &:hover {
+          background: linear-gradient(135deg, #ff6663 0%, #ff3333 100%);
+          box-shadow: 0 4px 12px rgba(255, 120, 117, 0.4);
+        }
+        
+        &:disabled {
+          background: #f0f0f0;
+          color: #bfbfbf;
+          transform: none;
+          box-shadow: none;
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
+  
+  // Empty state hint styling
+  .invitations-empty-hint {
+    text-align: center;
+    padding: 20px 16px;
+    margin-top: 12px;
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    border: 1.5px dashed #bbf7d0;
+    border-radius: 12px;
+    
+    .empty-hint {
+      color: #4d7c0f;
+      font-size: 13px;
+      font-style: italic;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      
+      i {
+        font-size: 16px;
+        color: #6a8250;
+      }
+    }
+  }
+}
+
+// Loading state for action buttons
+.invitation-actions {
+  .accept-btn.loading, .reject-btn.loading {
+    ::ng-deep .ant-btn-loading-icon {
+      color: white;
+    }
+  }
+}
+
+// Mobile responsive
+@media (max-width: 768px) {
+  .invitations-section {
+    .invitation-item {
+      padding: 16px;
+      
+      .invitation-content {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 16px;
+      }
+      
+      .invitation-deck-info {
+        .deck-details .deck-name {
+          white-space: normal;
+          overflow: visible;
+          text-overflow: unset;
+        }
+      }
+      
+      .invitation-sender {
+        justify-content: space-between;
+        padding: 12px;
+        background: #fafafa;
+        border-radius: 10px;
+      }
+      
+      .invitation-actions {
+        justify-content: center;
+        
+        .accept-btn, .reject-btn {
+          width: 42px;
+          height: 42px;
+          
+          i {
+            font-size: 16px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .invitations-section {
+    .invitations-header {
+      h3 {
+        font-size: 18px;
+      }
+    }
+    
+    .invitation-item {
+      .invitation-deck-info {
+        .deck-icon {
+          width: 44px;
+          height: 44px;
+          font-size: 18px;
+        }
+        
+        .deck-details .deck-name {
+          font-size: 15px;
+        }
+      }
+      
+      .invitation-sender {
+        .sender-details .sender-name {
+          font-size: 13px;
+        }
+      }
+    }
+  }
+}
+
+// Animation keyframes
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ========================================
+// 🎨 MODERN INVITATION SECTION STYLES - COTTAGECORE NATURAL THEME 🌿✨
+// Inspired by: soft greens, white flowers, natural light, dreamy pastels
+// Color palette: Muted sage greens, soft mint, pale jade
+// ========================================
+
+.modern-invitations {
+  margin-top: 20px;
+  
+  .modern-header {
+    background: linear-gradient(135deg, #f5f9f6 0%, #e8f5e9 50%, #dcedc8 100%);
+    border-radius: 16px;
+    padding: 14px 18px;
+    margin-bottom: 14px;
+    border-left: 3px solid #9ccc65;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(156, 204, 101, 0.12), 0 0 0 1px rgba(255, 255, 255, 0.8) inset;
+    
+    .header-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .header-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #9ccc65 0%, #8bc34a 100%);
+      border-radius: 12px;
+      margin-right: 12px;
+      flex-shrink: 0;
+      box-shadow: 0 2px 6px rgba(139, 195, 74, 0.2);
+      
+      i {
+        font-size: 18px;
+        color: #fff;
+        filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+      }
+      
+      .icon-pulse {
+        display: none;
+      }
+    }
+    
+    .header-text {
+      flex: 1;
+      
+      .section-title {
+        font-size: 16px;
+        font-weight: 700;
+        margin: 0 0 2px 0;
+        color: #558b2f;
+        text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+      }
+      
+      .section-subtitle {
+        margin: 0;
+        font-size: 12px;
+        color: #689f38;
+        font-weight: 500;
+      }
+    }
+    
+    .header-badge {
+      ::ng-deep .ant-badge {
+        .ant-badge-count {
+          background: linear-gradient(135deg, #9ccc65 0%, #8bc34a 100%);
+          border: none;
+          box-shadow: 0 2px 6px rgba(139, 195, 74, 0.3);
+          font-weight: 600;
+          font-size: 11px;
+          height: 20px;
+          min-width: 20px;
+          line-height: 20px;
+        }
+      }
+    }
+  }
+
+  .invitations-grid {
+    display: grid;
+    gap: 10px;
+    
+    .modern-card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 0;
+      border: 1.5px solid #f1f8e9;
+      box-shadow: 0 2px 6px rgba(139, 195, 74, 0.06), 0 4px 12px rgba(205, 220, 157, 0.04);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
+      position: relative;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, 
+          #aed581 0%,    /* light lime green */
+          #c5e1a5 25%,   /* pale lime */
+          #9ccc65 50%,   /* lime green */
+          #aed581 75%,   /* light lime */
+          #c5e1a5 100%   /* pale lime */
+        );
+      }
+      
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(139, 195, 74, 0.12), 0 6px 20px rgba(205, 220, 157, 0.08);
+        border-color: #dcedc8;
+      }
+    }
+    
+    .card-header {
+      padding: 10px 14px 8px;
+      border-bottom: 1px solid #f7fee7;
+      
+      .deck-preview {
+        display: flex;
+        align-items: center;
+        
+        .deck-icon-wrapper {
+          position: relative;
+          margin-right: 10px;
+          width: 36px;
+          height: 36px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: linear-gradient(135deg, #9ccc65 0%, #7cb342 50%, #689f38 100%);
+          border-radius: 12px;
+          flex-shrink: 0;
+          box-shadow: 0 2px 6px rgba(124, 179, 66, 0.2);
+          
+          .deck-icon {
+            font-size: 16px;
+            color: white;
+            z-index: 2;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.15));
+          }
+          
+          .icon-glow {
+            display: none;
+          }
+        }
+        
+        .deck-info {
+          flex: 1;
+          min-width: 0;
+          
+          .deck-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #292524;
+            margin: 0 0 3px 0;
+            line-height: 1.2;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+          
+          .deck-meta {
+            display: flex;
+            align-items: center;
+            font-size: 11px;
+            color: #a8a29e;
+            
+            .meta-item {
+              display: flex;
+              align-items: center;
+              
+              i {
+                margin-right: 2px;
+                font-size: 10px;
+                color: #d6d3d1;
+              }
+            }
+            
+            .meta-separator {
+              margin: 0 5px;
+              color: #e7e5e4;
+            }
+            
+            .time {
+              color: #d6d3d1;
+            }
+          }
+        }
+      }
+    }
+    
+    .sender-profile {
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      background: linear-gradient(135deg, #fefffe 0%, #f9fbe7 100%);
+      
+      .sender-avatar-wrapper {
+        position: relative;
+        margin-right: 10px;
+        
+        .modern-avatar {
+          border: 2px solid white;
+          box-shadow: 0 2px 6px rgba(139, 195, 74, 0.15);
+          font-size: 12px;
+          font-weight: 600;
+          transition: all 0.3s ease;
+          
+          &:hover {
+            transform: scale(1.08);
+            box-shadow: 0 3px 10px rgba(139, 195, 74, 0.25);
+          }
+        }
+        
+        .online-indicator {
+          display: none;
+        }
+      }
+      
+      .sender-info {
+        flex: 1;
+        min-width: 0;
+        
+        .sender-name {
+          font-size: 13px;
+          font-weight: 600;
+          color: #292524;
+          display: block;
+          margin-bottom: 2px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        
+        .invitation-message {
+          font-size: 11px;
+          color: #a8a29e;
+          font-style: italic;
+          line-height: 1.3;
+          
+          .quote-icon {
+            font-size: 8px;
+            opacity: 0.5;
+            margin: 0 1px;
+          }
+        }
+      }
+    }
+    
+    .modern-actions {
+      padding: 8px 14px 10px;
+      display: flex;
+      gap: 8px;
+      
+      .modern-button {
+        flex: 1;
+        height: 32px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        transition: all 0.2s ease;
+        
+        i {
+          font-size: 12px;
+        }
+        
+        .button-text {
+          font-weight: 600;
+        }
+      }
+      
+      .accept-button {
+        background: linear-gradient(135deg, #9ccc65 0%, #8bc34a 50%, #7cb342 100%);
+        border: none;
+        color: white;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 6px rgba(139, 195, 74, 0.2);
+        
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(139, 195, 74, 0.3);
+          background: linear-gradient(135deg, #8bc34a 0%, #7cb342 50%, #689f38 100%);
+        }
+        
+        &:active {
+          transform: translateY(0);
+        }
+      }
+      
+      .reject-button {
+        background: white;
+        border: 1.5px solid #dcedc8;
+        color: #558b2f;
+        
+        &:hover {
+          border-color: #aed581;
+          color: #33691e;
+          background: #f1f8e9;
+        }
+      }
+    }
+    
+    .card-footer {
+      padding: 8px 14px 10px;
+      border-top: 1px solid #f9fbe7;
+      background: linear-gradient(135deg, #fefffe 0%, #f9fbe7 100%);
+      
+      .benefits-preview {
+        display: flex;
+        justify-content: space-around;
+        
+        .benefit-item {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          font-size: 10px;
+          color: #6b7280;
+          
+          &:nth-child(1) i {
+            font-size: 12px;
+            margin-bottom: 2px;
+            color: #9ccc65; /* lime green - học cùng */
+          }
+          
+          &:nth-child(2) i {
+            font-size: 12px;
+            margin-bottom: 2px;
+            color: #aed581; /* light lime - tiến bộ */
+          }
+          
+          &:nth-child(3) i {
+            font-size: 12px;
+            margin-bottom: 2px;
+            color: #8bc34a; /* sage green - chia sẻ */
+          }
+          
+          span {
+            font-weight: 500;
+          }
+        }
+      }
+    }
+  }
+}
+
+// ========================================
+// 🎯 ANIMATIONS
+// ========================================
+
+@keyframes heartbeat {
+  0%, 50%, 100% { transform: scale(1); }
+  25%, 75% { transform: scale(1.1); }
+}
+
+@keyframes ripple {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2);
+    opacity: 0;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: rotate(0deg) scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: rotate(180deg) scale(1.2);
+    opacity: 0.1;
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ========================================
+// 📱 RESPONSIVE DESIGN - MODERN INVITATIONS
+// ========================================
+
+@media (max-width: 768px) {
+  .modern-invitations {
+    .modern-header {
+      padding: 10px 14px;
+      
+      .header-icon {
+        width: 30px;
+        height: 30px;
+        
+        i {
+          font-size: 14px;
+        }
+      }
+      
+      .header-text {
+        .section-title {
+          font-size: 14px;
+        }
+        
+        .section-subtitle {
+          font-size: 10px;
+        }
+      }
+    }
+    
+    .invitations-grid {
+      gap: 8px;
+      
+      .modern-card {
+        .card-header {
+          padding: 8px 12px 6px;
+          
+          .deck-preview {
+            .deck-icon-wrapper {
+              width: 32px;
+              height: 32px;
+              border-radius: 8px;
+              
+              .deck-icon {
+                font-size: 14px;
+              }
+            }
+            
+            .deck-info {
+              .deck-title {
+                font-size: 12px;
+              }
+              
+              .deck-meta {
+                font-size: 10px;
+                
+                .meta-item i {
+                  font-size: 9px;
+                }
+              }
+            }
+          }
+        }
+        
+        .sender-profile {
+          padding: 6px 12px;
+          
+          .sender-avatar-wrapper {
+            .modern-avatar {
+              width: 28px !important;
+              height: 28px !important;
+              font-size: 11px;
+            }
+          }
+          
+          .sender-info {
+            .sender-name {
+              font-size: 12px;
+            }
+            
+            .invitation-message {
+              font-size: 10px;
+            }
+          }
+        }
+        
+        .modern-actions {
+          padding: 6px 12px 8px;
+          gap: 6px;
+          
+          .modern-button {
+            height: 28px;
+            font-size: 11px;
+            
+            i {
+              font-size: 11px;
+            }
+          }
+        }
+        
+        .card-footer {
+          padding: 6px 12px 8px;
+          
+          .benefits-preview {
+            .benefit-item {
+              font-size: 9px;
+              
+              i {
+                font-size: 11px;
+              }
+              
+              span {
+                font-size: 9px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .modern-invitations {
+    .modern-header {
+      .header-text {
+        .section-title {
+          font-size: 14px;
+        }
+        
+        .section-subtitle {
+          font-size: 10px;
+        }
+      }
+    }
+    
+    .invitations-grid {
+      .modern-card {
+        .card-header {
+          .deck-preview {
+            .deck-icon-wrapper {
+              width: 36px;
+              height: 36px;
+              
+              .deck-icon {
+                font-size: 16px;
+              }
+            }
+            
+            .deck-info {
+              .deck-title {
+                font-size: 13px;
+              }
+              
+              .deck-meta {
+                font-size: 10px;
+              }
+            }
+          }
+        }
+        
+        .modern-actions {
+          .modern-button {
+            .button-text {
+              display: none;
+            }
+            
+            i {
+              font-size: 14px;
+            }
+          }
+        }
+        
+        .card-footer {
+          .benefits-preview {
+            justify-content: space-around;
+            
+            .benefit-item {
+              i {
+                font-size: 12px;
+              }
+              
+              span {
+                font-size: 9px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// ===========================
+// MODERN INVITATION SECTION STYLING (Legacy - kept for compatibility)
+// ===========================
+
+.dashboard-invitations {
+  margin-top: 16px;
+  animation: slideInUp 0.4s ease-out;
+
+  .invitations-header {
+    margin-bottom: 16px;
+    
+    h3 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 18px;
+      font-weight: 600;
+      color: #2c3e50;
+      margin: 0;
+
+      i {
+        color: #6a8250;
+        font-size: 18px;
+      }
+
+      nz-badge {
+        margin-left: 6px;
+        
+        ::ng-deep .ant-badge-count {
+          background: linear-gradient(135deg, #6a8250 0%, #8ba477 100%);
+          border: none;
+          box-shadow: 0 2px 6px rgba(106, 130, 80, 0.3);
+        }
+      }
+    }
+
+    .invitations-subtitle {
+      color: #6b7280;
+      font-size: 13px;
+      margin: 6px 0 0 0;
+      font-weight: 400;
+    }
+  }
+
+  .invitations-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .invitation-item {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 3px 12px rgba(106, 130, 80, 0.15);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    border-left: 3px solid #6a8250;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #6a8250, #8ba477, #7cb342);
+      opacity: 0.9;
+    }
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(106, 130, 80, 0.25);
+    }
+
+    .invitation-content {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      color: #365314;
+    }
+
+    .invitation-deck-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+
+      .deck-icon {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, #6a8250 0%, #8ba477 100%);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 8px rgba(106, 130, 80, 0.2);
+
+        i {
+          color: white;
+          font-size: 18px;
+        }
+      }
+
+      .deck-details {
+        .deck-name {
+          font-size: 15px;
+          font-weight: 600;
+          margin: 0 0 3px 0;
+          color: #365314;
+          line-height: 1.3;
+        }
+
+        .deck-meta {
+          font-size: 12px;
+          color: #4d7c0f;
+          margin: 0;
+          display: flex;
+          align-items: center;
+          gap: 4px;
+
+          i {
+            font-size: 11px;
+          }
+        }
+      }
+    }
+
+    .invitation-sender {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+
+      .sender-avatar {
+        border: 2px solid white;
+        box-shadow: 0 2px 8px rgba(106, 130, 80, 0.2);
+        transition: all 0.3s ease;
+        
+        &:hover {
+          transform: scale(1.05);
+          box-shadow: 0 4px 12px rgba(106, 130, 80, 0.3);
+        }
+      }
+
+      .sender-details {
+        .sender-name {
+          display: block;
+          font-size: 13px;
+          font-weight: 600;
+          color: #365314;
+          line-height: 1.3;
+        }
+
+        .invitation-time {
+          font-size: 11px;
+          color: #4d7c0f;
+          margin-top: 2px;
+        }
+      }
+    }
+
+    .invitation-actions {
+      display: flex;
+      gap: 6px;
+      
+      button {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 13px;
+        transition: all 0.2s ease;
+        border: 1px solid transparent;
+
+        i {
+          font-size: 13px;
+        }
+
+        &.accept-btn {
+          background: linear-gradient(135deg, #6a8250 0%, #8ba477 100%);
+          color: white;
+          
+          &:hover {
+            background: linear-gradient(135deg, #5a7240 0%, #7b9467 100%);
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(106, 130, 80, 0.3);
+          }
+
+          &:disabled {
+            background: #d1d5db;
+            cursor: not-allowed;
+            transform: none;
+          }
+        }
+
+        &.reject-btn {
+          background: white;
+          color: #6b7280;
+          border: 1.5px solid #e5e7eb;
+          
+          &:hover {
+            border-color: #ff7875;
+            color: #ff7875;
+            background: #fff5f5;
+            transform: scale(1.05);
+          }
+
+          &:disabled {
+            background: #f5f5f5;
+            color: #bfbfbf;
+            cursor: not-allowed;
+            transform: none;
+          }
+        }
+      }
+    }
+  }
+}
+
+.invitations-empty-hint {
+  text-align: center;
+  padding: 16px;
+  color: #9ca3af;
+  
+  .empty-hint {
+    font-size: 13px;
+    margin: 0;
+    
+    i {
+      margin-right: 6px;
+      color: #6a8250;
+    }
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

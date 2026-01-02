@@ -1,0 +1,152 @@
+<nz-modal 
+     [(nzVisible)]="visible" 
+     nzTitle="Mẹo học từ cộng đồng" 
+     (nzOnCancel)="close()" 
+     [nzWidth]="700" 
+     nzCancelText="Đóng" 
+     [nzFooter]="null"
+     nzClassName="community-tips-modal">
+  <ng-container *nzModalContent>
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-container">
+      <nz-spin nzSize="large">
+        <div class="loading-text">Đang tải mẹo học từ cộng đồng...</div>
+      </nz-spin>
+    </div>
+
+    <!-- Tips Content -->
+    <div *ngIf="!isLoading" class="tips-content">
+      <!-- Header with stats -->
+      <div class="tips-header">
+        <div class="stats-info">
+          <i nz-icon nzType="bulb" nzTheme="fill"></i>
+          <span>{{ tips.length }} mẹo học từ cộng đồng</span>
+        </div>
+        <button nz-button nzType="primary" nzSize="small" (click)="showAddTipForm = !showAddTipForm">
+          <i nz-icon nzType="plus"></i>
+          Thêm mẹo học
+        </button>
+      </div>
+
+      <!-- Add New Tip Form -->
+      <div *ngIf="showAddTipForm" class="add-tip-form">
+        <div class="form-header">
+          <i nz-icon nzType="edit" nzTheme="outline"></i>
+          <span>Chia sẻ mẹo học của bạn</span>
+        </div>
+        <nz-form-item>
+          <textarea 
+            nz-input 
+            [(ngModel)]="newTipContent"
+            placeholder="Ví dụ: Tôi nhớ từ 'apple' bằng cách hình dung một quả táo đỏ mọng nước..."
+            [nzAutosize]="{ minRows: 3, maxRows: 5 }"
+            maxlength="500">
+          </textarea>
+          <div class="char-count">{{ newTipContent.length }}/500</div>
+        </nz-form-item>
+        <div class="form-actions">
+          <button nz-button nzType="default" nzSize="small" (click)="cancelAddTip()">
+            Hủy
+          </button>
+          <button 
+            nz-button 
+            nzType="primary" 
+            nzSize="small" 
+            [nzLoading]="submittingTip"
+            [disabled]="!newTipContent.trim()"
+            (click)="submitTip()">
+            Chia sẻ
+          </button>
+        </div>
+      </div>
+
+      <!-- Tips List -->
+      <div class="tips-list">
+        <div *ngIf="tips.length === 0" class="empty-state">
+          <i nz-icon nzType="bulb" nzTheme="outline"></i>
+          <h3>Chưa có mẹo học nào</h3>
+          <p>Hãy là người đầu tiên chia sẻ mẹo học cho từ này!</p>
+        </div>
+
+        <div *ngFor="let tip of tips; trackBy: trackByTipId" class="tip-item">
+          <!-- Tip Header -->
+          <div class="tip-header">
+            <div class="user-info">
+              <nz-avatar 
+                [nzSrc]="tip.userAvatar" 
+                [nzText]="getAvatarText(tip.userDisplayName)"
+                nzSize="small">
+              </nz-avatar>
+              <div class="user-details">
+                <span class="username">{{ tip.userDisplayName }}</span>
+                <span class="timestamp">{{ formatDate(tip.createdAt) }}</span>
+              </div>
+            </div>
+            <div class="tip-actions" *ngIf="canEditTip(tip)">
+              <button nz-button nzType="text" nzSize="small" (click)="editTip(tip)">
+                <i nz-icon nzType="edit" nzTheme="outline"></i>
+              </button>
+              <button nz-button nzType="text" nzSize="small" nz-popconfirm nzPopconfirmTitle="Bạn có chắc muốn xóa mẹo này?" (nzOnConfirm)="deleteTip(tip)">
+                <i nz-icon nzType="delete" nzTheme="outline"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Tip Content -->
+          <div class="tip-content" [class.editing]="editingTipId === tip.id">
+            <div *ngIf="editingTipId !== tip.id" class="content-text">
+              {{ tip.content }}
+            </div>
+            <div *ngIf="editingTipId === tip.id" class="edit-form">
+              <textarea 
+                nz-input 
+                [(ngModel)]="editTipContent"
+                [nzAutosize]="{ minRows: 2, maxRows: 4 }"
+                maxlength="500">
+              </textarea>
+              <div class="edit-actions">
+                <button nz-button nzType="default" nzSize="small" (click)="cancelEdit()">
+                  Hủy
+                </button>
+                <button 
+                  nz-button 
+                  nzType="primary" 
+                  nzSize="small" 
+                  [nzLoading]="updatingTip"
+                  (click)="saveEdit(tip.id)">
+                  Lưu
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tip Reactions -->
+          <div class="tip-reactions">
+            <div class="reaction-buttons">
+              <button 
+                nz-button 
+                nzType="text" 
+                nzSize="small"
+                [class.active]="tip.isLikedByCurrentUser"
+                (click)="toggleReaction(tip, 'LIKE')"
+                [disabled]="processingReaction === tip.id">
+                <i nz-icon nzType="like" [nzTheme]="tip.isLikedByCurrentUser ? 'fill' : 'outline'"></i>
+                <span>{{ tip.likesCount }}</span>
+              </button>
+              <button 
+                nz-button 
+                nzType="text" 
+                nzSize="small"
+                [class.active]="tip.isDislikedByCurrentUser"
+                (click)="toggleReaction(tip, 'DISLIKE')"
+                [disabled]="processingReaction === tip.id">
+                <i nz-icon nzType="dislike" [nzTheme]="tip.isDislikedByCurrentUser ? 'fill' : 'outline'"></i>
+                <span>{{ tip.dislikesCount }}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</nz-modal>

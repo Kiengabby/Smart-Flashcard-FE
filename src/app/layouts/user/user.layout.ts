@@ -9,9 +9,6 @@ import { NzTypographyModule } from 'ng-zorro-antd/typography';
 import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { TokenService } from '../../services/token.service';
-import { CardService } from '../../services/card.service';
-import { InvitationService } from '../../services/invitation.service';
-import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-user-layout',
@@ -37,7 +34,6 @@ export class UserLayoutComponent implements OnInit {
   sidebarWidth = 280; // Default width
   isResizing = false;
   currentYear = new Date().getFullYear();
-  pendingInvitationsCount = 0;
   
   // User data - lấy từ TokenService
   currentUser = {
@@ -47,9 +43,6 @@ export class UserLayoutComponent implements OnInit {
 
   constructor(
     private tokenService: TokenService,
-    private cardService: CardService,
-    private invitationService: InvitationService,
-    private notificationService: NotificationService,
     private router: Router,
     private cdr: ChangeDetectorRef
   ) {}
@@ -58,8 +51,6 @@ export class UserLayoutComponent implements OnInit {
     this.loadUserInfo();
     this.loadMenuData();
     this.updateActiveMenuItem();
-    this.loadInvitationsCount();
-    this.subscribeToNotifications();
     this.updateSidebarMode();
   }
 
@@ -178,58 +169,10 @@ export class UserLayoutComponent implements OnInit {
   }
 
   /**
-   * Load dữ liệu động cho menu (số thẻ cần ôn tập, notifications, etc.)
+   * Load dữ liệu động cho menu (notifications, etc.)
    */
   loadMenuData(): void {
-    // Cập nhật badge cho "Ôn tập hàng ngày"
-    this.cardService.getStudyStats().subscribe({
-      next: (stats) => {
-        const dailyReviewItem = this.menuItems.find(item => item.routerLink === '/app/daily-review');
-        if (dailyReviewItem && stats.dueCards > 0) {
-          dailyReviewItem.badge = stats.dueCards.toString();
-        } else if (dailyReviewItem) {
-          dailyReviewItem.badge = null; // Ẩn badge nếu không có thẻ cần ôn
-        }
-      },
-      error: (error) => {
-        console.warn('Could not load study stats for menu:', error);
-      }
-    });
-  }
-
-  /**
-   * Load số lượng lời mời chờ phản hồi
-   */
-  loadInvitationsCount(): void {
-    this.invitationService.getPendingCount().subscribe({
-      next: (count) => {
-        // 🔥 Fix NG0100: Wrap in setTimeout để avoid expression changed error
-        setTimeout(() => {
-          this.pendingInvitationsCount = count;
-          this.cdr.detectChanges();
-        }, 0);
-      },
-      error: (error) => {
-        console.warn('Could not load pending invitations count:', error);
-        // Set to 0 on error to prevent crash
-        setTimeout(() => {
-          this.pendingInvitationsCount = 0;
-          this.cdr.detectChanges();
-        }, 0);
-      }
-    });
-  }
-
-  /**
-   * Subscribe to notification updates để cập nhật real-time
-   */
-  subscribeToNotifications(): void {
-    this.notificationService.unreadCount$.subscribe({
-      next: (count) => {
-        // Update invitation count when notifications change
-        this.loadInvitationsCount();
-      }
-    });
+    // Removed daily review badge loading since the menu item is removed
   }
 
   /**
@@ -267,7 +210,8 @@ export class UserLayoutComponent implements OnInit {
       routerLink: '/app/dashboard',
       description: 'Xem tổng quan tiến độ học tập và thống kê cá nhân',
       isActive: true,
-      badge: null as string | null
+      badge: null as string | null,
+      isHighPriority: true
     },
     {
       title: 'Thư viện thẻ',
@@ -275,33 +219,18 @@ export class UserLayoutComponent implements OnInit {
       routerLink: '/app/deck-library',
       description: 'Quản lý và tạo mới các bộ thẻ học tập',
       isActive: false,
-      badge: null as string | null // UC-02: Quản lý Bộ thẻ
+      badge: null as string | null, // UC-02: Quản lý Bộ thẻ
+      isHighPriority: false
     },
-    {
-      title: 'Ôn tập hàng ngày',
-      icon: 'fa-fire',
-      routerLink: '/app/daily-review',
-      description: 'Ôn tập thẻ đã đến hạn theo thuật toán SM-2',
-      isActive: false,
-      badge: null as string | null, // UC-04: Core feature - SRS
-      isHighPriority: true
-    },
-    {
-      title: 'Lời mời học tập',
-      icon: 'fa-envelope-open-text',
-      routerLink: '/app/invitations',
-      description: 'Quản lý lời mời tham gia bộ thẻ từ bạn bè',
-      isActive: false,
-      badge: null as string | null, // UC-06: Social Learning
-      badgeGetter: () => this.pendingInvitationsCount > 0 ? this.pendingInvitationsCount.toString() : null
-    },
+
     {
       title: 'Cộng đồng',
       icon: 'fa-trophy',
       routerLink: '/app/community',
       description: 'Tương tác, chia sẻ và thách đấu với cộng đồng',
       isActive: false,
-      badge: null as string | null // UC-06, UC-07: Tương tác cộng đồng
+      badge: null as string | null, // UC-06, UC-07: Tương tác cộng đồng
+      isHighPriority: false
     },
     {
       title: 'Thông tin tài khoản',
@@ -309,7 +238,8 @@ export class UserLayoutComponent implements OnInit {
       routerLink: '/app/profile',
       description: 'Quản lý thông tin cá nhân và cài đặt',
       isActive: false,
-      badge: null as string | null // UC-01: Quản lý Tài khoản
+      badge: null as string | null, // UC-01: Quản lý Tài khoản
+      isHighPriority: false
     }
   ];
 }

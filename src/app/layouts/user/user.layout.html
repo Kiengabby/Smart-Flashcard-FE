@@ -40,7 +40,7 @@
       >
         <div class="menu-item-content">
           <div class="menu-icon-wrapper">
-            <nz-badge [nzCount]="item.badgeGetter ? +(item.badgeGetter() || 0) : +(item.badge || 0)" [nzShowZero]="false">
+            <nz-badge [nzCount]="+(item.badge || 0)" [nzShowZero]="false">
               <i [class]="'fa-solid ' + item.icon + ' menu-icon'"></i>
             </nz-badge>
           </div>

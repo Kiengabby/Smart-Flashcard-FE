@@ -90,6 +90,125 @@
             </button>
           </div>
         </nz-card>
+
+        <!-- Invitations Section - Redesigned (Green Theme) -->
+        <div *ngIf="!isLoadingInvitations && pendingInvitations.length > 0" class="invitations-section modern-invitations">
+          <!-- Section Header -->
+          <div class="invitations-header modern-header">
+            <div class="header-content">
+              <div class="header-icon">
+                <i class="fa-solid fa-leaf"></i>
+              </div>
+              <div class="header-text">
+                <h3 class="section-title">Lời mời học cùng</h3>
+                <p class="section-subtitle">{{ pendingInvitations.length }} lời mời đang chờ bạn</p>
+              </div>
+              <div class="header-badge">
+                <nz-badge [nzCount]="pendingInvitations.length" 
+                          [nzColor]="'#9ccc65'" 
+                          class="modern-badge"></nz-badge>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Invitations Grid -->
+          <div class="invitations-grid">
+            <div *ngFor="let invitation of pendingInvitations; trackBy: trackByInvitationId" 
+                 class="invitation-card modern-card">
+              
+              <!-- Card Header with Deck Info -->
+              <div class="card-header">
+                <div class="deck-preview">
+                  <div class="deck-icon-wrapper">
+                    <i class="fa-solid fa-layer-group deck-icon"></i>
+                  </div>
+                  <div class="deck-info">
+                    <h4 class="deck-title" [title]="invitation.deck.name">{{ invitation.deck.name }}</h4>
+                    <div class="deck-meta">
+                      <span class="meta-item">
+                        <i class="fa-solid fa-credit-card"></i>
+                        {{ invitation.deck.cardCount || 0 }} thẻ
+                      </span>
+                      <span class="meta-separator">•</span>
+                      <span class="meta-item time">
+                        <i class="fa-regular fa-clock"></i>
+                        {{ formatTimeAgo(invitation.createdAt) }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Sender Profile -->
+              <div class="sender-profile">
+                <div class="sender-avatar-wrapper">
+                  <nz-avatar 
+                    [nzSize]="32"
+                    [ngStyle]="{'background': getAvatarGradient(invitation.inviter.name)}"
+                    class="sender-avatar modern-avatar">
+                    {{ getUserInitials(invitation.inviter.name) }}
+                  </nz-avatar>
+                </div>
+                <div class="sender-info">
+                  <div class="sender-name" [title]="invitation.inviter.name">{{ invitation.inviter.name }}</div>
+                  <div class="invitation-message">
+                    Mời bạn cùng học và tiến bộ!
+                  </div>
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="invitation-actions modern-actions">
+                <button nz-button 
+                        nzType="primary" 
+                        nzSize="default"
+                        [nzLoading]="isInvitationProcessing(invitation.id)"
+                        [disabled]="isInvitationProcessing(invitation.id)"
+                        (click)="acceptInvitation(invitation)"
+                        class="accept-button modern-button">
+                  <i class="fa-solid fa-check" *ngIf="!isInvitationProcessing(invitation.id)"></i>
+                  <span class="button-text">Chấp nhận</span>
+                </button>
+                
+                <button nz-button 
+                        nzType="default" 
+                        nzSize="default"
+                        [disabled]="isInvitationProcessing(invitation.id)"
+                        (click)="rejectInvitation(invitation)"
+                        class="reject-button modern-button">
+                  <i class="fa-solid fa-times"></i>
+                  <span class="button-text">Từ chối</span>
+                </button>
+              </div>
+
+              <!-- Card Footer with Benefits -->
+              <div class="card-footer">
+                <div class="benefits-preview">
+                  <div class="benefit-item">
+                    <i class="fa-solid fa-users"></i>
+                    <span>Học cùng</span>
+                  </div>
+                  <div class="benefit-item">
+                    <i class="fa-solid fa-trophy"></i>
+                    <span>Thách đấu</span>
+                  </div>
+                  <div class="benefit-item">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>Tiến bộ</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty State for Invitations (if needed) -->
+        <div *ngIf="!isLoadingInvitations && pendingInvitations.length === 0" class="invitations-empty-hint">
+          <p class="empty-hint">
+            <i class="fa-regular fa-envelope-open"></i>
+            Khi có lời mời học tập từ bạn bè, chúng sẽ xuất hiện tại đây
+          </p>
+        </div>
       </div>
     </div>
 

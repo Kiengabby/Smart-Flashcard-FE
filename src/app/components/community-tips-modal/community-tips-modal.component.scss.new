@@ -1,0 +1,397 @@
+::ng-deep .community-tips-modal {
+  .ant-modal-content {
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .ant-modal-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-bottom: none;
+    padding: 20px 24px;
+
+    .ant-modal-title {
+      color: white;
+      font-weight: 600;
+      font-size: 18px;
+    }
+  }
+
+  .ant-modal-body {
+    padding: 0;
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  
+  .loading-text {
+    margin-top: 16px;
+    color: #8c8c8c;
+    font-size: 14px;
+  }
+}
+
+.tips-content {
+  padding: 20px 24px;
+}
+
+.tips-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f0f0f0;
+
+  .stats-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #595959;
+    font-size: 14px;
+
+    i {
+      color: #faad14;
+      font-size: 16px;
+    }
+  }
+
+  button {
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+  }
+}
+
+.add-tip-form {
+  background: #fafafa;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 24px;
+  animation: slideDown 0.3s ease-out;
+
+  .form-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    color: #262626;
+    font-weight: 500;
+    font-size: 15px;
+
+    i {
+      color: #1890ff;
+    }
+  }
+
+  nz-form-item {
+    margin-bottom: 12px;
+
+    textarea {
+      border-radius: 6px;
+      resize: none;
+      font-size: 14px;
+      line-height: 1.6;
+
+      &::placeholder {
+        color: #bfbfbf;
+      }
+
+      &:focus {
+        border-color: #40a9ff;
+        box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.1);
+      }
+    }
+  }
+
+  .char-count {
+    text-align: right;
+    color: #8c8c8c;
+    font-size: 12px;
+    margin-top: 4px;
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+
+    button {
+      border-radius: 6px;
+      font-weight: 500;
+    }
+  }
+}
+
+.tips-list {
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #8c8c8c;
+
+    i {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+
+    h3 {
+      color: #595959;
+      margin: 16px 0 8px 0;
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    p {
+      color: #8c8c8c;
+      margin: 0;
+      font-size: 14px;
+    }
+  }
+}
+
+.tip-item {
+  background: white;
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: #d9d9d9;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.tip-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    .user-details {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+
+      .username {
+        font-weight: 500;
+        color: #262626;
+        font-size: 14px;
+      }
+
+      .timestamp {
+        color: #8c8c8c;
+        font-size: 12px;
+      }
+    }
+  }
+
+  .tip-actions {
+    display: flex;
+    gap: 4px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+
+    button {
+      color: #8c8c8c;
+      border: none;
+      padding: 4px;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover {
+        color: #1890ff;
+        background: #f0f8ff;
+      }
+
+      &:last-child:hover {
+        color: #ff4d4f;
+        background: #fff2f0;
+      }
+    }
+  }
+}
+
+.tip-item:hover .tip-actions {
+  opacity: 1;
+}
+
+.tip-content {
+  margin-bottom: 12px;
+
+  .content-text {
+    color: #262626;
+    font-size: 14px;
+    line-height: 1.6;
+    word-break: break-word;
+  }
+
+  &.editing .content-text {
+    display: none;
+  }
+
+  .edit-form {
+    textarea {
+      width: 100%;
+      border-radius: 6px;
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 8px;
+
+      &:focus {
+        border-color: #40a9ff;
+        box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.1);
+      }
+    }
+
+    .edit-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+
+      button {
+        border-radius: 6px;
+        font-size: 12px;
+        padding: 4px 12px;
+        height: 28px;
+      }
+    }
+  }
+}
+
+.tip-reactions {
+  .reaction-buttons {
+    display: flex;
+    gap: 8px;
+
+    button {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 8px;
+      border: 1px solid #f0f0f0;
+      border-radius: 16px;
+      background: white;
+      color: #8c8c8c;
+      font-size: 12px;
+      height: 28px;
+      transition: all 0.2s ease;
+
+      &:hover {
+        border-color: #d9d9d9;
+        color: #595959;
+      }
+
+      &.active {
+        border-color: #1890ff;
+        background: #f0f8ff;
+        color: #1890ff;
+
+        &:hover {
+          border-color: #40a9ff;
+          background: #e6f7ff;
+        }
+      }
+
+      &:last-child.active {
+        border-color: #ff4d4f;
+        background: #fff2f0;
+        color: #ff4d4f;
+
+        &:hover {
+          border-color: #ff7875;
+          background: #ffebee;
+        }
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      i {
+        font-size: 12px;
+      }
+
+      span {
+        font-weight: 500;
+        min-width: 12px;
+        text-align: center;
+      }
+    }
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  ::ng-deep .community-tips-modal {
+    .ant-modal {
+      margin: 10px;
+      max-width: calc(100vw - 20px);
+    }
+
+    .ant-modal-body {
+      max-height: 60vh;
+    }
+  }
+
+  .tips-content {
+    padding: 16px;
+  }
+
+  .tips-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+
+    .stats-info {
+      justify-content: center;
+    }
+  }
+
+  .add-tip-form {
+    padding: 16px;
+  }
+
+  .tip-item {
+    padding: 12px;
+  }
+
+  .tip-header .tip-actions {
+    opacity: 1;
+  }
+}

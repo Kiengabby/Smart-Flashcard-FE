@@ -30,8 +30,10 @@ export const routes: Routes = [
       { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
       { path: 'dashboard', loadChildren: () => import('./pages/dashboard/dashboard.routes').then(m => m.DASHBOARD_ROUTES) },
       { path: 'daily-review', loadChildren: () => import('./pages/daily-review/daily-review.routes').then(m => m.dailyReviewRoutes) },
+      { path: 'flashcard-study', loadChildren: () => import('./pages/flashcard-study/flashcard-study.routes').then(m => m.FLASHCARD_STUDY_ROUTES) },
       { path: 'deck-library', loadChildren: () => import('./pages/deck-library/deck-library.routes').then(m => m.DECK_LIBRARY_ROUTES) },
       { path: 'deck/:id', loadChildren: () => import('./pages/deck-detail/deck-detail.routes').then(m => m.DECK_DETAIL_ROUTES) },
+      // Note: Invitations are now integrated into dashboard, but route kept for direct access
       { path: 'invitations', loadChildren: () => import('./pages/invitations/invitations.routes').then(m => m.INVITATIONS_ROUTES) },
       
       // 🏆 Arena Mode Routes
